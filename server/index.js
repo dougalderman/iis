@@ -10,7 +10,7 @@ if (node_env !== 'production') {
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');
-  const config = require('./webpack.dev.js');
+  const config = require('../config/webpack.dev.js');
   const compiler = webpack(config);
   // Tell express to use the webpack-dev-middleware and use the webpack.config.js
   // configuration file as a base.

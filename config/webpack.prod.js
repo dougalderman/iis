@@ -1,5 +1,4 @@
 const merge = require('webpack-merge');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -17,7 +16,7 @@ module.exports = merge(common, {
     new MiniCssExtractPlugin({
       filename: 'style.css'
     }),
-    new UglifyJSPlugin({ // https://github.com/angular/angular/issues/10618
+    new webpack.optimize.UglifyJSPlugin({ // https://github.com/angular/angular/issues/10618
       mangle: {
         keep_fnames: true
       }

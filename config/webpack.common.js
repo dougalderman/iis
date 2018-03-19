@@ -1,5 +1,7 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
+var helpers = require('./helpers');
 
 module.exports = {
   entry: {
@@ -16,9 +18,6 @@ module.exports = {
         helpers.root('./public/src'), // location of your src
       {} // a map of your routes
     ),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'vendor', 'polyfills']
-    }),
   ],
   output: {
     filename: '[name].[hash].js',
