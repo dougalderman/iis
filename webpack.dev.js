@@ -2,6 +2,7 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+var helpers = require('./config/helpers');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -11,8 +12,10 @@ module.exports = merge(common, {
     hot: true
   },
   output: {
+    path: helpers.root('dist'),
+    filename: '[name].js',
+    chunkFilename: '[id].chunk.js',
     publicPath: '/'
-
   },
   module: {
     rules: [

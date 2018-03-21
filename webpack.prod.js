@@ -3,10 +3,17 @@ const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+var helpers = require('./config/helpers');
 
 module.exports = merge(common, {
   devtool: 'source-map',
   mode: 'production',
+  output: {
+    path: helpers.root('dist'),
+    publicPath: '/',
+    filename: '[name].[hash].js',
+    chunkFilename: '[id].[hash].chunk.js'
+  },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({

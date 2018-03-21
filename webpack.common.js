@@ -1,7 +1,7 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
-var helpers = require('./helpers');
+var helpers = require('./config/helpers');
 
 module.exports = {
   entry: {
@@ -9,26 +9,46 @@ module.exports = {
     'vendor': './public/src/vendor.ts',
     'app': './public/src/main.ts'
   },
+  optimization: {
+		splitChunks: {
+			cacheGroups: {
+				polyfills: {
+					name: "polyfills",
+					test: "polyfills",
+					enforce: true
+				},
+				vendor: {
+					name: "vendor",
+					test: "vendor",
+					enforce: true
+        },
+        app: {
+					name: "app",
+					test: "app",
+					enforce: true
+				}
+			}
+    }
+  },
   plugins: [
-    new CleanWebpackPlugin(['dist']),
+    new CleanWebpackPlugin(['./dist']),
     // Workaround for angular/angular#11580
     new webpack.ContextReplacementPlugin(
       // The (\\|\/) piece accounts for path separators in *nix and Windows
       /angular(\\|\/)core(\\|\/)@angular/,
         helpers.root('./public/src'), // location of your src
       {} // a map of your routes
-    ),
+    )
   ],
-  output: {
-    filename: '[name].[hash].js',
-    chunkFilename: '[id].[hash].chunk.js',
-    path: path.resolve(__dirname, 'dist')
-  },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ]
   },
   module: {
     rules: [
+      {
+        test: /\.html$/,
+        loader: 'html-loader'
+      },
       {
         // Image files
         test: /\.(png|svg|jpg|gif)$/,
@@ -38,11 +58,9 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-        loaders: [
-          {
-            loader: 'awesome-typescript-loader',
-            options: { configFileName: helpers.root('src', 'tsconfig.json') }
-          } , 'angular2-template-loader'
+        use: [
+          'ts-loader',
+          'angular2-template-loader'
         ],
         exclude: /node_modules/
       }
