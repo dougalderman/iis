@@ -5,11 +5,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "server": "node server/index.js"
+    "server": "node server/index.js",
+    "build": "webpack --config webpack.prod.js"
   },
   "private": true,
   "dependencies": {
@@ -50,12 +50,17 @@
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "mini-css-extract-plugin": "^0.2.0",
+    "node-sass": "^4.7.2",
     "protractor": "~5.1.2",
+    "raw-loader": "^0.5.1",
+    "sass-loader": "^6.0.7",
+    "style-loader": "^0.20.3",
     "ts-loader": "^4.1.0",
     "ts-node": "~4.1.0",
     "tslint": "~5.9.1",
     "typescript": "^2.5.3",
     "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.12",
     "webpack-dev-middleware": "^3.0.1",
     "webpack-hot-middleware": "^2.21.2",
     "webpack-merge": "^4.1.2"

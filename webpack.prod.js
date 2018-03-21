@@ -3,7 +3,7 @@ const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
-var helpers = require('./config/helpers');
+const helpers = require('./config/helpers');
 
 module.exports = merge(common, {
   devtool: 'source-map',

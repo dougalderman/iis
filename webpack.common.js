@@ -1,7 +1,7 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
-var helpers = require('./config/helpers');
+const helpers = require('./config/helpers');
 
 module.exports = {
   entry: {
