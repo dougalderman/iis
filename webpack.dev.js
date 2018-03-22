@@ -33,8 +33,7 @@ module.exports = merge(common, {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'IIS Development',
-      template: 'public/src/index.html'
+      template: 'public/src/index.dev.html'
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),

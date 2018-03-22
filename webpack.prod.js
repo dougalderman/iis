@@ -2,8 +2,10 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const helpers = require('./config/helpers');
+const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 
 module.exports = merge(common, {
   devtool: 'source-map',
@@ -17,19 +19,21 @@ module.exports = merge(common, {
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({
-      title: 'IIS Production',
-      template: 'public/src/index.html'
+      template: 'public/src/index.prod.html'
+    }),
+    new UglifyJSPlugin({
+      sourceMap: true,
+      uglifyOptions: {
+        keep_fnames: true
+      }
     }),
     new MiniCssExtractPlugin({
       filename: 'style.css'
     }),
-    new webpack.optimize.UglifyJSPlugin({ // https://github.com/angular/angular/issues/10618
-      mangle: {
-        keep_fnames: true
-      }
-    }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env': {
+        'ENV': JSON.stringify(ENV)
+      }
     }),
     new webpack.LoaderOptionsPlugin({
       htmlLoader: {
@@ -41,9 +45,15 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.(s*)css$/, // Test for CSS or Sass
+        exclude: helpers.root('./public/src', 'app'), // exclude component-scoped styles
         use:
           [ MiniCssExtractPlugin.loader,
         'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.(s*)css$/, // Test for CSS or Sass
+        include: helpers.root('./public/src', 'app'), // include component-scoped styles
+        use: ['raw-loader', 'sass-loader']
       }
     ]
   }
