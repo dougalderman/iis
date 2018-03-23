@@ -7,7 +7,7 @@ const webpack = require('webpack');
 const helpers = require('./config/helpers');
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 
-module.exports = merge(common, {
+module.exports = merge(common[0], {
   devtool: 'source-map',
   mode: 'production',
   output: {
@@ -17,6 +17,7 @@ module.exports = merge(common, {
     chunkFilename: '[id].[hash].chunk.js'
   },
   plugins: [
+    new CleanWebpackPlugin(['./dist']),
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({
       template: 'public/src/index.prod.html'
