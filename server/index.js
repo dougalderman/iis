@@ -7,6 +7,7 @@ const app = express();
 
 console.log('node_env: ', node_env);
 if (node_env !== 'production') {
+  console.log('check point 1');
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -20,6 +21,7 @@ if (node_env !== 'production') {
   }));
   app.use(webpackHotMiddleware(compiler.compilers.find(compiler => compiler.name === 'client')));
   app.use(webpackHotServerMiddleware(compiler));
+  console.log('check point 2');
 }
 else {
   let app_dir = process.env.APP_DIR;
@@ -28,12 +30,9 @@ else {
 }
 
 app.get('/wiki/*', (req, res) => {
-  console.log('getting wiki');
-  for (let p in req) {
-    if (req.hasOwnProperty(p)) {
-      console.log('p', p);
-      console.log('req.p', req.p);
-    }
+  console.log('check point 3');
+  if (req.originalUrl) {
+    res.redirect('https://en.wikipedia.org' + req.originalUrl);
   }
 });
 

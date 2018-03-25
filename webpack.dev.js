@@ -34,7 +34,8 @@ mergedConfig[0] = merge(common[0], {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'public/src/index.dev.html'
+      template: 'public/src/index.dev.html',
+      favicon: 'public/src/favicon.ico'
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),

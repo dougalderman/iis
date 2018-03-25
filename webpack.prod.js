@@ -17,10 +17,10 @@ module.exports = merge(common[0], {
     chunkFilename: '[id].[hash].chunk.js'
   },
   plugins: [
-    new CleanWebpackPlugin(['./dist']),
     new webpack.NoEmitOnErrorsPlugin(),
     new HtmlWebpackPlugin({
-      template: 'public/src/index.prod.html'
+      template: 'public/src/index.prod.html',
+      favicon: 'public/src/favicon.ico'
     }),
     new UglifyJSPlugin({
       sourceMap: true,
