@@ -4,8 +4,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const helpers = require('./config/helpers');
 
-let mergedConfig = common;
-mergedConfig[0] = merge(common[0], {
+module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
@@ -42,5 +41,3 @@ mergedConfig[0] = merge(common[0], {
     new webpack.NoEmitOnErrorsPlugin(),
   ]
 });
-
-module.exports = mergedConfig;
