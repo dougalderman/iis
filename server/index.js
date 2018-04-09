@@ -1,9 +1,17 @@
 require('dotenv').config();
-const node_env = process.env.NODE_ENV;
-const port = process.env.PORT;
 
-const express = require('express');
+const node_env = process.env.NODE_ENV,
+      port = process.env.PORT;
+
+const express = require('express'),
+      expressSession = require('express-session'),
+      passport = require('passport'),
+      passportLocal = require('passport-local'),
+      bodyParser = require('body-parser'),
+      { Client } = require('pg');
+
 const app = express();
+app.use(bodyParser.json());
 
 console.log('node_env: ', node_env);
 if (node_env !== 'production') {
@@ -24,6 +32,17 @@ else {
   let path = __dirname + app_dir;
   app.use(express.static(path));
 }
+
+app.use(expressSession({
+  secret: process.env.SECRET,
+  saveUninitialized: false,
+  resave: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+const pgSqlClient = new Client();
+pgSqlClient.connect();
 
 app.get('/wiki/*', (req, res) => {
   if (req.originalUrl) {
