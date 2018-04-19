@@ -10,9 +10,12 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       { Client } = require('pg');
 
+import { endpoints } from './controllers/endpoints';
+import { addAdminUsers } from './controllers/adminUsers';
+
 const app = express();
 app.use(bodyParser.json());
-
+    
 console.log('node_env: ', node_env);
 if (node_env !== 'production') {
   const webpack = require('webpack');
@@ -43,6 +46,12 @@ app.use(passport.session());
 
 const pgSqlClient = new Client();
 pgSqlClient.connect();
+
+// add Admin users if they don't exist
+addAdminUsers();
+
+// Endpoints
+endpoints();
 
 app.get('/wiki/*', (req, res) => {
   if (req.originalUrl) {

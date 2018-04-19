@@ -30,7 +30,7 @@ CREATE TYPE quiz_multiple_choice_options AS (
 
 DROP TABLE IF EXISTS Quizzes CASCADE;
 CREATE TABLE Quizzes (
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   brief_name text,
   title text,
   config jsonb
@@ -38,14 +38,14 @@ CREATE TABLE Quizzes (
 
 DROP TABLE IF EXISTS QuizTemplates CASCADE;
 CREATE TABLE QuizTemplates (
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   name text,
   description text
 );
 
 DROP TABLE IF EXISTS QuizQuestions CASCADE;
 CREATE TABLE QuizQuestions (
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes,
   quiz_template int REFERENCES QuizTemplates,
   text_question text,
@@ -64,7 +64,7 @@ CREATE TABLE QuizQuestions (
 
 DROP TABLE IF EXISTS QuizResults CASCADE;
 CREATE TABLE QuizResults ( 
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes,
   date_taken date,
   quiz_duration interval
@@ -72,7 +72,7 @@ CREATE TABLE QuizResults (
 
 DROP TABLE IF EXISTS QuizAnswers CASCADE;
 CREATE TABLE QuizAnswers (
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes,
   question_id int REFERENCES QuizQuestions,
   quiz_results int REFERENCES QuizResults,
@@ -116,7 +116,7 @@ CREATE TYPE survey_multiple_choice_options AS (
 
 DROP TABLE IF EXISTS Surveys CASCADE;
 CREATE TABLE Surveys (
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   brief_name text,
   title text,
   config jsonb
@@ -124,14 +124,14 @@ CREATE TABLE Surveys (
 
 DROP TABLE IF EXISTS SurveyTemplates CASCADE;
 CREATE TABLE SurveyTemplates (
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   name text,
   description text
 );
 
 DROP TABLE IF EXISTS SurveyQuestions CASCADE;
 CREATE TABLE SurveyQuestions (
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   survey_id int REFERENCES Surveys,
   survey_template_id int REFERENCES SurveyTemplates,
   text_question text,
@@ -142,7 +142,7 @@ CREATE TABLE SurveyQuestions (
 
 DROP TABLE IF EXISTS SurveyResults CASCADE;
 CREATE TABLE SurveyResults ( 
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   survey_id int REFERENCES Surveys,
   date_taken date,
   survey_duration interval
@@ -150,7 +150,7 @@ CREATE TABLE SurveyResults (
 
 DROP TABLE IF EXISTS SurveyAnswers CASCADE;
 CREATE TABLE SurveyAnswers (
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes,
   question_id int REFERENCES QuizQuestions,
   survey_results int REFERENCES SurveyResults,
@@ -168,7 +168,7 @@ CREATE TABLE SurveyAnswers (
 --Admin Users  
 DROP TABLE IF EXISTS AdminUsers CASCADE;
 CREATE TABLE AdminUsers (
-  id int PRIMARY KEY,
+  id serial PRIMARY KEY,
   first_name text,
   last_name text,
   email text,
