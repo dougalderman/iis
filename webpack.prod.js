@@ -7,7 +7,10 @@ const webpack = require('webpack');
 const helpers = require('./config/helpers');
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 
-module.exports = merge(common, {
+module.exports = merge({}, {
+  entry: {
+    'server': './server/index.js'
+  },
   devtool: 'source-map',
   mode: 'production',
   output: {
@@ -55,6 +58,14 @@ module.exports = merge(common, {
         test: /\.(s*)css$/, // Test for CSS or Sass
         include: helpers.root('./public/src', 'app'), // include component-scoped styles
         use: ['raw-loader', 'sass-loader']
+      },
+      {
+        test: /\.js$/,
+        exclude: helpers.root('./node_modules'),
+        include:  helpers.root('./server'), // Test for server js
+        use: {
+          loader: 'babel-loader'
+        }
       }
     ]
   }

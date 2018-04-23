@@ -1,9 +1,5 @@
-require('dotenv').config();
-
-const node_env = process.env.NODE_ENV,
-      port = process.env.PORT;
-
-const express = require('express'),
+const dotenv = require ('dotenv'),
+      express = require('express'),
       expressSession = require('express-session'),
       passport = require('passport'),
       passportLocal = require('passport-local'),
@@ -13,9 +9,13 @@ const express = require('express'),
 import { endpoints } from './controllers/endpoints';
 import { addAdminUsers } from './controllers/adminUsers';
 
+dotenv.config();
+const node_env = process.env.NODE_ENV,
+      port = process.env.PORT;
+
 const app = express();
 app.use(bodyParser.json());
-    
+
 console.log('node_env: ', node_env);
 if (node_env !== 'production') {
   const webpack = require('webpack');

@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "server": "nodemon server/index.js --exec babel-node",
+    "dev": "nodemon server/index.js --exec babel-node",
+    "prod": "node dist/server/index.js",
     "build": "webpack --config webpack.prod.js"
   },
   "private": true,
@@ -43,6 +44,8 @@
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "^4.0.1",
     "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "clean-webpack-plugin": "^0.1.19",
     "codelyzer": "^4.0.1",
