@@ -45,7 +45,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const pgSqlClient = new Client();
-pgSqlClient.connect();
+// pgSqlClient.connect();
 
 // add Admin users if they don't exist
 addAdminUsers();
