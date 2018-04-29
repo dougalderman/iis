@@ -1,27 +1,31 @@
-const dotenv = require ('dotenv'),
-      express = require('express'),
-      expressSession = require('express-session'),
-      passport = require('passport'),
-      passportLocal = require('passport-local'),
-      bodyParser = require('body-parser'),
-      { Client } = require('pg');
+import * as dotenv from 'dotenv';
+import * as express from 'express';
+import * as expressSession from 'express-session';
+import * as passport from 'passport';
+import * as passportLocal from 'passport-local';
+import * as bodyParser from 'body-parser';
+import { Client } from 'pg';
+import * as webpack from 'webpack';
+import * as webpackDevMiddleware from 'webpack-dev-middleware';
+import * as webpackHotMiddleware from 'webpack-hot-middleware';
 
+import * as config from '../webpack.dev.js';
 import { endpoints } from './controllers/endpoints';
 import { addAdminUsers } from './controllers/adminUsers';
 
+let node_env, port;
+
 dotenv.config();
-const node_env = process.env.NODE_ENV,
-      port = process.env.PORT;
+node_env = process.env.NODE_ENV,
+port = process.env.PORT;
+
+console.log('node_env: ', node_env);
+console.log('port: ', port);
 
 const app = express();
 app.use(bodyParser.json());
 
-console.log('node_env: ', node_env);
 if (node_env !== 'production') {
-  const webpack = require('webpack');
-  const webpackDevMiddleware = require('webpack-dev-middleware');
-  const webpackHotMiddleware = require('webpack-hot-middleware');
-  const config = require('../webpack.dev.js');
   const compiler = webpack(config);
   // Tell express to use the webpack-dev-middleware and use the webpack.config.js
   // configuration file as a base.
@@ -33,9 +37,12 @@ if (node_env !== 'production') {
 else {
   let app_dir = process.env.APP_DIR;
   let path = __dirname + app_dir;
+  console.log('app_dir: ', app_dir);
+  console.log('path: ', path);
   app.use(express.static(path));
 }
 
+console.log('process.env.SECRET: ', process.env.SECRET);
 app.use(expressSession({
   secret: process.env.SECRET,
   saveUninitialized: false,
