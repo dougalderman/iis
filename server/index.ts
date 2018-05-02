@@ -20,7 +20,6 @@ node_env = process.env.NODE_ENV,
 port = process.env.PORT;
 
 console.log('node_env: ', node_env);
-console.log('port: ', port);
 
 const app = express();
 app.use(bodyParser.json());
@@ -37,12 +36,9 @@ if (node_env !== 'production') {
 else {
   let app_dir = process.env.APP_DIR;
   let path = __dirname + app_dir;
-  console.log('app_dir: ', app_dir);
-  console.log('path: ', path);
   app.use(express.static(path));
 }
 
-console.log('process.env.SECRET: ', process.env.SECRET);
 app.use(expressSession({
   secret: process.env.SECRET,
   saveUninitialized: false,

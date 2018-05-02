@@ -10,11 +10,5 @@
     "experimentalDecorators": true,
     "suppressImplicitAnyIndexErrors": true,
     "target": "es5"
-  },
-  "include": [
-    "server/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  }
 }

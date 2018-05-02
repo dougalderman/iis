@@ -11,7 +11,7 @@ module.exports = merge(common, {
   devtool: 'source-map',
   mode: 'production',
   output: {
-    path: helpers.root('dist'),
+    path: helpers.root('dist/public'),
     publicPath: '/',
     filename: '[name].[hash].js',
     chunkFilename: '[id].[hash].chunk.js'
