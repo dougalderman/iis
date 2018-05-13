@@ -4,14 +4,13 @@ import * as expressSession from 'express-session';
 import * as passport from 'passport';
 import * as passportLocal from 'passport-local';
 import * as bodyParser from 'body-parser';
-import { Client } from 'pg';
+import { Pool } from 'pg';
 import * as webpack from 'webpack';
 import * as webpackDevMiddleware from 'webpack-dev-middleware';
 import * as webpackHotMiddleware from 'webpack-hot-middleware';
 
 import * as config from '../webpack.dev.js';
 import { endpoints } from './controllers/endpoints';
-import { addAdminUsers } from './controllers/adminUsers';
 
 let node_env, port;
 
@@ -25,13 +24,13 @@ const app = express();
 app.use(bodyParser.json());
 
 if (node_env !== 'production') {
-  const compiler = webpack(config);
+  /* const compiler = webpack(config);
   // Tell express to use the webpack-dev-middleware and use the webpack.config.js
   // configuration file as a base.
   app.use(webpackDevMiddleware(compiler, {
     publicPath: config.output.publicPath
   }));
-  app.use(webpackHotMiddleware(compiler));
+  app.use(webpackHotMiddleware(compiler)); */
 }
 else {
   let app_dir = process.env.APP_DIR;
@@ -47,11 +46,22 @@ app.use(expressSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-const pgSqlClient = new Client();
-// pgSqlClient.connect();
-
-// add Admin users if they don't exist
-addAdminUsers();
+/* const pgSqlPool = new Pool();
+let quiz1;
+pgSqlPool.query('SELECT * from quizzes')
+  .then(res => {
+    console.log('in then');
+    console.log('res.rows: ', res.rows);
+    if (res && res.rows && res.rows.length) {
+      quiz1 = res.rows[0];
+      console.log('quiz1: ', quiz1);
+      console.log('quiz1.title: ', quiz1.title);
+    }
+  })
+  .catch(e => {
+    console.error('in error');
+    console.error(e.stack)
+  }); */
 
 // Endpoints
 endpoints();

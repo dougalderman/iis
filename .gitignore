@@ -44,3 +44,4 @@ testem.log
 Thumbs.db
 .env
 prod_build.log
+db/admin
