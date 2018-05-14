@@ -10,7 +10,7 @@ import * as webpackDevMiddleware from 'webpack-dev-middleware';
 import * as webpackHotMiddleware from 'webpack-hot-middleware';
 
 import * as config from '../webpack.dev.js';
-import { endpoints } from './controllers/endpoints';
+import { EndpointsController } from './controllers/endpointsController';
 
 let node_env, port;
 
@@ -46,25 +46,8 @@ app.use(expressSession({
 app.use(passport.initialize());
 app.use(passport.session());
 
-/* const pgSqlPool = new Pool();
-let quiz1;
-pgSqlPool.query('SELECT * from quizzes')
-  .then(res => {
-    console.log('in then');
-    console.log('res.rows: ', res.rows);
-    if (res && res.rows && res.rows.length) {
-      quiz1 = res.rows[0];
-      console.log('quiz1: ', quiz1);
-      console.log('quiz1.title: ', quiz1.title);
-    }
-  })
-  .catch(e => {
-    console.error('in error');
-    console.error(e.stack)
-  }); */
-
 // Endpoints
-endpoints();
+let endpoints = new EndpointsController(app);
 
 app.get('/wiki/*', (req, res) => {
   if (req.originalUrl) {

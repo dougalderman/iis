@@ -1,0 +1,15 @@
+export interface quizAnswers {
+  quizId: number;
+  questionId: number;
+  quizResults: number;
+  textAnswer: string;
+  booleanAnswer: boolean;
+  dateAnswer: Date;
+  dateStartAnswer: Date;
+  dateEndAnswer: Date,
+  locationAnswers: [object];
+  integerAnswer: number;
+  realAnswer: number;
+  answeredCorrectly: boolean;
+  timeToAnswer: string
+}
