@@ -47,7 +47,7 @@ DROP TABLE IF EXISTS QuizQuestions CASCADE;
 CREATE TABLE QuizQuestions (
   id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes,
-  quiz_template int REFERENCES QuizTemplates,
+  template_id int REFERENCES QuizTemplates,
   text_question text,
   picture_question text,
   question_type quiz_question_type,
@@ -63,7 +63,7 @@ CREATE TABLE QuizQuestions (
 );
 
 DROP TABLE IF EXISTS QuizResults CASCADE;
-CREATE TABLE QuizResults ( 
+CREATE TABLE QuizResults (
   id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes,
   date_taken date,
@@ -75,7 +75,7 @@ CREATE TABLE QuizAnswers (
   id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes,
   question_id int REFERENCES QuizQuestions,
-  quiz_results int REFERENCES QuizResults,
+  results_id int REFERENCES QuizResults,
   text_answer text,
   boolean_answer boolean,
   date_answer date,
@@ -89,7 +89,7 @@ CREATE TABLE QuizAnswers (
 );
 
 
---Surveys  
+--Surveys
 DROP TYPE IF EXISTS survey_question_type CASCADE;
 CREATE TYPE survey_question_type AS ENUM (
   'textMultipleChoice',
@@ -133,7 +133,7 @@ DROP TABLE IF EXISTS SurveyQuestions CASCADE;
 CREATE TABLE SurveyQuestions (
   id serial PRIMARY KEY,
   survey_id int REFERENCES Surveys,
-  survey_template_id int REFERENCES SurveyTemplates,
+  template_id int REFERENCES SurveyTemplates,
   text_question text,
   picture_question text,
   question_type quiz_question_type,
@@ -141,19 +141,19 @@ CREATE TABLE SurveyQuestions (
 );
 
 DROP TABLE IF EXISTS SurveyResults CASCADE;
-CREATE TABLE SurveyResults ( 
+CREATE TABLE SurveyResults (
   id serial PRIMARY KEY,
   survey_id int REFERENCES Surveys,
   date_taken date,
   survey_duration interval
-);   
+);
 
 DROP TABLE IF EXISTS SurveyAnswers CASCADE;
 CREATE TABLE SurveyAnswers (
   id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes,
   question_id int REFERENCES QuizQuestions,
-  survey_results int REFERENCES SurveyResults,
+  results_id int REFERENCES SurveyResults,
   text_answer text,
   boolean_answer boolean,
   date_answer date,
@@ -165,7 +165,7 @@ CREATE TABLE SurveyAnswers (
   time_to_answer interval
 );
 
---Admin Users  
+--Admin Users
 DROP TABLE IF EXISTS AdminUsers CASCADE;
 CREATE TABLE AdminUsers (
   id serial PRIMARY KEY,
@@ -173,4 +173,4 @@ CREATE TABLE AdminUsers (
   last_name text,
   email text,
   password text
-);  
+);

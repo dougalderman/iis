@@ -1,6 +1,6 @@
 export interface QuizQuestions {
   quizId: number,
-  quizTemplate: number,
+  templateId: number,
   textQuestion: string,
   pictureQuestion: string,
   questionType: string,

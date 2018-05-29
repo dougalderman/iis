@@ -1,7 +1,7 @@
 export interface quizAnswers {
   quizId: number;
   questionId: number;
-  quizResults: number;
+  resultsId: number;
   textAnswer: string;
   booleanAnswer: boolean;
   dateAnswer: Date;
