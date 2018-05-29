@@ -49,7 +49,7 @@ export class QuizTemplatesController {
       const pgSqlPool = new Pool();
       const id = req.params.id;
       const query = {
-        text: 'SELECT * FROM QuizTemplates WHERE ID = $1',
+        text: 'SELECT * FROM QuizTemplates WHERE id = $1',
         values: [id]
       };
       console.log('query: ', query);
@@ -78,7 +78,7 @@ export class QuizTemplatesController {
       const pgSqlPool = new Pool();
       const name = '%' + req.params.name + '%';
       const query = {
-        text: 'SELECT * FROM QuizTemplates WHERE NAME ILIKE $1 ORDER BY NAME',
+        text: 'SELECT * FROM QuizTemplates WHERE name ILIKE $1 ORDER BY name',
         values: [name]
       };
       console.log('query: ', query);
@@ -104,7 +104,7 @@ export class QuizTemplatesController {
     console.log('in QuizTemplatesController--readAll()');
     const pgSqlPool = new Pool();
     const query = {
-      text: 'SELECT * FROM QuizTemplates ORDER BY NAME',
+      text: 'SELECT * FROM QuizTemplates ORDER BY name',
       values: []
     };
     console.log('query: ', query);
@@ -131,7 +131,7 @@ export class QuizTemplatesController {
       const template = new Template(req.body.name, req.body.description);
       const id = req.params.id;
       const query = {
-        text: 'UPDATE QuizTemplates SET NAME = $1, DESCRIPTION = $2 WHERE ID = $3',
+        text: 'UPDATE QuizTemplates SET name = $1, description = $2 WHERE id = $3',
         values: [template.name, template.description, id]
       };
       console.log('query: ', query);
@@ -160,7 +160,7 @@ export class QuizTemplatesController {
       const pgSqlPool = new Pool();
       const id = req.params.id;
       const query = {
-        text: 'DELETE FROM QuizTemplates WHERE ID = $1',
+        text: 'DELETE FROM QuizTemplates WHERE id = $1',
         values: [id]
       };
       console.log('query: ', query);

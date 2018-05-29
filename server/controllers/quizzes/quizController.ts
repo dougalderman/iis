@@ -51,7 +51,7 @@ export class QuizController {
       const pgSqlPool = new Pool();
       const id = req.params.id;
       const query = {
-        text: 'SELECT * FROM Quizzes WHERE ID = $1',
+        text: 'SELECT * FROM Quizzes WHERE id = $1',
         values: [id]
       };
       console.log('query: ', query);
@@ -80,7 +80,7 @@ export class QuizController {
       const pgSqlPool = new Pool();
       const name = '%' + req.params.briefName + '%';
       const query = {
-        text: 'SELECT * FROM Quizzes WHERE BRIEF_NAME ILIKE $1 ORDER BY BRIEF_NAME',
+        text: 'SELECT * FROM Quizzes WHERE brief_name ILIKE $1 ORDER BY brief_name',
         values: [name]
       };
       console.log('query: ', query);
@@ -109,7 +109,7 @@ export class QuizController {
       const pgSqlPool = new Pool();
       const title = '%' + req.params.title + '%';
       const query = {
-        text: 'SELECT * FROM Quizzes WHERE TITLE ILIKE $1 ORDER BY TITLE',
+        text: 'SELECT * FROM Quizzes WHERE title ILIKE $1 ORDER BY title',
         values: [title]
       };
       console.log('query: ', query);
@@ -135,7 +135,7 @@ export class QuizController {
     console.log('in QuizController--readAll()');
     const pgSqlPool = new Pool();
     const query = {
-      text: 'SELECT * FROM Quizzes ORDER BY TITLE',
+      text: 'SELECT * FROM Quizzes ORDER BY title',
       values: []
     };
     console.log('query: ', query);
@@ -162,7 +162,7 @@ export class QuizController {
       const quiz = new Quiz(req.body.briefName, req.body.title, req.body.config);
       const id = req.params.id;
       const query = {
-        text: 'UPDATE Quizzes SET BRIEF_NAME = $1, TITLE = $2, CONFIG= $3 WHERE ID = $4',
+        text: 'UPDATE Quizzes SET brief_name = $1, title = $2, config = $3 WHERE id = $4',
         values: [quiz.briefName, quiz.title, quiz.config, id]
       };
       console.log('query: ', query);
@@ -191,7 +191,7 @@ export class QuizController {
       const pgSqlPool = new Pool();
       const id = req.params.id;
       const query = {
-        text: 'DELETE FROM Quizzes WHERE ID = $1',
+        text: 'DELETE FROM Quizzes WHERE id = $1',
         values: [id]
       };
       console.log('query: ', query);
