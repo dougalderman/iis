@@ -185,7 +185,7 @@ export class QuizController {
   }
 
   static delete(req, res) : void {
-    console.log('in QuizController--update()');
+    console.log('in QuizController--delete()');
     console.log('req.params: ', req.params);
     if (req.params && req.params.id) {
       const pgSqlPool = new Pool();
