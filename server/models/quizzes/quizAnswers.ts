@@ -1,4 +1,4 @@
-export interface quizAnswers {
+export interface QuizAnswers {
   quizId: number;
   questionId: number;
   resultsId: number;
@@ -6,10 +6,10 @@ export interface quizAnswers {
   booleanAnswer: boolean;
   dateAnswer: Date;
   dateStartAnswer: Date;
-  dateEndAnswer: Date,
+  dateEndAnswer: Date;
   locationAnswers: [object];
   integerAnswer: number;
   realAnswer: number;
   answeredCorrectly: boolean;
-  timeToAnswer: string
+  timeToAnswer: string;
 }

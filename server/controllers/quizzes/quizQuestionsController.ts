@@ -8,7 +8,7 @@ class Question implements QuizQuestions {
   pictureQuestion: string;
   questionType: string;
   options: object;
-  booleanCorectAnswer: boolean;
+  booleanCorrectAnswer: boolean;
   correctAnswer: string;
   locationCorrectAnswers: [object];
   dateCorrectAnswer: Date;
@@ -39,7 +39,7 @@ class Question implements QuizQuestions {
     this.pictureQuestion = reqPictureQuestion;
     this.questionType = reqQuestionType;
     this.options = reqOptions;
-    this.booleanCorectAnswer = reqBooleanCorrectAnswer;
+    this.booleanCorrectAnswer = reqBooleanCorrectAnswer;
     this.correctAnswer = reqCorrectAnswer;
     this.locationCorrectAnswers = reqLocationCorrectAnswers;
     this.dateCorrectAnswer = reqDateCorrectAnswer;
@@ -64,7 +64,7 @@ export class QuizQuestionsController {
         req.body.pictureQuestion,
         req.body.questionType,
         req.body.options,
-        req.body.booleanCorectAnswer,
+        req.body.booleanCorrectAnswer,
         req.body.correctAnswer,
         req.body.locationCorrectAnswers,
         req.body.dateCorrectAnswer,
@@ -87,7 +87,7 @@ export class QuizQuestionsController {
           question.pictureQuestion,
           question.questionType,
           question.options,
-          question.booleanCorectAnswer,
+          question.booleanCorrectAnswer,
           question.correctAnswer,
           question.locationCorrectAnswers,
           question.dateCorrectAnswer,
@@ -216,7 +216,7 @@ export class QuizQuestionsController {
         req.body.pictureQuestion,
         req.body.questionType,
         req.body.options,
-        req.body.booleanCorectAnswer,
+        req.body.booleanCorrectAnswer,
         req.body.correctAnswer,
         req.body.locationCorrectAnswers,
         req.body.dateCorrectAnswer,
@@ -239,7 +239,7 @@ export class QuizQuestionsController {
           question.pictureQuestion,
           question.questionType,
           question.options,
-          question.booleanCorectAnswer,
+          question.booleanCorrectAnswer,
           question.correctAnswer,
           question.locationCorrectAnswers,
           question.dateCorrectAnswer,

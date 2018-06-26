@@ -2,6 +2,7 @@ import { QuizController } from './quizzes/quizController';
 import { QuizTemplatesController } from './quizzes/quizTemplatesController';
 import { QuizResultsController } from './quizzes/quizResultsController';
 import { QuizQuestionsController } from './quizzes/quizQuestionsController';
+import { QuizAnswersController } from './quizzes/quizAnswersController';
 
 export class EndpointsController {
   constructor(app) {
@@ -39,5 +40,13 @@ export class EndpointsController {
     app.get('/api/admin/quiz_questions/quiz_id/:templateId', QuizQuestionsController.readByTemplateId) // Reads questions by template id.
     app.put('/api/admin/quiz_questions/:id', QuizQuestionsController.update) // Updates quiz question.
     app.delete('/api/admin/quiz_questions/:id', QuizQuestionsController.delete) // Deletes quiz question.
+    // Quiz Answers
+    app.post('/api/quiz_answers', QuizAnswersController.create) // Writes new quiz answers.
+    app.get('/api/admin/quiz_answers/id/:id', QuizAnswersController.readById) // Reads answer by id.
+    app.get('/api/admin/quiz_answers/quiz_id/:quizId', QuizAnswersController.readByQuizId) // Reads answers by quiz id.
+    app.get('/api/admin/quiz_answers/question_id/:questionId', QuizAnswersController.readByQuestionId) // Reads answer by question id.
+    app.get('/api/admin/quiz_answers/results_id/:resultsId', QuizAnswersController.readByResultsId) // Reads answers by results id.
+    app.put('/api/quiz_answers/:id', QuizAnswersController.update) // Updates quiz answer.
+    app.delete('/api/admin/quiz_answers/:id', QuizAnswersController.delete) // Deletes quiz answer.
   }
 }
