@@ -21,13 +21,6 @@ CREATE TYPE quiz_question_type AS ENUM (
   'pictureAnswer'
  );
 
-DROP TYPE IF EXISTS quiz_multiple_choice_options CASCADE;
-CREATE TYPE quiz_multiple_choice_options AS (
-   option_id  text,
-   text_answer  text,
-   picture_answer text
- );
-
 DROP TABLE IF EXISTS Quizzes CASCADE;
 CREATE TABLE Quizzes (
   id serial PRIMARY KEY,
@@ -51,7 +44,7 @@ CREATE TABLE QuizQuestions (
   text_question text,
   picture_question text,
   question_type quiz_question_type,
-  options quiz_multiple_choice_options,
+  options jsonb,
   boolean_correct_answer boolean,
   correct_answer text,
   location_correct_answers point[],
@@ -137,7 +130,7 @@ CREATE TABLE SurveyQuestions (
   text_question text,
   picture_question text,
   question_type quiz_question_type,
-  options quiz_multiple_choice_options
+  options jsonb
 );
 
 DROP TABLE IF EXISTS SurveyResults CASCADE;
