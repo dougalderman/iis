@@ -7,7 +7,7 @@ class Question implements QuizQuestions {
   textQuestion: string;
   pictureQuestion: string;
   questionType: string;
-  options: object;
+  options: [object];
   booleanCorrectAnswer: boolean;
   correctAnswer: string;
   locationCorrectAnswers: [object];
@@ -23,7 +23,7 @@ class Question implements QuizQuestions {
     reqTextQuestion: string,
     reqPictureQuestion: string,
     reqQuestionType: string,
-    reqOptions: object,
+    reqOptions: [object],
     reqBooleanCorrectAnswer: boolean,
     reqCorrectAnswer: string,
     reqLocationCorrectAnswers: [object],

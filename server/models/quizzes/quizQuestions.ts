@@ -4,7 +4,7 @@ export interface QuizQuestions {
   textQuestion: string;
   pictureQuestion: string;
   questionType: string;
-  options: object;
+  options: [object];
   booleanCorrectAnswer: boolean;
   correctAnswer: string;
   locationCorrectAnswers: [object];
