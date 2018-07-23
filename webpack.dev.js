@@ -14,7 +14,6 @@ module.exports = merge(common, {
   output: {
     path: helpers.root('dist'),
     filename: '[name].js',
-    chunkFilename: '[id].chunk.js',
     publicPath: '/'
   },
   module: {
@@ -36,7 +35,6 @@ module.exports = merge(common, {
       template: 'public/src/index.dev.html',
       favicon: 'public/src/favicon.ico'
     }),
-    new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
   ]

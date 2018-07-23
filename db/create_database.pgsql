@@ -7,10 +7,11 @@ DROP TYPE IF EXISTS quiz_question_type CASCADE;
 CREATE TYPE quiz_question_type AS ENUM (
   'textMultipleChoice',
   'textShortAnswer',
-  'textBoolean'
+  'textBoolean',
   'textDateAnswer',
   'textDateRangeAnswer',
   'textNumericAnswer',
+  'textNumericRangeAnswer',
   'pictureQuestionMultipleChoice',
   'pictureQuestionShortAnswer',
   'pictureQuestionBoolean',
@@ -18,6 +19,7 @@ CREATE TYPE quiz_question_type AS ENUM (
   'pictureQuestionDateAnswer',
   'picatureQuestionDateRangeAnswer',
   'pictureQuestionNumericAnswer',
+  'pictureQuestionNumericRangeAnswer',
   'pictureAnswer'
  );
 
@@ -47,12 +49,17 @@ CREATE TABLE QuizQuestions (
   options jsonb,
   boolean_correct_answer boolean,
   correct_answer text,
+  correct_answer_array text[],
   location_correct_answers point[],
   date_correct_answer date,
   date_start_correct_answer date,
   date_end_correct_answer date,
   integer_correct_answer int,
-  real_correct_answer real
+  integer_start_correct_answer int,
+  integer_end_correct_answer int,
+  real_correct_answer real,
+  real_start_correct_answer real,
+  real_end_correct_answer real
 );
 
 DROP TABLE IF EXISTS QuizResults CASCADE;
@@ -76,7 +83,11 @@ CREATE TABLE QuizAnswers (
   date_end_answer date,
   location_answers point[],
   integer_answer int,
+  integer_start_answer int,
+  integer_end_answer int,
   real_answer real,
+  real_start_answer real,
+  real_end_answer real,
   answered_correctly boolean,
   time_to_answer interval
 );

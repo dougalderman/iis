@@ -7,7 +7,7 @@ export interface QuizAnswers {
   dateAnswer: Date;
   dateStartAnswer: Date;
   dateEndAnswer: Date;
-  locationAnswers: [object];
+  locationAnswers: object[];
   integerAnswer: number;
   realAnswer: number;
   answeredCorrectly: boolean;

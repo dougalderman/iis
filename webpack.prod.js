@@ -14,7 +14,6 @@ module.exports = merge(common, {
     path: helpers.root('dist/public'),
     publicPath: '/',
     filename: '[name].[hash].js',
-    chunkFilename: '[id].[hash].chunk.js'
   },
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),

@@ -8,39 +8,15 @@ module.exports = {
   target: 'web',
   entry: {
     'polyfills': './public/src/polyfills.ts',
-    'vendor': './public/src/vendor.ts',
     'app': './public/src/main.ts'
   },
   optimization: {
     splitChunks: {
-      cacheGroups: {
-        polyfills: {
-          name: "polyfills",
-          test: "polyfills",
-          enforce: true
-        },
-        vendor: {
-          name: "vendor",
-          test: "vendor",
-          enforce: true
-        },
-        app: {
-          name: "app",
-          test: "app",
-          enforce: true
-        }
-      }
+      chunks: 'all'
     }
   },
   plugins: [
     new CleanWebpackPlugin(['./dist']),
-    // Workaround for angular/angular#11580
-    new webpack.ContextReplacementPlugin(
-      // The (\\|\/) piece accounts for path separators in *nix and Windows
-      /angular(\\|\/)core(\\|\/)@angular/,
-        helpers.root('./public/src'), // location of your src
-      {} // a map of your routes
-    )
   ],
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ]

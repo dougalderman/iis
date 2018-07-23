@@ -4,13 +4,18 @@ export interface QuizQuestions {
   textQuestion: string;
   pictureQuestion: string;
   questionType: string;
-  options: [object];
+  options: object[];
   booleanCorrectAnswer: boolean;
   correctAnswer: string;
-  locationCorrectAnswers: [object];
+  correctAnswerArray: string[];
+  locationCorrectAnswers: object[];
   dateCorrectAnswer: Date;
   dateStartCorrectAnswer: Date;
   dateEndCorrectAnswer: Date;
   integerCorrectAnswer: number;
+  integerStartCorrectAnswer: number;
+  integerEndCorrectAnswer: number;
   realCorrectAnswer: number;
+  realStartCorrectAnswer: number;
+  realEndCorrectAnswer: number;
 }

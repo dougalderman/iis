@@ -7,15 +7,20 @@ class Question implements QuizQuestions {
   textQuestion: string;
   pictureQuestion: string;
   questionType: string;
-  options: [object];
+  options: object[];
   booleanCorrectAnswer: boolean;
   correctAnswer: string;
-  locationCorrectAnswers: [object];
+  correctAnswerArray: string[];
+  locationCorrectAnswers: object[];
   dateCorrectAnswer: Date;
   dateStartCorrectAnswer: Date;
   dateEndCorrectAnswer: Date;
   integerCorrectAnswer: number;
+  integerStartCorrectAnswer: number;
+  integerEndCorrectAnswer: number;
   realCorrectAnswer: number;
+  realStartCorrectAnswer: number;
+  realEndCorrectAnswer: number;
 
   constructor(
     reqQuizId: number,
@@ -23,15 +28,20 @@ class Question implements QuizQuestions {
     reqTextQuestion: string,
     reqPictureQuestion: string,
     reqQuestionType: string,
-    reqOptions: [object],
+    reqOptions: object[],
     reqBooleanCorrectAnswer: boolean,
     reqCorrectAnswer: string,
-    reqLocationCorrectAnswers: [object],
+    reqCorrectAnswerArray: string[],
+    reqLocationCorrectAnswers: object[],
     reqDateCorrectAnswer: Date,
     reqDateStartCorrectAnswer: Date,
     reqDateEndCorrectAnswer: Date,
     reqIntegerCorrectAnswer: number,
-    reqRealCorrectAnswer: number
+    reqIntegerStartCorrectAnswer: number,
+    reqIntegerEndCorrectAnswer: number,
+    reqRealCorrectAnswer: number,
+    reqRealStartCorrectAnswer: number,
+    reqRealEndCorrectAnswer: number
   ) {
     this.quizId = reqQuizId;
     this.templateId = reqTemplateId;
@@ -41,12 +51,17 @@ class Question implements QuizQuestions {
     this.options = reqOptions;
     this.booleanCorrectAnswer = reqBooleanCorrectAnswer;
     this.correctAnswer = reqCorrectAnswer;
+    this.correctAnswerArray = reqCorrectAnswerArray;
     this.locationCorrectAnswers = reqLocationCorrectAnswers;
     this.dateCorrectAnswer = reqDateCorrectAnswer;
     this.dateStartCorrectAnswer = reqDateStartCorrectAnswer;
     this.dateEndCorrectAnswer = reqDateEndCorrectAnswer;
     this.integerCorrectAnswer = reqIntegerCorrectAnswer;
+    this.integerStartCorrectAnswer = reqIntegerStartCorrectAnswer;
+    this.integerEndCorrectAnswer = reqIntegerEndCorrectAnswer;
     this.realCorrectAnswer =  reqRealCorrectAnswer;
+    this.realStartCorrectAnswer =  reqRealStartCorrectAnswer;
+    this.realEndCorrectAnswer =  reqRealEndCorrectAnswer;
   }
 }
 
@@ -66,35 +81,46 @@ export class QuizQuestionsController {
         req.body.options,
         req.body.booleanCorrectAnswer,
         req.body.correctAnswer,
+        req.body.correctAnswerArray,
         req.body.locationCorrectAnswers,
         req.body.dateCorrectAnswer,
         req.body.dateStartCorrectAnswer,
         req.body.dateEndCorrectAnswer,
         req.body.integerCorrectAnswer,
-        req.body.realCorrectAnswer
+        req.body.integerStartCorrectAnswer,
+        req.body.integerEndCorrectAnswer,
+        req.body.realCorrectAnswer,
+        req.body.realStartCorrectAnswer,
+        req.body.realEndCorrectAnswer
       );
       const query = {
         text: 'INSERT INTO QuizQuestions(quiz_id, template_id, text_question, ' +
           'picture_question, question_type, options, boolean_correct_answer, ' +
-          'correct_answer, location_correct_answers, date_correct_answer, ' +
+          'correct_answer, correct_answer_array, location_correct_answers, date_correct_answer, ' +
           'date_start_correct_answer, date_end_correct_answer, integer_correct_answer, ' +
-          'real_correct_answer) VALUES($1, $2, $3, $4, $5, $6, $7, ' +
-          '$8, $9, $10, $11, $12, $13, $14)',
+          'integer_start_correct_answer, integer_end_correct_answer, real_correct_answer, ' +
+          'real_start_correct_answer, real_end_correct_answer) VALUES($1, $2, $3, $4, $5, $6, $7, ' +
+          '$8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)',
         values: [
           question.quizId,
           question.templateId,
           question.textQuestion,
           question.pictureQuestion,
           question.questionType,
-          question.options,
+          JSON.stringify(question.options),
           question.booleanCorrectAnswer,
           question.correctAnswer,
+          question.correctAnswerArray,
           question.locationCorrectAnswers,
           question.dateCorrectAnswer,
           question.dateStartCorrectAnswer,
           question.dateEndCorrectAnswer,
           question.integerCorrectAnswer,
-          question.realCorrectAnswer
+          question.integerStartCorrectAnswer,
+          question.integerEndCorrectAnswer,
+          question.realCorrectAnswer,
+          question.realStartCorrectAnswer,
+          question.realEndCorrectAnswer,
         ]
       };
       console.log('query: ', query);
@@ -218,35 +244,46 @@ export class QuizQuestionsController {
         req.body.options,
         req.body.booleanCorrectAnswer,
         req.body.correctAnswer,
+        req.body.correctAnswerArray,
         req.body.locationCorrectAnswers,
         req.body.dateCorrectAnswer,
         req.body.dateStartCorrectAnswer,
         req.body.dateEndCorrectAnswer,
         req.body.integerCorrectAnswer,
-        req.body.realCorrectAnswer
+        req.body.integerStartCorrectAnswer,
+        req.body.integerEndCorrectAnswer,
+        req.body.realCorrectAnswer,
+        req.body.realStartCorrectAnswer,
+        req.body.realEndCorrectAnswer
       );
       const id = req.params.id;
       const query = {
         text: 'UPDATE QuizQuestions SET quiz_id = $1, template_id = $2, text_question = $3, ' +
         'picture_question = $4, question_type = $5, options = $6, boolean_correct_answer = $7, ' +
-        'correct_answer = $8, location_correct_answers = $9, date_correct_answer = $10, ' +
-        'date_start_correct_answer = $11, date_end_correct_answer = $12, integer_correct_answer = $13, ' +
-        'real_correct_answer = $14 WHERE id = $15',
+        'correct_answer = $8, correct_answer_array = $9, location_correct_answers = $10, date_correct_answer = $11, ' +
+        'date_start_correct_answer = $12, date_end_correct_answer = $13, integer_correct_answer = $14, ' +
+        'integer_start_correct_answer = $15, integer_end_correct_answer = $16, real_correct_answer = $17, ' +
+        'real_start_correct_answer = $18, real_end_correct_answer = $19 WHERE id = $20',
         values: [
           question.quizId,
           question.templateId,
           question.textQuestion,
           question.pictureQuestion,
           question.questionType,
-          question.options,
+          JSON.stringify(question.options),
           question.booleanCorrectAnswer,
           question.correctAnswer,
+          question.correctAnswerArray,
           question.locationCorrectAnswers,
           question.dateCorrectAnswer,
           question.dateStartCorrectAnswer,
           question.dateEndCorrectAnswer,
           question.integerCorrectAnswer,
+          question.integerStartCorrectAnswer,
+          question.integerEndCorrectAnswer,
           question.realCorrectAnswer,
+          question.realStartCorrectAnswer,
+          question.realEndCorrectAnswer,
           id
         ]
       };
