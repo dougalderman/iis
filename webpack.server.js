@@ -20,13 +20,7 @@ module.exports = {
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
   optimization: {
     splitChunks: {
-      cacheGroups: {
-        server: {
-          name: "server",
-          test: "server",
-          enforce: true
-        }
-      }
+      chunks: 'all'
     }
   },
   output: {

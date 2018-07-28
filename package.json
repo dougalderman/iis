@@ -10,7 +10,9 @@
     "e2e": "ng e2e",
     "dev": "nodemon server/index.ts --exec ts-node",
     "prod": "node dist/server/server.js",
-    "build": "prod_build.sh"
+    "build": "prod_build.sh",
+    "buildangular": "webpack --config webpack.prod.js",
+    "buildserver": "webpack --config webpack.server.js"
   },
   "private": true,
   "dependencies": {
@@ -65,7 +67,6 @@
     "karma-coverage-istanbul-reporter": "^1.2.1",
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "mini-css-extract-plugin": "^0.2.0",
     "node-sass": "^4.7.2",
     "nodemon": "^1.17.3",
     "protractor": "~5.1.2",

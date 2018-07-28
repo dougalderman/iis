@@ -12,7 +12,11 @@ class Answer implements QuizAnswers {
   dateEndAnswer: Date;
   locationAnswers: [object];
   integerAnswer: number;
+  integerStartAnswer: number;
+  integerEndAnswer: number;
   realAnswer: number;
+  realStartAnswer: number;
+  realEndAnswer: number;
   answeredCorrectly: boolean;
   timeToAnswer: string;
 
@@ -27,7 +31,11 @@ class Answer implements QuizAnswers {
     reqDateEndAnswer: Date,
     reqLocationAnswers: [object],
     reqIntegerAnswer: number,
+    reqIntegerStartAnswer: number,
+    reqIntegerEndAnswer: number,
     reqRealAnswer: number,
+    reqRealStartAnswer: number,
+    reqRealEndAnswer: number,
     reqAnsweredCorrectly: boolean,
     reqTimeToAnswer: string
   ) {
@@ -41,7 +49,11 @@ class Answer implements QuizAnswers {
     this.dateEndAnswer = reqDateEndAnswer;
     this.locationAnswers = reqLocationAnswers;
     this.integerAnswer = reqIntegerAnswer;
+    this.integerStartAnswer = reqIntegerStartAnswer;
+    this.integerEndAnswer = reqIntegerEndAnswer;
     this.realAnswer =  reqRealAnswer;
+    this.realStartAnswer =  reqRealStartAnswer;
+    this.realEndAnswer =  reqRealEndAnswer;
     this.answeredCorrectly = reqAnsweredCorrectly;
     this.timeToAnswer = reqTimeToAnswer;
   }
@@ -65,15 +77,20 @@ export class QuizAnswersController {
         req.body.dateEndAnswer,
         req.body.locationAnswers,
         req.body.integerAnswer,
+        req.body.integerStartAnswer,
+        req.body.integerEndAnswer,
         req.body.realAnswer,
+        req.body.realStartAnswer,
+        req.body.realEndAnswer,
         req.body.answeredCorrectly,
         req.body.timeToAnswer
       );
       const query = {
         text: 'INSERT INTO QuizAnswers(quiz_id, question_id, results_id, text_answer, ' +
           'boolean_answer, date_answer, date_start_answer, date_end_answer, location_answers, ' +
-          'integer_answer, real_answer, answered_correct, time_to_answer) VALUES($1, $2, $3, ' +
-          '$4, $5, $6, $7, $8, $9, $10, $11, $12, $13)',
+          'integer_answer, integer_start_answer, integer_end_answer, real_answer, real_start_answer, ' +
+          'real_end_answer, answered_correct, time_to_answer) VALUES($1, $2, $3, ' +
+          '$4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',
         values: [
           answer.quizId,
           answer.questionId,
@@ -85,7 +102,11 @@ export class QuizAnswersController {
           answer.dateEndAnswer,
           answer.locationAnswers,
           answer.integerAnswer,
+          answer.integerStartAnswer,
+          answer.integerEndAnswer,
           answer.realAnswer,
+          answer.realStartAnswer,
+          answer.realEndAnswer,
           answer.answeredCorrectly,
           answer.timeToAnswer
         ]
@@ -242,7 +263,11 @@ export class QuizAnswersController {
         req.body.dateEndAnswer,
         req.body.locationAnswers,
         req.body.integerAnswer,
+        req.body.integerStartAnswer,
+        req.body.integerEndAnswer,
         req.body.realAnswer,
+        req.body.realStartAnswer,
+        req.body.realEndAnswer,
         req.body.answeredCorrectly,
         req.body.timeToAnswer
       );
@@ -250,8 +275,9 @@ export class QuizAnswersController {
       const query = {
         text: 'UPDATE QuizAnswers SET quiz_id = $1, question_id = $2, results_id = $3, ' +
         'text_answer = $4, boolean_answer = $5, date_answer = $6, date_start_answer = $7, ' +
-        'date_end_answer = $8, location_answers = $9, integer_answer = $10, real_answer = $11, ' +
-        'answered_correctly = $12, time_to_answer = $13 WHERE id = $14',
+        'date_end_answer = $8, location_answers = $9, integer_answer = $10, integer_start_answer = $11, ' +
+        'integer_end_answer = $12, real_answer = $13, real_start_answer = $14, real_end_answer = $15, ' +
+        'answered_correctly = $16, time_to_answer = $17 WHERE id = $18',
         values: [
           answer.quizId,
           answer.questionId,
@@ -263,7 +289,11 @@ export class QuizAnswersController {
           answer.dateEndAnswer,
           answer.locationAnswers,
           answer.integerAnswer,
+          answer.integerStartAnswer,
+          answer.integerEndAnswer,
           answer.realAnswer,
+          answer.realStartAnswer,
+          answer.realEndAnswer,
           answer.answeredCorrectly,
           answer.timeToAnswer,
           id
