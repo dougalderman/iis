@@ -1,0 +1,7 @@
+{
+  "randomizeQuestionSequence": true,
+  "autoSubmit": true,
+  "percentGreatJob": 60,
+  "locationAnswersPercentCorrect": 75,
+  "locationAnswersErrorRangeRadiusInPixels": 10
+}

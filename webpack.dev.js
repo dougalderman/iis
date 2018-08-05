@@ -14,30 +14,13 @@ module.exports = merge(common, {
   output: {
     path: helpers.root('dist'),
     filename: '[name].js',
-    chunkFilename: '[id].chunk.js',
     publicPath: '/'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(s*)css$/, // Test for CSS or Sass
-        exclude: helpers.root('./public/src', 'app'), // exclude component-scoped styles
-        use: ['style-loader', 'css-loader', 'sass-loader']
-      },
-      {
-        test: /\.(s*)css$/, // Test for CSS or Sass
-        include: helpers.root('./public/src', 'app'), // include component-scoped styles
-        use: ['raw-loader', 'sass-loader']
-      }
-    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: 'public/src/index.dev.html',
       favicon: 'public/src/favicon.ico'
     }),
-    new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
   ]
 });
