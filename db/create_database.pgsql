@@ -155,8 +155,8 @@ CREATE TABLE SurveyResults (
 DROP TABLE IF EXISTS SurveyAnswers CASCADE;
 CREATE TABLE SurveyAnswers (
   id serial PRIMARY KEY,
-  quiz_id int REFERENCES Quizzes,
-  question_id int REFERENCES QuizQuestions,
+  survey_id int REFERENCES Surveys,
+  question_id int REFERENCES SurveyQuestions,
   results_id int REFERENCES SurveyResults,
   text_answer text,
   boolean_answer boolean,
@@ -165,7 +165,11 @@ CREATE TABLE SurveyAnswers (
   date_end_answer date,
   location_answers point[],
   integer_answer int,
+  integer_start_answer int,
+  integer_end_answer int,
   real_answer real,
+  real_start_answer real,
+  real_end_answer real,
   time_to_answer interval
 );
 

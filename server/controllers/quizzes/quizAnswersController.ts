@@ -89,7 +89,7 @@ export class QuizAnswersController {
         text: 'INSERT INTO QuizAnswers(quiz_id, question_id, results_id, text_answer, ' +
           'boolean_answer, date_answer, date_start_answer, date_end_answer, location_answers, ' +
           'integer_answer, integer_start_answer, integer_end_answer, real_answer, real_start_answer, ' +
-          'real_end_answer, answered_correct, time_to_answer) VALUES($1, $2, $3, ' +
+          'real_end_answer, answered_correctly, time_to_answer) VALUES($1, $2, $3, ' +
           '$4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',
         values: [
           answer.quizId,
