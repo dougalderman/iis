@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "nodemon server/index.ts --exec ts-node",
+    "dev": "nodemon server/index.ts --exec ts-node --ignore public/",
     "prod": "node dist/server/server.js",
     "build": "prod_build.sh",
     "buildangular": "webpack --config webpack.prod.js",
