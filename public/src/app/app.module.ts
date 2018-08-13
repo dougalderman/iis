@@ -10,14 +10,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 
 const appRoutes: Routes = [
   { path: 'fibro-article', component: FibroArticleComponent },
-  {
-    path: 'admin',
-    component: AdminComponent
-  },
-  { path: '',
-    redirectTo: '/fibro-article',
-    pathMatch: 'full'
-  },
+  { path: 'admin', component: AdminComponent },
+  { path: '', redirectTo: '/fibro-article', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
 
