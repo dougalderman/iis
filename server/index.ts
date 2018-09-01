@@ -55,6 +55,17 @@ app.get('/wiki/*', (req, res) => {
   }
 });
 
+// 404 catch
+app.all('*', (req: any, res: any) => {
+  // onsole.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
+  let app_dir = process.env.APP_DIR;
+  let path = __dirname + app_dir;
+  // console.log('__dirname: ', __dirname)
+  // console.log('path: ', path)
+  // console.log('config.output.publicPath: ', config.output.publicPath)
+  res.status(200).sendFile('index.html', {root: config.output.publicPath});
+});
+
 app.listen(port, function () {
   console.log('Example app listening on port ' + port + '\n');
 });
