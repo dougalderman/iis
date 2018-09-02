@@ -1,4 +1,3 @@
-const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const helpers = require('./config/helpers');
@@ -16,7 +15,7 @@ module.exports = {
     }
   },
   plugins: [
-    new CleanWebpackPlugin(['./dist']),
+    new CleanWebpackPlugin(['./dist/public']),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {

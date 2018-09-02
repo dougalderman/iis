@@ -1,12 +1,11 @@
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const helpers = require('./config/helpers');
 const nodeExternals = require('webpack-node-externals');
-const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
-  devtool: 'source-map',
-  mode: 'production',
+  devtool: 'inline-source-map',
+  mode: 'development',
   entry: {
     'server': './server/index.ts'
   },
@@ -29,13 +28,8 @@ module.exports = {
     chunkFilename: '[id].chunk.js'
   },
   plugins: [
-    new webpack.NoEmitOnErrorsPlugin(),
-    new UglifyJSPlugin({
-      sourceMap: true,
-      uglifyOptions: {
-        keep_fnames: true
-      }
-    }),
+    new CleanWebpackPlugin(['./dist/server']),
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {
     rules: [

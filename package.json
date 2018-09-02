@@ -8,11 +8,15 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "nodemon server/index.ts --exec ts-node --ignore public/",
+    "devserver": "nodemon server/index.ts --exec ts-node --ignore public/",
     "prod": "node dist/server/server.js",
-    "build": "prod_build.sh",
-    "buildangular": "webpack --config webpack.prod.js",
-    "buildserver": "webpack --config webpack.server.js"
+    "dev": "node dist/server/server.js",
+    "build:prod": "prod_build.sh",
+    "build:dev": "dev_build.sh",
+    "build:prodangular": "webpack --config webpack.prod.js",
+    "build:devangular": "webpack --config webpack.dev.js --watch",
+    "build:prodserver": "webpack --config webpack.prod.server.js",
+    "build:devserver": "webpack --config webpack.dev.server.js --watch"
   },
   "private": true,
   "dependencies": {

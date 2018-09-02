@@ -12,7 +12,7 @@ module.exports = merge(common, {
     hot: true
   },
   output: {
-    path: helpers.root('dist'),
+    path: helpers.root('dist/public'),
     filename: '[name].js',
     publicPath: '/'
   },

@@ -43,5 +43,6 @@ testem.log
 .DS_Store
 Thumbs.db
 .env
+dev_build.log
 prod_build.log
 db/admin
