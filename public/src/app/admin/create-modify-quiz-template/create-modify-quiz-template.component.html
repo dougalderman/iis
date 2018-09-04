@@ -1,3 +1,16 @@
-<p>
-  create-modify-quiz-template works!
-</p>
+<h2>Create / Modify Template</h2>
+
+<select [(ngModel)]="templates" id="template">
+  <option value="" disabled selected>Select Template</option>
+  <option *ngFor="let template of templates" [value]="template">{{template}}</option>
+</select>
+<br>
+<label>Name:</label>
+<input type="text">
+<br>
+<label>Description:</label>
+<input type="text">
+<br>
+<button>Add New Question</button>
+<br>
+<button>Save</button>

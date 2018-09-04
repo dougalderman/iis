@@ -12,4 +12,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   ngOnInit() {
   }
 
+  templates = []
+
 }
