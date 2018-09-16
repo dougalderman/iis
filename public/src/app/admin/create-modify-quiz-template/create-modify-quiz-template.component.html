@@ -1,8 +1,8 @@
 <h2>Create / Modify Template</h2>
 
-<select [(ngModel)]="templates" id="template">
+<select [(ngModel)]="templateSelected" id="template">
   <option value="" disabled selected>Select Template</option>
-  <option *ngFor="let template of templates" [value]="template">{{template}}</option>
+  <option *ngFor="let template of templates" [value]="template.id">{{template.name}}</option>
 </select>
 <br>
 <label>Name:</label>

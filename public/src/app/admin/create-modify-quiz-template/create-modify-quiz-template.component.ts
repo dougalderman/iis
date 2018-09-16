@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
+import { QuizTemplate } from  '../../../../../models/quizzes/quizTemplate';
+import { AdminService } from '../../services/admin.service'
+
 @Component({
   selector: 'app-create-modify-quiz-template',
   templateUrl: './create-modify-quiz-template.component.html',
@@ -7,11 +10,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateModifyQuizTemplateComponent implements OnInit {
 
-  constructor() { }
+  templates: QuizTemplate[]
+  templateSelected: QuizTemplate
+
+  constructor(
+    private adminService: AdminService
+  ) { }
 
   ngOnInit() {
+    this.getTemplates();
   }
 
-  templates = []
-
+  getTemplates(): void {
+    this.adminService.getAllQuizTemplates()
+        .subscribe(templates =>
+          this.templates = templates);
+  }
 }

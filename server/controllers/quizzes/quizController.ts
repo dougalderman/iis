@@ -1,7 +1,7 @@
-import { Quizzes } from  '../../models/quizzes/quizzes';
+import { QuizInterface } from  '../../../models/quizzes/quiz';
 import { Pool } from 'pg';
 
-class Quiz implements Quizzes {
+class Quiz implements QuizInterface {
   briefName: string
   title: string;
   config: object;

@@ -1,7 +1,7 @@
-import { QuizAnswers } from  '../../models/quizzes/quizAnswers';
+import { QuizAnswer } from  '../../../models/quizzes/quizAnswer';
 import { Pool } from 'pg';
 
-class Answer implements QuizAnswers {
+class Answer implements QuizAnswer {
   quizId: number;
   questionId: number;
   resultsId: number;

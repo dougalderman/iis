@@ -1,7 +1,7 @@
-import { QuizQuestions } from  '../../models/quizzes/quizQuestions';
+import { QuizQuestion } from  '../../../models/quizzes/quizQuestion';
 import { Pool } from 'pg';
 
-class Question implements QuizQuestions {
+class Question implements QuizQuestion {
   quizId: number;
   templateId: number;
   textQuestion: string;

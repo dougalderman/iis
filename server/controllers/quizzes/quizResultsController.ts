@@ -1,7 +1,7 @@
-import { QuizResults } from  '../../models/quizzes/quizResults';
+import { QuizResult } from  '../../../models/quizzes/quizResult';
 import { Pool } from 'pg';
 
-class Results implements QuizResults {
+class Results implements QuizResult {
   quizId: number;
   dateTaken: Date;
   quizDuration: string;
