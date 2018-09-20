@@ -118,6 +118,9 @@ export class QuizAnswersController {
         if (result) {
           res.send(result);
         }
+        else {
+          res.send([]);
+        }
       })
       .catch(e => {
         console.error('in error');
@@ -144,8 +147,11 @@ export class QuizAnswersController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -173,8 +179,11 @@ export class QuizAnswersController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -202,8 +211,11 @@ export class QuizAnswersController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -231,8 +243,11 @@ export class QuizAnswersController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -306,6 +321,9 @@ export class QuizAnswersController {
         if (result) {
           res.send(result);
         }
+        else {
+          res.send([]);
+        }
       })
       .catch(e => {
         console.error('in error');
@@ -334,6 +352,9 @@ export class QuizAnswersController {
         console.log('result: ', result);
         if (result) {
           res.send(result);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {

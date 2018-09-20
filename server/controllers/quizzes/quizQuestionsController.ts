@@ -130,6 +130,9 @@ export class QuizQuestionsController {
         if (result) {
           res.send(result);
         }
+        else {
+          res.send([]);
+        }
       })
       .catch(e => {
         console.error('in error');
@@ -156,8 +159,11 @@ export class QuizQuestionsController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -185,8 +191,11 @@ export class QuizQuestionsController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -214,8 +223,11 @@ export class QuizQuestionsController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -294,6 +306,9 @@ export class QuizQuestionsController {
         if (result) {
           res.send(result);
         }
+        else {
+          res.send([]);
+        }
       })
       .catch(e => {
         console.error('in error');
@@ -322,6 +337,9 @@ export class QuizQuestionsController {
         console.log('result: ', result);
         if (result) {
           res.send(result);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
