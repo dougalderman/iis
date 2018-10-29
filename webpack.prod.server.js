@@ -21,7 +21,8 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks: 'all'
-    }
+    },
+    minimizer: [new UglifyJSPlugin()]
   },
   output: {
     path: helpers.root('dist/server'),
@@ -30,13 +31,7 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['./dist/server']),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new UglifyJSPlugin({
-      sourceMap: true,
-      uglifyOptions: {
-        keep_fnames: true
-      }
-    }),
+    new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {
     rules: [

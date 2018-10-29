@@ -35,14 +35,6 @@ module.exports = {
         ]
       },
       {
-        test: /\.tsx?$/,
-        use: [
-          'ts-loader',
-          'angular2-template-loader'
-        ],
-        exclude: /node_modules/
-      },
-      {
         test: /\.(s*)css$/, // Test for CSS or Sass
         exclude: helpers.root('./public/src', 'app'), // exclude component-scoped styles
         use: ['style-loader', 'css-loader', 'sass-loader']
