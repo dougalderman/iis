@@ -1,6 +1,5 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
-const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const helpers = require('./config/helpers');
 const { AngularCompilerPlugin } = require('@ngtools/webpack');
@@ -22,7 +21,6 @@ module.exports = merge(common, {
       template: helpers.root('./public/src', 'index.dev.html'),
       favicon: helpers.root('./public/src', 'favicon.ico')
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new AngularCompilerPlugin({
       entryModule: helpers.root('./public/src', 'app/app.module#AppModule'),
       sourceMap: true,

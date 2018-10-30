@@ -8,9 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "devserver": "nodemon server/index.ts --exec ts-node --ignore public/",
-    "prod": "node dist/server/server.js",
-    "dev": "node dist/server/server.js",
+    "server": "node dist/server/server.js",
     "build:prod": "./prod_build.sh",
     "build:dev": "./dev_build.sh",
     "build:prodangular": "webpack --config webpack.prod.js",
@@ -72,7 +70,6 @@
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^1.4.0",
     "node-sass": "^4.9.4",
-    "nodemon": "^1.18.5",
     "protractor": "~5.4.1",
     "raw-loader": "^0.5.1",
     "sass-loader": "^7.1.0",
@@ -84,8 +81,6 @@
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.23.1",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-middleware": "^3.4.0",
-    "webpack-hot-middleware": "^2.24.3",
     "webpack-merge": "^4.1.4",
     "webpack-node-externals": "^1.7.2"
   }

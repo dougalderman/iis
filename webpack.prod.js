@@ -20,11 +20,11 @@ module.exports = merge(common, {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: helpers.root('./src', 'index.prod.html'),
-      favicon: helpers.root('./src', 'favicon.ico')
+      template: helpers.root('./public/src', 'index.prod.html'),
+      favicon: helpers.root('./public/src', 'favicon.ico')
     }),
     new AngularCompilerPlugin({
-      entryModule: helpers.root('./src', 'app/app.module#AppModule'),
+      entryModule: helpers.root('./public/src', 'app/app.module#AppModule'),
       sourceMap: false,
       tsConfigPath: helpers.root('./', 'tsconfig.json'),
     }),

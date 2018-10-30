@@ -3,11 +3,6 @@ import * as express from 'express';
 import * as expressSession from 'express-session';
 import * as passport from 'passport';
 import * as bodyParser from 'body-parser';
-import * as webpack from 'webpack';
-import * as webpackDevMiddleware from 'webpack-dev-middleware';
-import * as webpackHotMiddleware from 'webpack-hot-middleware';
-
-import * as config from '../webpack.dev.js';
 import { EndpointsController } from './controllers/endpointsController';
 
 dotenv.config();
@@ -20,20 +15,7 @@ console.log('node_env: ', node_env);
 
 const app = express();
 app.use(bodyParser.json());
-
-if (node_env === 'devserver') {
-  const compiler = webpack(config);
-  // Tell express to use the webpack-dev-middleware and use the webpack.config.js
-  // configuration file as a base.
-  app.use(webpackDevMiddleware(compiler, {
-    publicPath: config.output.publicPath
-  }));
-  app.use(webpackHotMiddleware(compiler));
-}
-else {
-  app.use(express.static(path));
-}
-
+app.use(express.static(path));
 app.use(expressSession({
   secret: process.env.SECRET,
   saveUninitialized: false,
@@ -43,7 +25,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Endpoints
-let endpoints = new EndpointsController(app);
+new EndpointsController(app);
 
 app.get('/wiki/*', (req, res) => {
   if (req.originalUrl) {
