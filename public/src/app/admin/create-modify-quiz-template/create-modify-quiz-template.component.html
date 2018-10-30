@@ -1,6 +1,6 @@
 <h2>Create / Modify Template</h2>
 
-<select [(ngModel)]="templateSelected" id="template" (ngModelChange)="templateChanged($event)">
+<select [(ngModel)]="templateSelected" id="template" (ngOnChanges)="templateChanged()">
   <option value="" disabled selected>Select Template</option>
   <option *ngFor="let templ of templates" [value]="templ.id">{{templ.name}}</option>
 </select>
