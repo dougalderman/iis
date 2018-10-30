@@ -20,8 +20,8 @@ module.exports = merge(common, {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'public/src/index.prod.html',
-      favicon: 'public/src/favicon.ico'
+      template: helpers.root('./src', 'index.prod.html'),
+      favicon: helpers.root('./src', 'favicon.ico')
     }),
     new AngularCompilerPlugin({
       entryModule: helpers.root('./src', 'app/app.module#AppModule'),

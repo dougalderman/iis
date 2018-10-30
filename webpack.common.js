@@ -6,8 +6,8 @@ module.exports = {
   name: 'client',
   target: 'web',
   entry: {
-    'polyfills': './public/src/polyfills.ts',
-    'app': './public/src/main.ts'
+    'polyfills': helpers.root('./public/src', 'polyfills.ts'),
+    'app': helpers.root('./public/src', 'main.ts')
   },
   optimization: {
     splitChunks: {

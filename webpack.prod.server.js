@@ -8,7 +8,7 @@ module.exports = {
   devtool: 'source-map',
   mode: 'production',
   entry: {
-    'server': './server/index.ts'
+    'server': helpers.root('./server', 'index.ts')
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ]
@@ -30,7 +30,7 @@ module.exports = {
     chunkFilename: '[id].chunk.js'
   },
   plugins: [
-    new CleanWebpackPlugin(['./dist/server']),
+    new CleanWebpackPlugin([helpers.root('dist/server')]),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {

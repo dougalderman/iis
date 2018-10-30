@@ -7,7 +7,7 @@ module.exports = {
   devtool: 'inline-source-map',
   mode: 'development',
   entry: {
-    'server': './server/index.ts'
+    'server': helpers.root('./server', 'index.ts')
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ]

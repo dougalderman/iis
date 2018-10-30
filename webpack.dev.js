@@ -13,18 +13,18 @@ module.exports = merge(common, {
     hot: true
   },
   output: {
-    path: helpers.root('dist/public'),
+    path: helpers.root('./dist/public'),
     filename: '[name].js',
     publicPath: '/'
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'public/src/index.dev.html',
-      favicon: 'public/src/favicon.ico'
+      template: helpers.root('./public/src', 'index.dev.html'),
+      favicon: helpers.root('./public/src', 'favicon.ico')
     }),
     new webpack.HotModuleReplacementPlugin(),
     new AngularCompilerPlugin({
-      entryModule: helpers.root('./src', 'app/app.module#AppModule'),
+      entryModule: helpers.root('./public/src', 'app/app.module#AppModule'),
       sourceMap: true,
       tsConfigPath: helpers.root('./', 'tsconfig.json'),
       skipCodeGeneration: true
