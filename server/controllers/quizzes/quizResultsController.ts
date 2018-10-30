@@ -1,7 +1,7 @@
-import { QuizResults } from  '../../models/quizzes/quizResults';
+import { QuizResult } from  '../../../models/quizzes/quizResult';
 import { Pool } from 'pg';
 
-class Results implements QuizResults {
+class Results implements QuizResult {
   quizId: number;
   dateTaken: Date;
   quizDuration: string;
@@ -32,6 +32,9 @@ export class QuizResultsController {
         if (result) {
           res.send(result);
         }
+        else {
+          res.send([]);
+        }
       })
       .catch(e => {
         console.error('in error');
@@ -58,8 +61,11 @@ export class QuizResultsController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -88,8 +94,11 @@ export class QuizResultsController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -114,8 +123,11 @@ export class QuizResultsController {
     pgSqlPool.query(query)
     .then(result => {
       console.log('result: ', result);
-      if (result) {
-        res.send(result);
+      if (result && result.rows) {
+        res.send(result.rows);
+      }
+      else {
+        res.send([]);
       }
     })
     .catch(e => {

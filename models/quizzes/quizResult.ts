@@ -1,4 +1,4 @@
-export interface QuizResults {
+export interface QuizResult {
   quizId: number;
   dateTaken: Date;
   quizDuration: string;

@@ -1,4 +1,3 @@
-const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const helpers = require('./config/helpers');
@@ -7,8 +6,8 @@ module.exports = {
   name: 'client',
   target: 'web',
   entry: {
-    'polyfills': './public/src/polyfills.ts',
-    'app': './public/src/main.ts'
+    'polyfills': helpers.root('./public/src', 'polyfills.ts'),
+    'app': helpers.root('./public/src', 'main.ts')
   },
   optimization: {
     splitChunks: {
@@ -16,7 +15,7 @@ module.exports = {
     }
   },
   plugins: [
-    new CleanWebpackPlugin(['./dist']),
+    new CleanWebpackPlugin(['./dist/public']),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
@@ -34,14 +33,6 @@ module.exports = {
         use: [
           'file-loader'
         ]
-      },
-      {
-        test: /\.tsx?$/,
-        use: [
-          'ts-loader',
-          'angular2-template-loader'
-        ],
-        exclude: /node_modules/
       },
       {
         test: /\.(s*)css$/, // Test for CSS or Sass

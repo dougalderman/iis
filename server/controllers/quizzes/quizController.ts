@@ -1,7 +1,7 @@
-import { Quizzes } from  '../../models/quizzes/quizzes';
+import { QuizInterface } from  '../../../models/quizzes/quiz';
 import { Pool } from 'pg';
 
-class Quiz implements Quizzes {
+class Quiz implements QuizInterface {
   briefName: string
   title: string;
   config: object;
@@ -32,6 +32,9 @@ export class QuizController {
         if (result) {
           res.send(result);
         }
+        else {
+          res.send([]);
+        }
       })
       .catch(e => {
         console.error('in error');
@@ -58,8 +61,11 @@ export class QuizController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -87,8 +93,11 @@ export class QuizController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -116,8 +125,11 @@ export class QuizController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -142,8 +154,11 @@ export class QuizController {
     pgSqlPool.query(query)
     .then(result => {
       console.log('result: ', result);
-      if (result) {
-        res.send(result);
+      if (result && result.rows) {
+        res.send(result.rows);
+      }
+      else {
+        res.send([]);
       }
     })
     .catch(e => {
@@ -171,6 +186,9 @@ export class QuizController {
         console.log('result: ', result);
         if (result) {
           res.send(result);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -200,6 +218,9 @@ export class QuizController {
         console.log('result: ', result);
         if (result) {
           res.send(result);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {

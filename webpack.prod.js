@@ -5,6 +5,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const helpers = require('./config/helpers');
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+const { AngularCompilerPlugin } = require('@ngtools/webpack');
 
 module.exports = merge(common, {
   devtool: 'source-map',
@@ -14,21 +15,32 @@ module.exports = merge(common, {
     publicPath: '/',
     filename: '[name].[hash].js',
   },
+  optimization: {
+    minimizer: [new UglifyJSPlugin()]
+  },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'public/src/index.prod.html',
-      favicon: 'public/src/favicon.ico'
+      template: helpers.root('./public/src', 'index.prod.html'),
+      favicon: helpers.root('./public/src', 'favicon.ico')
     }),
-    new UglifyJSPlugin({
-      sourceMap: true,
-      uglifyOptions: {
-        keep_fnames: true
-      }
+    new AngularCompilerPlugin({
+      entryModule: helpers.root('./public/src', 'app/app.module#AppModule'),
+      sourceMap: false,
+      tsConfigPath: helpers.root('./', 'tsconfig.json'),
     }),
     new webpack.DefinePlugin({
       'process.env': {
         'ENV': JSON.stringify(ENV)
       }
     })
-  ]
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: '@ngtools/webpack',
+        exclude: /node_modules/
+      }
+    ]
+  }
 });

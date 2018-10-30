@@ -1,0 +1,16 @@
+<h2>Create / Modify Template</h2>
+
+<select [(ngModel)]="templateSelected" id="template" (ngOnChanges)="templateChanged()">
+  <option value="" disabled selected>Select Template</option>
+  <option *ngFor="let templ of templates" [value]="templ.id">{{templ.name}}</option>
+</select>
+<br>
+<label>Name:</label>
+<input type="text" id="name" [(ngModel)]="template.name" >
+<br>
+<label>Description:</label>
+<input type="text" id="text" [(ngModel)]="template.description">
+<br>
+<button>Add New Question</button>
+<br>
+<button>Save</button>

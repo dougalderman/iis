@@ -1,7 +1,7 @@
-import { QuizTemplates } from  '../../models/quizzes/quizTemplates';
+import { QuizTemplate } from  '../../../models/quizzes/quizTemplate';
 import { Pool } from 'pg';
 
-class Template implements QuizTemplates {
+class Template implements QuizTemplate {
   name: string;
   description: string;
 
@@ -30,6 +30,9 @@ export class QuizTemplatesController {
         if (result) {
           res.send(result);
         }
+        else {
+          res.send([]);
+        }
       })
       .catch(e => {
         console.error('in error');
@@ -56,8 +59,11 @@ export class QuizTemplatesController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -85,8 +91,11 @@ export class QuizTemplatesController {
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -111,8 +120,11 @@ export class QuizTemplatesController {
     pgSqlPool.query(query)
     .then(result => {
       console.log('result: ', result);
-      if (result) {
-        res.send(result);
+      if (result && result.rows) {
+        res.send(result.rows);
+      }
+      else {
+        res.send([]);
       }
     })
     .catch(e => {
@@ -140,6 +152,9 @@ export class QuizTemplatesController {
         console.log('result: ', result);
         if (result) {
           res.send(result);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {
@@ -169,6 +184,9 @@ export class QuizTemplatesController {
         console.log('result: ', result);
         if (result) {
           res.send(result);
+        }
+        else {
+          res.send([]);
         }
       })
       .catch(e => {

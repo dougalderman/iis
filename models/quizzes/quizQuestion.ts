@@ -1,4 +1,4 @@
-export interface QuizQuestions {
+export interface QuizQuestion {
   quizId: number;
   templateId: number;
   textQuestion: string;
