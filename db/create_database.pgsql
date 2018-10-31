@@ -27,14 +27,14 @@ DROP TABLE IF EXISTS Quizzes CASCADE;
 CREATE TABLE Quizzes (
   id serial PRIMARY KEY,
   brief_name text,
-  title text NOT NULL,
+  title text NOT NULL UNIQUE,
   config jsonb
 );
 
 DROP TABLE IF EXISTS QuizTemplates CASCADE;
 CREATE TABLE QuizTemplates (
   id serial PRIMARY KEY,
-  name text NOT NULL,
+  name text NOT NULL UNIQUE,
   description text
 );
 
