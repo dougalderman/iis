@@ -9,16 +9,16 @@ import { QuizQuestion } from  '../../../../models/quizzes/quizQuestion';
 @Injectable()
 export class AdminService {
 
-  private getAllQuizTemplatesUrl = '/api/admin/quiz_templates'; // URL to web api
-  private getQuizTemplateUrl = '/api/admin/quiz_templates/id/'; // URL to web api
-  private getQuestionsForQuizTemplateUrl = '/api/admin/quiz_questions/template_id/' // URL to web api
+  private QuizTemplatesUrl = '/api/admin/quiz_templates';
+  private getQuizTemplateUrl = '/api/admin/quiz_templates/id/';
+  private getQuestionsForQuizTemplateUrl = '/api/admin/quiz_questions/template_id/';
 
   constructor(
     private http: HttpClient
   ) {}
 
   getAllQuizTemplates(): Observable<QuizTemplate[]> {
-    return this.http.get<QuizTemplate[]>(this.getAllQuizTemplatesUrl)
+    return this.http.get<QuizTemplate[]>(this.QuizTemplatesUrl)
     .pipe(
       catchError(this.handleError('getAllTemplates', []))
     );
@@ -38,6 +38,15 @@ export class AdminService {
       return this.http.get<QuizQuestion[]>(this.getQuestionsForQuizTemplateUrl + templateId)
       .pipe(
         catchError(this.handleError('getQuestionsForQuizTemplate', []))
+      );
+    }
+  }
+
+  saveQuizTemplate(templateData: QuizTemplate) {
+    if (templateData) {
+      return this.http.post(this.QuizTemplatesUrl, templateData)
+      .pipe(
+        catchError(this.handleError('getQuizTemplates', []))
       );
     }
   }

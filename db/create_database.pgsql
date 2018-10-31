@@ -27,14 +27,14 @@ DROP TABLE IF EXISTS Quizzes CASCADE;
 CREATE TABLE Quizzes (
   id serial PRIMARY KEY,
   brief_name text,
-  title text,
+  title text NOT NULL,
   config jsonb
 );
 
 DROP TABLE IF EXISTS QuizTemplates CASCADE;
 CREATE TABLE QuizTemplates (
   id serial PRIMARY KEY,
-  name text,
+  name text NOT NULL,
   description text
 );
 
@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS QuizQuestions CASCADE;
 CREATE TABLE QuizQuestions (
   id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes,
-  template_id int REFERENCES QuizTemplates,
+  template_id int REFERENCES QuizTemplates NOT NULL,
   text_question text,
   picture_question text,
   question_type quiz_question_type,
@@ -65,17 +65,17 @@ CREATE TABLE QuizQuestions (
 DROP TABLE IF EXISTS QuizResults CASCADE;
 CREATE TABLE QuizResults (
   id serial PRIMARY KEY,
-  quiz_id int REFERENCES Quizzes,
-  date_taken date,
+  quiz_id int REFERENCES Quizzes NOT NULL,
+  date_taken date NOT NULL,
   quiz_duration interval
 );
 
 DROP TABLE IF EXISTS QuizAnswers CASCADE;
 CREATE TABLE QuizAnswers (
   id serial PRIMARY KEY,
-  quiz_id int REFERENCES Quizzes,
-  question_id int REFERENCES QuizQuestions,
-  results_id int REFERENCES QuizResults,
+  quiz_id int REFERENCES Quizzes NOT NULL,
+  question_id int REFERENCES QuizQuestions NOT NULL,
+  results_id int REFERENCES QuizResults NOT NULL,
   text_answer text,
   boolean_answer boolean,
   date_answer date,
