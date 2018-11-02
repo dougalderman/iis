@@ -11,6 +11,7 @@ export class AdminService {
 
   private QuizTemplatesUrl = '/api/admin/quiz_templates';
   private getQuizTemplateUrl = '/api/admin/quiz_templates/id/';
+  private getQuizTemplateByNameUrl = '/api/admin/quiz_templates/name/';
   private getQuestionsForQuizTemplateUrl = '/api/admin/quiz_questions/template_id/';
 
   constructor(
@@ -27,6 +28,15 @@ export class AdminService {
   getQuizTemplate(templateId): Observable<QuizTemplate[]> {
     if (templateId) {
       return this.http.get<QuizTemplate[]>(this.getQuizTemplateUrl + templateId)
+      .pipe(
+        catchError(this.handleError('getQuizTemplates', []))
+      );
+    }
+  }
+
+  getQuizTemplateByName(templateName): Observable<QuizTemplate[]> {
+    if (templateName) {
+      return this.http.get<QuizTemplate[]>(this.getQuizTemplateByNameUrl + templateName)
       .pipe(
         catchError(this.handleError('getQuizTemplates', []))
       );
