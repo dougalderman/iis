@@ -1,26 +1,35 @@
 <h2>Create / Modify Quiz Template</h2>
 
-<form [formGroup]="createModifyQuizTemplateForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="createModifyQuizTemplateForm" (ngSubmit)="saveTemplate()">
   <select id="template" (ngOnChanges)="templateChanged()">
     <option value="" disabled selected>Select Template</option>
     <option *ngFor="let templ of templates" [value]="templ.id">{{templ.name}}</option>
   </select>
   <br>
   <label>Name:</label>
-  <input type="text" id="name" [formControlName]="name" (ngOnChanges)="checkForTemplateName()" required>
+  <input type="text" id="name" formControlName="name" required>
+  <div *ngIf="name.invalid && (name.dirty || name.touched)">
+    <div *ngIf="name.errors.required" style="color: red">Template name is required</div>
+  </div>
   <br>
   <label>Description:</label>
-  <input type="text" id="text" [formControlName]="description">
+  <input type="text" id="text" formControlName="description">
   <br>
-  <div *ngFor="let question of questions.controls; let i=index">
-    <label>Question Text:</label>
-    <input type="text" [formControlName]="question.text">
-    <label>Question Type:</label>
-    <input type="text" [formControlName]="question.type">
+  <div formArrayName="formQuestions">
+    <div *ngFor="let question of createModifyQuizTemplateForm.get('formQuestions').controls; let i=index">
+      <div [formGroupName]="i">
+        <label>Question Text:</label>
+        <input type="text" formControlName="text">
+        <br>
+        <label>Question Type:</label>
+        <input type="text" formControlName="type">
+        <br>
+        <label>Answer:</label>
+        <input type="text" formControlName="answer">
+      </div>
+    </div>
   </div>
-</div>
-  <button (click)="addQuestion()"></button>>Add New Question</button>
+  <button (click)="addQuestion()">Add New Question</button>
   <br>
   <button type="submit" [disabled]="!createModifyQuizTemplateForm.valid">Save</button>
-  <div style="color: red">{{error}}</div>
-</form>
+ </form>

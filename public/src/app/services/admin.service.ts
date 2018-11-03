@@ -9,9 +9,11 @@ import { QuizQuestion } from  '../../../../models/quizzes/quizQuestion';
 @Injectable()
 export class AdminService {
 
-  private QuizTemplatesUrl = '/api/admin/quiz_templates';
+  private quizTemplatesUrl = '/api/admin/quiz_templates';
   private getQuizTemplateUrl = '/api/admin/quiz_templates/id/';
   private getQuizTemplateByNameUrl = '/api/admin/quiz_templates/name/';
+
+  private quizQuestionsUrl = '/api/admin/quiz_questions'
   private getQuestionsForQuizTemplateUrl = '/api/admin/quiz_questions/template_id/';
 
   constructor(
@@ -19,9 +21,9 @@ export class AdminService {
   ) {}
 
   getAllQuizTemplates(): Observable<QuizTemplate[]> {
-    return this.http.get<QuizTemplate[]>(this.QuizTemplatesUrl)
+    return this.http.get<QuizTemplate[]>(this.quizTemplatesUrl)
     .pipe(
-      catchError(this.handleError('getAllTemplates', []))
+      catchError(this.handleError('getAllQuizTemplates', []))
     );
   }
 
@@ -29,7 +31,7 @@ export class AdminService {
     if (templateId) {
       return this.http.get<QuizTemplate[]>(this.getQuizTemplateUrl + templateId)
       .pipe(
-        catchError(this.handleError('getQuizTemplates', []))
+        catchError(this.handleError('getQuizTemplate', []))
       );
     }
   }
@@ -38,7 +40,7 @@ export class AdminService {
     if (templateName) {
       return this.http.get<QuizTemplate[]>(this.getQuizTemplateByNameUrl + templateName)
       .pipe(
-        catchError(this.handleError('getQuizTemplates', []))
+        catchError(this.handleError('getQuizTemplateByName', []))
       );
     }
   }
@@ -54,9 +56,18 @@ export class AdminService {
 
   saveQuizTemplate(templateData: QuizTemplate) {
     if (templateData) {
-      return this.http.post(this.QuizTemplatesUrl, templateData)
+      return this.http.post(this.quizTemplatesUrl, templateData)
       .pipe(
-        catchError(this.handleError('getQuizTemplates', []))
+        catchError(this.handleError('saveQuizTemplate', []))
+      );
+    }
+  }
+
+  saveQuizQuestion(questionData: QuizQuestion) {
+    if (questionData) {
+      return this.http.post(this.quizQuestionsUrl, questionData)
+      .pipe(
+        catchError(this.handleError('saveQuizQuestion', []))
       );
     }
   }
