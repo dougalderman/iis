@@ -1,24 +1,7 @@
 import { QuizAnswer } from  '../../../models/quizzes/quizAnswer';
 import { Pool } from 'pg';
 
-class Answer implements QuizAnswer {
-  quizId: number;
-  questionId: number;
-  resultsId: number;
-  textAnswer: string;
-  booleanAnswer: boolean;
-  dateAnswer: Date;
-  dateStartAnswer: Date;
-  dateEndAnswer: Date;
-  locationAnswers: [object];
-  integerAnswer: number;
-  integerStartAnswer: number;
-  integerEndAnswer: number;
-  realAnswer: number;
-  realStartAnswer: number;
-  realEndAnswer: number;
-  answeredCorrectly: boolean;
-  timeToAnswer: string;
+class Answer extends QuizAnswer {
 
   constructor(
     reqQuizId: number,
@@ -39,6 +22,8 @@ class Answer implements QuizAnswer {
     reqAnsweredCorrectly: boolean,
     reqTimeToAnswer: string
   ) {
+    super();
+
     this.quizId = reqQuizId;
     this.questionId = reqQuestionId;
     this.resultsId = reqResultsId;

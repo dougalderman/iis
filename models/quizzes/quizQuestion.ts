@@ -1,4 +1,5 @@
-export interface QuizQuestion {
+export class QuizQuestion {
+  id: number;
   quizId: number;
   templateId: number;
   textQuestion: string;
@@ -18,4 +19,6 @@ export interface QuizQuestion {
   realCorrectAnswer: number;
   realStartCorrectAnswer: number;
   realEndCorrectAnswer: number;
+
+  constructor() {}
 }

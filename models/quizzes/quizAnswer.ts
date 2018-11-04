@@ -1,4 +1,5 @@
-export interface QuizAnswer {
+export class QuizAnswer {
+  id: number;
   quizId: number;
   questionId: number;
   resultsId: number;
@@ -9,7 +10,13 @@ export interface QuizAnswer {
   dateEndAnswer: Date;
   locationAnswers: object[];
   integerAnswer: number;
+  integerStartAnswer: number;
+  integerEndAnswer: number;
   realAnswer: number;
+  realStartAnswer: number;
+  realEndAnswer: number;
   answeredCorrectly: boolean;
   timeToAnswer: string;
+
+  constructor() {}
 }

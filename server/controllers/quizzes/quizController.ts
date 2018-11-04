@@ -1,12 +1,11 @@
-import { QuizInterface } from  '../../../models/quizzes/quiz';
+import { QuizModel } from  '../../../models/quizzes/quiz';
 import { Pool } from 'pg';
 
-class Quiz implements QuizInterface {
-  briefName: string
-  title: string;
-  config: object;
+class Quiz extends QuizModel {
 
   constructor(reqBriefName: string, reqTitle: string, reqConfig: object) {
+    super();
+
     this.briefName = reqBriefName;
     this.title = reqTitle;
     this.config = reqConfig;

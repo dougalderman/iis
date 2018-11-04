@@ -6,33 +6,8 @@ import { QuizQuestion } from  '../../../../../models/quizzes/quizQuestion';
 
 import { AdminService } from '../../services/admin.service'
 
-class Template implements QuizTemplate {
-  id: number;
-  name: string;
-  description: string;
-}
-
-class Question implements QuizQuestion {
-  quizId: number;
-  templateId: number;
-  textQuestion: string;
-  pictureQuestion: string;
-  questionType: string;
-  options: object[];
-  booleanCorrectAnswer: boolean;
-  correctAnswer: string;
-  correctAnswerArray: string[];
-  locationCorrectAnswers: object[];
-  dateCorrectAnswer: Date;
-  dateStartCorrectAnswer: Date;
-  dateEndCorrectAnswer: Date;
-  integerCorrectAnswer: number;
-  integerStartCorrectAnswer: number;
-  integerEndCorrectAnswer: number;
-  realCorrectAnswer: number;
-  realStartCorrectAnswer: number;
-  realEndCorrectAnswer: number;
-}
+class Template extends QuizTemplate {}
+class Question extends QuizQuestion {}
 
 
 @Component({
@@ -75,6 +50,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   get name() { return this.createModifyQuizTemplateForm.get('name'); }
+  get description() { return this.createModifyQuizTemplateForm.get('description'); }
 
   getTemplates(): void {
     this.adminService.getAllQuizTemplates()
@@ -108,6 +84,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   saveTemplate(): void {
     if (!this.template.id) { // if new template
+      this.template.name = this.createModifyQuizTemplateForm.get('name').value;
+      this.template.description = this.createModifyQuizTemplateForm.get('description').value;
       this.adminService.saveQuizTemplate(this.template)
         .subscribe(result => {
           if (result) {
