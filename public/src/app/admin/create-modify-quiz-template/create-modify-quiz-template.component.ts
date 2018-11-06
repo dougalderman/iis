@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormArray } from '@angular/forms'
+import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms'
 
 import { QuizTemplate } from  '../../../../../models/quizzes/quizTemplate';
 import { QuizQuestion } from  '../../../../../models/quizzes/quizQuestion';
@@ -19,12 +19,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   template: QuizTemplate = new Template()
   templates: QuizTemplate[]
-  templateSelected: QuizTemplate
   question: QuizQuestion = new Question()
   questions: QuizQuestion[]
   error = ''
 
   createModifyQuizTemplateForm = this.fb.group({
+    templateSelect: new FormControl(''),
     name: ['', Validators.required],
     description: [''],
     formQuestions: this.fb.array([
@@ -43,6 +43,13 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   ngOnInit() {
     this.getTemplates();
+    this.onChanges();
+  }
+
+  onChanges(): void {
+    this.createModifyQuizTemplateForm.get('templateSelect').valueChanges.subscribe(val => {
+      this.templateChanged(val);
+    })
   }
 
   get formQuestions() {
@@ -61,15 +68,15 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       });
   }
 
-  templateChanged(): void {
+  templateChanged(templateSelected): void {
     // console.log('templateSelected: ', this.templateSelected);
-    if (this.templateSelected) {
-      this.adminService.getQuizTemplate(this.templateSelected)
+    if (templateSelected) {
+      this.adminService.getQuizTemplate(templateSelected)
         .subscribe(template => {
           if (template && template.length) {
             this.template = template[0];
             this.formQuestions.reset();
-            this.adminService.getQuestionsForQuizTemplate(this.templateSelected)
+            this.adminService.getQuestionsForQuizTemplate(templateSelected)
               .subscribe(questions => {
                 if (questions && questions.length) {
                   for (let question of questions) {

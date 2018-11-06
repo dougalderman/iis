@@ -1,9 +1,9 @@
 <h2>Create / Modify Quiz Template</h2>
 
 <form [formGroup]="createModifyQuizTemplateForm" (ngSubmit)="saveTemplate()">
-  <select id="template" (ngOnChanges)="templateChanged()">
+  <select id="template" formControlName="templateSelect">
     <option value="" disabled selected>Select Template</option>
-    <option *ngFor="let templ of templates" [value]="templ.id">{{templ.name}}</option>
+    <option *ngFor="let templ of templates" [ngValue]="templ.id">{{templ.name}}</option>
   </select>
   <br>
   <label>Name:</label>
