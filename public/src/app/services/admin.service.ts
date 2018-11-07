@@ -47,7 +47,7 @@ export class AdminService {
 
   getQuestionsForQuizTemplate(templateId): Observable<QuizQuestion[]> {
     if (templateId) {
-      return this.http.get<QuizQuestion[]>(this.getQuestionsForQuizTemplateUrl + templateId)
+      return this.http.get<any[]>(this.getQuestionsForQuizTemplateUrl + templateId)
       .pipe(
         catchError(this.handleError('getQuestionsForQuizTemplate', []))
       );
