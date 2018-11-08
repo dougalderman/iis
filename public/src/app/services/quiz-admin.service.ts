@@ -7,14 +7,14 @@ import { QuizTemplate } from  '../../../../models/quizzes/quizTemplate';
 import { QuizQuestion } from  '../../../../models/quizzes/quizQuestion';
 
 @Injectable()
-export class AdminService {
+export class QuizAdminService {
 
   private quizTemplatesUrl = '/api/admin/quiz_templates';
-  private getQuizTemplateUrl = '/api/admin/quiz_templates/id/';
-  private getQuizTemplateByNameUrl = '/api/admin/quiz_templates/name/';
+  private quizTemplateByIdUrl = '/api/admin/quiz_templates/id/';
+  private quizTemplateByNameUrl = '/api/admin/quiz_templates/name/';
 
   private quizQuestionsUrl = '/api/admin/quiz_questions'
-  private getQuestionsForQuizTemplateUrl = '/api/admin/quiz_questions/template_id/';
+  private questionsForQuizTemplateUrl = '/api/admin/quiz_questions/template_id/';
 
   constructor(
     private http: HttpClient
@@ -27,47 +27,65 @@ export class AdminService {
     );
   }
 
-  getQuizTemplate(templateId): Observable<QuizTemplate[]> {
+  getQuizTemplate(templateId: number): Observable<QuizTemplate[]> {
     if (templateId) {
-      return this.http.get<QuizTemplate[]>(this.getQuizTemplateUrl + templateId)
+      return this.http.get<QuizTemplate[]>(this.quizTemplateByIdUrl + templateId)
       .pipe(
         catchError(this.handleError('getQuizTemplate', []))
       );
     }
   }
 
-  getQuizTemplateByName(templateName): Observable<QuizTemplate[]> {
+  getQuizTemplateByName(templateName: string): Observable<QuizTemplate[]> {
     if (templateName) {
-      return this.http.get<QuizTemplate[]>(this.getQuizTemplateByNameUrl + templateName)
+      return this.http.get<QuizTemplate[]>(this.quizTemplateByNameUrl + templateName)
       .pipe(
         catchError(this.handleError('getQuizTemplateByName', []))
       );
     }
   }
 
-  getQuestionsForQuizTemplate(templateId): Observable<QuizQuestion[]> {
+  getQuestionsForQuizTemplate(templateId: number): Observable<QuizQuestion[]> {
     if (templateId) {
-      return this.http.get<any[]>(this.getQuestionsForQuizTemplateUrl + templateId)
+      return this.http.get<any[]>(this.questionsForQuizTemplateUrl + templateId)
       .pipe(
         catchError(this.handleError('getQuestionsForQuizTemplate', []))
       );
     }
   }
 
-  saveQuizTemplate(templateData: QuizTemplate) {
+  saveNewQuizTemplate(templateData: QuizTemplate) {
     if (templateData) {
       return this.http.post(this.quizTemplatesUrl, templateData)
       .pipe(
-        catchError(this.handleError('saveQuizTemplate', []))
+        catchError(this.handleError('saveNewQuizTemplate', []))
       );
     }
   }
 
-  saveQuizQuestion(questionData: QuizQuestion) {
+  saveExistingQuizTemplate(templateId: number, templateData: QuizTemplate) {
+    if (templateId && templateData) {
+      return this.http.put(this.quizTemplatesUrl + '/' + templateId, templateData)
+      .pipe(
+        catchError(this.handleError('saveExistingQuizTemplate', []))
+      );
+    }
+  }
+
+  saveNewQuizQuestion(questionData: QuizQuestion) {
     if (questionData) {
       return this.http.post(this.quizQuestionsUrl, questionData)
       .pipe(
-        catchError(this.handleError('saveQuizQuestion', []))
+        catchError(this.handleError('saveNewQuizQuestion', []))
+      );
+    }
+  }
+
+  deleteQuizQuestionsByTemplateId(templateId: number) {
+    if (templateId) {
+      return this.http.delete(this.questionsForQuizTemplateUrl + templateId)
+      .pipe(
+        catchError(this.handleError('deleteQuizQuestionsByTemplateId', []))
       );
     }
   }

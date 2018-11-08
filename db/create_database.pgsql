@@ -42,7 +42,7 @@ DROP TABLE IF EXISTS QuizQuestions CASCADE;
 CREATE TABLE QuizQuestions (
   id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes,
-  template_id int REFERENCES QuizTemplates NOT NULL,
+  template_id int REFERENCES QuizTemplates,
   text_question text,
   picture_question text,
   question_type quiz_question_type,

@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms'
 import { QuizTemplate } from  '../../../../../models/quizzes/quizTemplate';
 import { QuizQuestion } from  '../../../../../models/quizzes/quizQuestion';
 
-import { AdminService } from '../../services/admin.service'
+import { QuizAdminService } from '../../services/quiz-admin.service'
 
 class Template extends QuizTemplate {}
 class Question extends QuizQuestion {}
@@ -35,7 +35,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   });
 
   constructor(
-    private adminService: AdminService,
+    private quizAdminService: QuizAdminService,
     private fb: FormBuilder
   ) { }
 
@@ -46,7 +46,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   onChanges(): void {
     this.createModifyQuizTemplateForm.get('templateSelect').valueChanges.subscribe(val => {
-      this.templateChanged(val);
+      this.templateSelectionChanged(val);
     })
   }
 
@@ -58,7 +58,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   get description() { return this.createModifyQuizTemplateForm.get('description'); }
 
   getTemplates(): void {
-    this.adminService.getAllQuizTemplates()
+    this.quizAdminService.getAllQuizTemplates()
       .subscribe(templates => {
         if (templates && templates.length) {
           this.templates = templates;
@@ -66,20 +66,20 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       });
   }
 
-  templateChanged(templateSelected): void {
+  templateSelectionChanged(templateSelected): void {
     // console.log('templateSelected: ', this.templateSelected);
     if (templateSelected) {
-      this.adminService.getQuizTemplate(templateSelected)
+      this.quizAdminService.getQuizTemplate(templateSelected)
         .subscribe(template => {
           if (template && template.length) {
             this.template = template[0];
             this.createModifyQuizTemplateForm.controls.name.setValue(this.template.name);
             this.createModifyQuizTemplateForm.controls.description.setValue(this.template.description)
-            this.adminService.getQuestionsForQuizTemplate(templateSelected)
+            this.quizAdminService.getQuestionsForQuizTemplate(templateSelected)
               .subscribe((questions: any) => {
+                let formQuestions = <FormArray>this.createModifyQuizTemplateForm.controls.formQuestions;
                 if (questions && questions.length) {
                   for (let i = 0; i < questions.length; i++) {
-                    let formQuestions = <FormArray>this.createModifyQuizTemplateForm.controls.formQuestions;
                     let question = new Question();
                     question.textQuestion = questions[i].text_question;
                     question.questionType = questions[i].question_type;
@@ -96,6 +96,9 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                     }
                   }
                 }
+                else {
+                  formQuestions.reset();
+                }
               });
           }
         });
@@ -103,41 +106,43 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   saveTemplate(): void {
-    if (!this.template.id) { // if new template
-      this.template.name = this.createModifyQuizTemplateForm.get('name').value;
-      this.template.description = this.createModifyQuizTemplateForm.get('description').value;
-      this.adminService.saveQuizTemplate(this.template)
+    const name = this.createModifyQuizTemplateForm.get('name').value;
+    this.template.description = this.createModifyQuizTemplateForm.get('description').value;
+    if (!this.template.id || name !== this.template.name) { // if new template or template name changed
+      this.template.name = name;
+      this.template.id = null;
+      this.quizAdminService.saveNewQuizTemplate(this.template)
         .subscribe(result => {
           if (result) {
             // console.log('result: ', result);
-            this.adminService.getQuizTemplateByName(this.template.name)
+            this.quizAdminService.getQuizTemplateByName(this.template.name)
               .subscribe(template => {
                 if (template && template.length) {
                   const templateId = template[0].id;
                   if (templateId) {
-                    let questions = this.createModifyQuizTemplateForm.get('formQuestions').value;
-                    for (let question of questions) {
-                      this.question = new Question()
-                      this.question.templateId = templateId;
-                      this.question.textQuestion = question.text;
-                      this.question.questionType = question.type;
-                      this.question.correctAnswer = question.answer;
-                      this.adminService.saveQuizQuestion(this.question)
-                        .subscribe(result => {
-                          if (result) {
-                            console.log('Quiz Question saved: ', this.question);
-                          }
-                        });
-                    }
+                    this.saveAllTemplateQuestions(templateId)
                   }
                 }
               });
           }
         });
       }
+      else { // modifying existing template
+        this.quizAdminService.saveExistingQuizTemplate(this.template.id, this.template)
+          .subscribe(result => {
+            if (result) {
+              this.quizAdminService.deleteQuizQuestionsByTemplateId(this.template.id)
+                .subscribe(result => {
+                  if (result) {
+                    this.saveAllTemplateQuestions(this.template.id)
+                  }
+                })
+            }
+          });
+      }
   }
 
-  addQuestion(question?: QuizQuestion) {
+  addQuestion(question?: QuizQuestion): void {
     let questions = <FormArray>this.createModifyQuizTemplateForm.controls.formQuestions;
 
     if (question) {
@@ -153,6 +158,32 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         type: [''],
         answer: ['']
       }));
+    }
+  }
+
+  deleteQuestion(index: number): void {
+    let questions = <FormArray>this.createModifyQuizTemplateForm.controls.formQuestions;
+
+    if (typeof index === 'number') {
+      questions.removeAt(index)
+    }
+  }
+
+
+  saveAllTemplateQuestions(templateId: number): void {
+    let questions = this.createModifyQuizTemplateForm.get('formQuestions').value;
+    for (let question of questions) {
+      this.question = new Question()
+      this.question.templateId = templateId;
+      this.question.textQuestion = question.text;
+      this.question.questionType = question.type;
+      this.question.correctAnswer = question.answer;
+      this.quizAdminService.saveNewQuizQuestion(this.question)
+        .subscribe(result => {
+          if (result) {
+            console.log('Quiz Question saved: ', this.question);
+          }
+        });
     }
   }
 }

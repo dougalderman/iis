@@ -14,7 +14,7 @@
   <br>
   <label>Description:</label>
   <input type="text" id="text" formControlName="description">
-  <br>
+  <br><br>
   <div formArrayName="formQuestions">
     <div *ngFor="let question of createModifyQuizTemplateForm.get('formQuestions').controls; let i=index">
       <div [formGroupName]="i">
@@ -26,6 +26,9 @@
         <br>
         <label>Answer:</label>
         <input type="text" formControlName="answer">
+        <br>
+        <button type="button" (click)="deleteQuestion(i)">Delete Question</button>
+        <br><br>
       </div>
     </div>
   </div>

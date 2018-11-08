@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { FibroArticleComponent } from './fibro-article/fibro-article.component';
 import { AdminModule } from './admin/admin.module';
-import { AdminService } from './services/admin.service'
+import { QuizAdminService } from './services/quiz-admin.service'
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
 
 @NgModule({
@@ -21,7 +21,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [AdminService],
+  providers: [QuizAdminService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
