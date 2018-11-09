@@ -20,14 +20,23 @@
       <div [formGroupName]="i">
         <label>Question Text:</label>
         <input type="text" formControlName="text">
+        <div *ngIf="question.controls.text.invalid && (question.controls.text.dirty || question.controls.text.touched)">
+          <div *ngIf="question.controls.text.errors.required" style="color: red">Question text is required</div>
+        </div>
         <br>
         <label>Question Type:</label>
         <input type="text" formControlName="type">
+        <div *ngIf="question.controls.type.invalid && (question.controls.type.dirty || question.controls.type.touched)">
+            <div *ngIf="question.controls.type.errors.required" style="color: red">Question type is required</div>
+          </div>
         <br>
         <label>Answer:</label>
         <input type="text" formControlName="answer">
+        <div *ngIf="question.controls.answer.invalid && (question.controls.answer.dirty || question.controls.answer.touched)">
+            <div *ngIf="question.controls.answer.errors.required" style="color: red">Question answer is required</div>
+          </div>
         <br>
-        <button type="button" (click)="deleteQuestion(i)">Delete Question</button>
+        <button type="button" *ngIf="createModifyQuizTemplateForm.get('formQuestions').controls.length > 1" (click)="deleteQuestion(i)">Delete Question</button>
         <br><br>
       </div>
     </div>
@@ -35,4 +44,5 @@
   <button type="button" (click)="addQuestion()">Add New Question</button>
   <br>
   <button type="submit" [disabled]="!createModifyQuizTemplateForm.valid">Save</button>
+  <div *ngIf="success" style="color: green">Template successfully saved</div>
  </form>

@@ -19,7 +19,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   template: QuizTemplate = new Template()
   templates: QuizTemplate[]
   question: QuizQuestion = new Question()
-  error = ''
+  success = false
 
   createModifyQuizTemplateForm = this.fb.group({
     templateSelect: new FormControl(''),
@@ -27,9 +27,9 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     description: [''],
     formQuestions: this.fb.array([
       this.fb.group({
-        text: [''],
-        type: [''],
-        answer: ['']
+        text: ['', Validators.required],
+        type: ['', Validators.required],
+        answer: ['', Validators.required]
       })
     ])
   });
@@ -69,6 +69,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   templateSelectionChanged(templateSelected): void {
     // console.log('templateSelected: ', this.templateSelected);
     if (templateSelected) {
+      this.success = false;
       this.quizAdminService.getQuizTemplate(templateSelected)
         .subscribe(template => {
           if (template && template.length) {
@@ -147,16 +148,16 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
     if (question) {
       questions.push(this.fb.group({
-        text: [question.textQuestion],
-        type: [question.questionType],
-        answer: [question.correctAnswer]
+        text: [question.textQuestion, Validators.required],
+        type: [question.questionType, Validators.required],
+        answer: [question.correctAnswer, Validators.required]
       }));
     }
     else {
       questions.push(this.fb.group({
-        text: [''],
-        type: [''],
-        answer: ['']
+        text: ['', Validators.required],
+        type: ['', Validators.required],
+        answer: ['', Validators.required]
       }));
     }
   }
@@ -172,6 +173,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   saveAllTemplateQuestions(templateId: number): void {
     let questions = this.createModifyQuizTemplateForm.get('formQuestions').value;
+    let questionSavedCount = 0;
     for (let question of questions) {
       this.question = new Question()
       this.question.templateId = templateId;
@@ -182,6 +184,19 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         .subscribe(result => {
           if (result) {
             console.log('Quiz Question saved: ', this.question);
+            questionSavedCount++;
+            if (questionSavedCount === questions.length) {
+              this.success = true;
+              this.createModifyQuizTemplateForm.reset();
+              this.createModifyQuizTemplateForm.controls.formQuestions = <FormArray>this.fb.array([
+                this.fb.group({
+                  text: ['', Validators.required],
+                  type: ['', Validators.required],
+                  answer: ['', Validators.required]
+                })
+              ]);
+              this.getTemplates();
+            }
           }
         });
     }
