@@ -21,8 +21,11 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   question: QuizQuestion = new Question()
   success = false
 
+  selectTemplateForm = this.fb.group({
+    templateSelect: new FormControl('')
+  })
+
   createModifyQuizTemplateForm = this.fb.group({
-    templateSelect: new FormControl(''),
     name: ['', Validators.required],
     description: [''],
     formQuestions: this.fb.array([
@@ -45,12 +48,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   onChanges(): void {
-    this.createModifyQuizTemplateForm.get('templateSelect').valueChanges.subscribe(val => {
+    this.selectTemplateForm.get('templateSelect').valueChanges.subscribe(val => {
       this.templateSelectionChanged(val);
     })
   }
 
-  get formQuestions() {
+  get formQuestions(): FormArray {
     return this.createModifyQuizTemplateForm.get('formQuestions') as FormArray;
   }
 
@@ -74,31 +77,20 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         .subscribe(template => {
           if (template && template.length) {
             this.template = template[0];
+            this.createModifyQuizTemplateForm.reset();
+            this.resetFormQuestions();
             this.createModifyQuizTemplateForm.controls.name.setValue(this.template.name);
-            this.createModifyQuizTemplateForm.controls.description.setValue(this.template.description)
+            this.createModifyQuizTemplateForm.controls.description.setValue(this.template.description);
             this.quizAdminService.getQuestionsForQuizTemplate(templateSelected)
               .subscribe((questions: any) => {
-                let formQuestions = <FormArray>this.createModifyQuizTemplateForm.controls.formQuestions;
                 if (questions && questions.length) {
                   for (let i = 0; i < questions.length; i++) {
                     let question = new Question();
                     question.textQuestion = questions[i].text_question;
                     question.questionType = questions[i].question_type;
                     question.correctAnswer = questions[i].correct_answer;
-                    if (i === 0) {
-                      formQuestions.setValue([{
-                        text: question.textQuestion,
-                        type: question.questionType,
-                        answer: question.correctAnswer
-                      }]);
-                    }
-                    else {
-                      this.addQuestion(question);
-                    }
+                    this.addQuestion(question);
                   }
-                }
-                else {
-                  formQuestions.reset();
                 }
               });
           }
@@ -144,35 +136,31 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   addQuestion(question?: QuizQuestion): void {
-    let questions = <FormArray>this.createModifyQuizTemplateForm.controls.formQuestions;
-
     if (question) {
-      questions.push(this.fb.group({
+      this.formQuestions.push(this.fb.group({
         text: [question.textQuestion, Validators.required],
         type: [question.questionType, Validators.required],
         answer: [question.correctAnswer, Validators.required]
       }));
     }
     else {
-      questions.push(this.fb.group({
-        text: ['', Validators.required],
-        type: ['', Validators.required],
-        answer: ['', Validators.required]
+      this.formQuestions.push(this.fb.group({
+          text: ['', Validators.required],
+          type: ['', Validators.required],
+          answer: ['', Validators.required]
       }));
     }
   }
 
   deleteQuestion(index: number): void {
-    let questions = <FormArray>this.createModifyQuizTemplateForm.controls.formQuestions;
-
     if (typeof index === 'number') {
-      questions.removeAt(index)
+      this.formQuestions.removeAt(index)
     }
   }
 
 
   saveAllTemplateQuestions(templateId: number): void {
-    let questions = this.createModifyQuizTemplateForm.get('formQuestions').value;
+    let questions = this.formQuestions.value;
     let questionSavedCount = 0;
     for (let question of questions) {
       this.question = new Question()
@@ -188,17 +176,20 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
             if (questionSavedCount === questions.length) {
               this.success = true;
               this.createModifyQuizTemplateForm.reset();
-              this.createModifyQuizTemplateForm.controls.formQuestions = <FormArray>this.fb.array([
-                this.fb.group({
-                  text: ['', Validators.required],
-                  type: ['', Validators.required],
-                  answer: ['', Validators.required]
-                })
-              ]);
+              this.resetFormQuestions();
               this.getTemplates();
+              this.selectTemplateForm.reset();
             }
           }
         });
     }
+  }
+
+  resetFormQuestions(): void {
+    const len = this.formQuestions.controls.length;
+    for (let i = len - 1; i >= 0; i--) {
+      this.deleteQuestion(i);
+    }
+    this.formQuestions.reset();
   }
 }

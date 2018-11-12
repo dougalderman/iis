@@ -1,11 +1,13 @@
 <h2>Create / Modify Quiz Template</h2>
 
-<form [formGroup]="createModifyQuizTemplateForm" (ngSubmit)="saveTemplate()">
+<form [formGroup]="selectTemplateForm">
   <select id="template" formControlName="templateSelect">
     <option value="" disabled selected>Select Template</option>
     <option *ngFor="let templ of templates" [ngValue]="templ.id">{{templ.name}}</option>
   </select>
-  <br>
+  <br><br>
+</form>
+<form [formGroup]="createModifyQuizTemplateForm" (ngSubmit)="saveTemplate()">
   <label>Name:</label>
   <input type="text" id="name" formControlName="name" required>
   <div *ngIf="name.invalid && (name.dirty || name.touched)">
@@ -16,7 +18,7 @@
   <input type="text" id="text" formControlName="description">
   <br><br>
   <div formArrayName="formQuestions">
-    <div *ngFor="let question of createModifyQuizTemplateForm.get('formQuestions').controls; let i=index">
+    <div *ngFor="let question of formQuestions.controls; let i=index">
       <div [formGroupName]="i">
         <label>Question Text:</label>
         <input type="text" formControlName="text">
@@ -27,16 +29,16 @@
         <label>Question Type:</label>
         <input type="text" formControlName="type">
         <div *ngIf="question.controls.type.invalid && (question.controls.type.dirty || question.controls.type.touched)">
-            <div *ngIf="question.controls.type.errors.required" style="color: red">Question type is required</div>
-          </div>
+          <div *ngIf="question.controls.type.errors.required" style="color: red">Question type is required</div>
+        </div>
         <br>
         <label>Answer:</label>
         <input type="text" formControlName="answer">
         <div *ngIf="question.controls.answer.invalid && (question.controls.answer.dirty || question.controls.answer.touched)">
-            <div *ngIf="question.controls.answer.errors.required" style="color: red">Question answer is required</div>
-          </div>
+          <div *ngIf="question.controls.answer.errors.required" style="color: red">Question answer is required</div>
+        </div>
         <br>
-        <button type="button" *ngIf="createModifyQuizTemplateForm.get('formQuestions').controls.length > 1" (click)="deleteQuestion(i)">Delete Question</button>
+        <button type="button" *ngIf="formQuestions.length > 1" (click)="deleteQuestion(i)">Delete Question</button>
         <br><br>
       </div>
     </div>
