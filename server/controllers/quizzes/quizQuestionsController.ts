@@ -1,26 +1,7 @@
 import { QuizQuestion } from  '../../../models/quizzes/quizQuestion';
 import { Pool } from 'pg';
 
-class Question implements QuizQuestion {
-  quizId: number;
-  templateId: number;
-  textQuestion: string;
-  pictureQuestion: string;
-  questionType: string;
-  options: object[];
-  booleanCorrectAnswer: boolean;
-  correctAnswer: string;
-  correctAnswerArray: string[];
-  locationCorrectAnswers: object[];
-  dateCorrectAnswer: Date;
-  dateStartCorrectAnswer: Date;
-  dateEndCorrectAnswer: Date;
-  integerCorrectAnswer: number;
-  integerStartCorrectAnswer: number;
-  integerEndCorrectAnswer: number;
-  realCorrectAnswer: number;
-  realStartCorrectAnswer: number;
-  realEndCorrectAnswer: number;
+class Question extends QuizQuestion {
 
   constructor(
     reqQuizId: number,
@@ -43,6 +24,8 @@ class Question implements QuizQuestion {
     reqRealStartCorrectAnswer: number,
     reqRealEndCorrectAnswer: number
   ) {
+    super();
+
     this.quizId = reqQuizId;
     this.templateId = reqTemplateId;
     this.textQuestion = reqTextQuestion;
@@ -321,8 +304,8 @@ export class QuizQuestionsController {
     }
   }
 
-  static delete(req, res) : void {
-    console.log('in QuizQuestionsController--delete()');
+  static deleteById(req, res) : void {
+    console.log('in QuizQuestionsController--deleteById()');
     console.log('req.params: ', req.params);
     if (req.params && req.params.id) {
       const pgSqlPool = new Pool();
@@ -330,6 +313,70 @@ export class QuizQuestionsController {
       const query = {
         text: 'DELETE FROM QuizQuestions WHERE id = $1',
         values: [id]
+      };
+      console.log('query: ', query);
+      pgSqlPool.query(query)
+      .then(result => {
+        console.log('result: ', result);
+        if (result) {
+          res.send(result);
+        }
+        else {
+          res.send([]);
+        }
+      })
+      .catch(e => {
+        console.error('in error');
+        console.error(e.stack);
+        return res.status(500).send(e);
+      });
+    }
+    else {
+      return res.status(500).send('invalid request');
+    }
+  }
+
+  static deleteByQuizId(req, res) : void {
+    console.log('in QuizQuestionsController--deleteByQuizId()');
+    console.log('req.params: ', req.params);
+    if (req.params && req.params.quizId) {
+      const pgSqlPool = new Pool();
+      const quizId = req.params.quizId;
+      const query = {
+        text: 'UPDATE QuizQuestions SET quiz_id = NULL WHERE quiz_id = $1',
+        values: [quizId]
+      };
+      console.log('query: ', query);
+      pgSqlPool.query(query)
+      .then(result => {
+        console.log('result: ', result);
+        if (result) {
+          res.send(result);
+        }
+        else {
+          res.send([]);
+        }
+      })
+      .catch(e => {
+        console.error('in error');
+        console.error(e.stack);
+        return res.status(500).send(e);
+      });
+    }
+    else {
+      return res.status(500).send('invalid request');
+    }
+  }
+
+  static deleteByTemplateId(req, res) : void {
+    console.log('in QuizQuestionsController--deleteByTemplateId()');
+    console.log('req.params: ', req.params);
+    if (req.params && req.params.templateId) {
+      const pgSqlPool = new Pool();
+      const templateId = req.params.templateId;
+      const query = {
+        text: 'UPDATE QuizQuestions SET template_id = NULL WHERE template_id = $1',
+        values: [templateId]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)

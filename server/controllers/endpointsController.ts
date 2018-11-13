@@ -39,7 +39,9 @@ export class EndpointsController {
     app.get('/api/admin/quiz_questions/quiz_id/:quizId', QuizQuestionsController.readByQuizId) // Reads questions by quiz id.
     app.get('/api/admin/quiz_questions/template_id/:templateId', QuizQuestionsController.readByTemplateId) // Reads questions by template id.
     app.put('/api/admin/quiz_questions/:id', QuizQuestionsController.update) // Updates quiz question.
-    app.delete('/api/admin/quiz_questions/:id', QuizQuestionsController.delete) // Deletes quiz question.
+    app.delete('/api/admin/quiz_questions/:id', QuizQuestionsController.deleteById) // Deletes quiz question.
+    app.delete('/api/admin/quiz_questions/quiz_id/:quizId', QuizQuestionsController.deleteByQuizId) // Deletes all quiz questions asssociated with quiz id.
+    app.delete('/api/admin/quiz_questions/template_id/:templateId', QuizQuestionsController.deleteByTemplateId) // Deletes all quiz questions associated with template id.
     // Quiz Answers
     app.post('/api/quiz_answers', QuizAnswersController.create) // Writes new quiz answers.
     app.get('/api/admin/quiz_answers/id/:id', QuizAnswersController.readById) // Reads answer by id.

@@ -1,11 +1,11 @@
 import { QuizTemplate } from  '../../../models/quizzes/quizTemplate';
 import { Pool } from 'pg';
 
-class Template implements QuizTemplate {
-  name: string;
-  description: string;
+class Template extends QuizTemplate {
 
   constructor(reqName: string, reqDescription: string) {
+    super();
+
     this.name = reqName;
     this.description = reqDescription;
   };

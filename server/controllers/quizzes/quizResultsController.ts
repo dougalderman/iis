@@ -1,12 +1,11 @@
 import { QuizResult } from  '../../../models/quizzes/quizResult';
 import { Pool } from 'pg';
 
-class Results implements QuizResult {
-  quizId: number;
-  dateTaken: Date;
-  quizDuration: string;
+class Results extends QuizResult {
 
   constructor(reqQuizId: number, reqDateTaken: Date, reqQuizDuration: string) {
+    super();
+
     this.quizId = reqQuizId;
     this.dateTaken = reqDateTaken;
     this.quizDuration = reqQuizDuration;
