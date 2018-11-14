@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators, FormArray } from '@angular/forms'
+import { FormBuilder, FormControl, Validators, FormArray, FormGroup } from '@angular/forms'
 
 import { QuizTemplate } from  '../../../../../models/quizzes/quizTemplate';
 import { QuizQuestion } from  '../../../../../models/quizzes/quizQuestion';
@@ -9,6 +9,14 @@ import { QuizAdminService } from '../../services/quiz-admin.service'
 class Template extends QuizTemplate {}
 class Question extends QuizQuestion {}
 
+const QUESTION_TYPES = [
+  {name: 'textQuestionMultipleChoice', description: 'Text Question Multiple Choice', default: true},
+  {name: 'textQuestionShortAnswer', description: 'Text Question Short Answer'},
+  {name: 'textQuestionBoolean', description: 'Text Question Boolean'},
+  {name: 'textQuestionNumericAnswer', description: 'Text Question Numeric Answer'},
+  {name: 'textQuestionNumericRangeAnswer', description: 'Text Question Numeric Range Answer'},
+]
+
 @Component({
   selector: 'app-create-modify-quiz-template',
   templateUrl: './create-modify-quiz-template.component.html',
@@ -16,10 +24,13 @@ class Question extends QuizQuestion {}
 })
 export class CreateModifyQuizTemplateComponent implements OnInit {
 
-  template: QuizTemplate = new Template()
-  templates: QuizTemplate[]
-  question: QuizQuestion = new Question()
-  success = false
+  template: QuizTemplate = new Template();
+  templates: QuizTemplate[];
+  question: QuizQuestion = new Question();
+  questionTypes = QUESTION_TYPES;
+  questionTypeChangedSubscription = [];
+  success = false;
+  error = false;
 
   selectTemplateForm = this.fb.group({
     templateSelect: new FormControl('')
@@ -31,7 +42,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     formQuestions: this.fb.array([
       this.fb.group({
         text: ['', Validators.required],
-        type: ['', Validators.required],
+        typeSelect: new FormControl(''),
         answer: ['', Validators.required]
       })
     ])
@@ -40,7 +51,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   constructor(
     private quizAdminService: QuizAdminService,
     private fb: FormBuilder
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.getTemplates();
@@ -50,7 +61,27 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   onChanges(): void {
     this.selectTemplateForm.get('templateSelect').valueChanges.subscribe(val => {
       this.templateSelectionChanged(val);
-    })
+    });
+    this.subscribeToQuestionTypeChanges();
+  }
+
+  subscribeToQuestionTypeChanges() {
+    if (this.formQuestions && this.formQuestions.controls) {
+      for (let i = 0; i < this.formQuestions.controls.length; i++) {
+        let control: FormGroup = this.formQuestions.controls[i] as FormGroup;
+        this.questionTypeChangedSubscription[i] = control.controls.typeSelect.valueChanges.subscribe(val => {
+          this.questionTypeChanged(val, i);
+        })
+      }
+    }
+  }
+
+  unsubscribeToQuestionTypeChanges() {
+    if (this.formQuestions && this.formQuestions.controls) {
+      for (let i = 0; i < this.formQuestions.controls.length; i++) {
+        this.questionTypeChangedSubscription[i].unsubscribe();
+      }
+    }
   }
 
   get formQuestions(): FormArray {
@@ -69,10 +100,10 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       });
   }
 
-  templateSelectionChanged(templateSelected): void {
-    // console.log('templateSelected: ', this.templateSelected);
+  templateSelectionChanged(templateSelected: number): void {
     if (templateSelected) {
       this.success = false;
+      this.error = false;
       this.quizAdminService.getQuizTemplate(templateSelected)
         .subscribe(template => {
           if (template && template.length) {
@@ -99,6 +130,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   saveTemplate(): void {
+    this.error = false;
     const name = this.createModifyQuizTemplateForm.get('name').value;
     this.template.description = this.createModifyQuizTemplateForm.get('description').value;
     if (!this.template.id || name !== this.template.name) { // if new template or template name changed
@@ -107,7 +139,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.quizAdminService.saveNewQuizTemplate(this.template)
         .subscribe(result => {
           if (result) {
-            // console.log('result: ', result);
             this.quizAdminService.getQuizTemplateByName(this.template.name)
               .subscribe(template => {
                 if (template && template.length) {
@@ -136,26 +167,30 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   addQuestion(question?: QuizQuestion): void {
+    this.unsubscribeToQuestionTypeChanges()
     if (question) {
       this.formQuestions.push(this.fb.group({
         text: [question.textQuestion, Validators.required],
-        type: [question.questionType, Validators.required],
+        typeSelect: new FormControl(question.questionType),
         answer: [question.correctAnswer, Validators.required]
       }));
     }
     else {
       this.formQuestions.push(this.fb.group({
           text: ['', Validators.required],
-          type: ['', Validators.required],
+          typeSelect: new FormControl(''),
           answer: ['', Validators.required]
       }));
     }
+    this.subscribeToQuestionTypeChanges()
   }
 
   deleteQuestion(index: number): void {
+    this.unsubscribeToQuestionTypeChanges()
     if (typeof index === 'number') {
       this.formQuestions.removeAt(index)
     }
+    this.subscribeToQuestionTypeChanges()
   }
 
 
@@ -166,22 +201,28 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.question = new Question()
       this.question.templateId = templateId;
       this.question.textQuestion = question.text;
-      this.question.questionType = question.type;
+      this.question.questionType = question.typeSelect;
       this.question.correctAnswer = question.answer;
       this.quizAdminService.saveNewQuizQuestion(this.question)
-        .subscribe(result => {
-          if (result) {
-            console.log('Quiz Question saved: ', this.question);
-            questionSavedCount++;
-            if (questionSavedCount === questions.length) {
-              this.success = true;
-              this.createModifyQuizTemplateForm.reset();
-              this.resetFormQuestions();
-              this.getTemplates();
-              this.selectTemplateForm.reset();
+        .subscribe(
+          result => {
+            if (result) {
+              console.log('result: ', result);
+              questionSavedCount++;
+              if (questionSavedCount === questions.length) {
+                this.success = true;
+                this.createModifyQuizTemplateForm.reset();
+                this.resetFormQuestions();
+                this.getTemplates();
+                this.selectTemplateForm.reset();
+              }
             }
+          },
+          error => {
+            console.error(error);
+            this.error = true;
           }
-        });
+        );
     }
   }
 
@@ -191,5 +232,10 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.deleteQuestion(i);
     }
     this.formQuestions.reset();
+  }
+
+  questionTypeChanged(questionType: string, index: number): void {
+    console.log('questionType: ', questionType);
+    console.log('index: ', index);
   }
 }

@@ -1,7 +1,7 @@
 <h2>Create / Modify Quiz Template</h2>
 
 <form [formGroup]="selectTemplateForm">
-  <select id="template" formControlName="templateSelect">
+  <select id="template-select" formControlName="templateSelect">
     <option value="" disabled selected>Select Template</option>
     <option *ngFor="let templ of templates" [ngValue]="templ.id">{{templ.name}}</option>
   </select>
@@ -20,16 +20,15 @@
   <div formArrayName="formQuestions">
     <div *ngFor="let question of formQuestions.controls; let i=index">
       <div [formGroupName]="i">
+        <select formControlName="typeSelect">
+          <option value="" disabled selected>Select Question Type</option>
+          <option *ngFor="let questionType of questionTypes" [ngValue]="questionType.name">{{questionType.description}}</option>
+        </select>
+        <br>
         <label>Question Text:</label>
         <input type="text" formControlName="text">
         <div *ngIf="question.controls.text.invalid && (question.controls.text.dirty || question.controls.text.touched)">
           <div *ngIf="question.controls.text.errors.required" style="color: red">Question text is required</div>
-        </div>
-        <br>
-        <label>Question Type:</label>
-        <input type="text" formControlName="type">
-        <div *ngIf="question.controls.type.invalid && (question.controls.type.dirty || question.controls.type.touched)">
-          <div *ngIf="question.controls.type.errors.required" style="color: red">Question type is required</div>
         </div>
         <br>
         <label>Answer:</label>
@@ -47,4 +46,5 @@
   <br>
   <button type="submit" [disabled]="!createModifyQuizTemplateForm.valid">Save</button>
   <div *ngIf="success" style="color: green">Template successfully saved</div>
+  <div *ngIf="error" style="color: red">Error saving template</div>
  </form>

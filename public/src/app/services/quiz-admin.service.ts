@@ -75,9 +75,9 @@ export class QuizAdminService {
   saveNewQuizQuestion(questionData: QuizQuestion) {
     if (questionData) {
       return this.http.post(this.quizQuestionsUrl, questionData)
-      .pipe(
+      /* .pipe(
         catchError(this.handleError('saveNewQuizQuestion', []))
-      );
+      ); */
     }
   }
 
