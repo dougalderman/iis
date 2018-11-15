@@ -21,7 +21,7 @@
     <div *ngFor="let question of formQuestions.controls; let i=index">
       <div [formGroupName]="i">
         <select formControlName="typeSelect">
-          <option value="" disabled selected>Select Question Type</option>
+          <option value="" disabled>Select Question Type</option>
           <option *ngFor="let questionType of questionTypes" [ngValue]="questionType.name">{{questionType.description}}</option>
         </select>
         <br>
