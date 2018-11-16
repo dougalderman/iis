@@ -30,6 +30,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   templates: QuizTemplate[];
   question: QuizQuestion = new Question();
   questionTypes: any[] = QUESTION_TYPES;
+  answer: any[] = [];
   questionTypeChangedSubscription: Subscription[] = [];
   success: boolean = false;
   error: boolean = false;
@@ -45,7 +46,26 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.fb.group({
         text: ['', Validators.required],
         typeSelect: new FormControl(''),
-        answer: ['', Validators.required]
+        answer: this.fb.group({
+          options: this.fb.array([
+            this.fb.group({
+              option: this.fb.group({
+                id: [''],
+                answer: ['']
+              })
+            })
+          ]),
+          booleanCorrectAnswer: [false],
+          correctAnswer: [''],
+          correctAnswerArray: this.fb.array([
+            this.fb.group({
+              correctAnswer: ['']
+            })
+          ]),
+          integerCorrectAnswer: [0],
+          integerStartCorrectAnswer: [0],
+          integerEndCorrectAnswer: [0]
+        })
       })
     ])
   });
@@ -146,7 +166,13 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                         let question = new Question();
                         question.textQuestion = questions[i].text_question;
                         question.questionType = questions[i].question_type;
+                        question.options = questions[i].options;
+                        question.booleanCorrectAnswer = questions[i].boolean_correct_answer;
                         question.correctAnswer = questions[i].correct_answer;
+                        question.correctAnswerArray = questions[i].correct_answer_array;
+                        question.integerCorrectAnswer = questions[i].integer_correct_answer;
+                        question.integerStartCorrectAnswer = questions[i].integer_start_correct_answer;
+                        question.integerEndCorrectAnswer = questions[i].integer_end_correct_answer;
                         this.addQuestion(question);
                       }
                     }
@@ -241,14 +267,14 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.formQuestions.push(this.fb.group({
         text: [question.textQuestion, Validators.required],
         typeSelect: new FormControl(question.questionType),
-        answer: [question.correctAnswer, Validators.required]
+        answer: new FormControl(this.getAnswer(question.questionType, question))
       }));
     }
     else {
       this.formQuestions.push(this.fb.group({
           text: ['', Validators.required],
           typeSelect: new FormControl(''),
-          answer: ['', Validators.required]
+          answer: new FormControl(this.getAnswer(this.getDefaultQuestionType()))
       }));
       const indxLastQuestion = this.formQuestions.length - 1;
       this.setDefaultQuestionType(indxLastQuestion);
@@ -264,6 +290,21 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.subscribeToQuestionTypeChanges()
   }
 
+  addOption(): void {
+    console.log('in addOption()');
+  }
+
+  deleteOption(indx1, indx2): void {
+    console.log('in deleteOption()')
+  }
+
+  addCorrectAnswer(): void {
+    console.log('in addCorrectAnswer()');
+  }
+
+  deleteCorrectAnswer(indx1, indx2): void {
+    console.log('in deleteCorrectAnswer()')
+  }
 
   saveAllTemplateQuestions(templateId: number): void {
     let questions = this.formQuestions.value;
@@ -273,7 +314,13 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.question.templateId = templateId;
       this.question.textQuestion = question.text;
       this.question.questionType = question.typeSelect;
-      this.question.correctAnswer = question.answer;
+      this.question.options = questions.options;
+      this.question.booleanCorrectAnswer = question.answer.booleanCorrectAnswer;
+      this.question.correctAnswer = question.answer.correctAanswer;
+      this.question.correctAnswerArray = question.answer.correctAnswerArray;
+      this.question.integerCorrectAnswer = question.answer.integerCorrectAnswer;
+      this.question.integerStartCorrectAnswer = question.answer.integerStartCorrectAnswer;
+      this.question.integerEndCorrectAnswer = question.answer.integerEndCorrectAnswer;
       this.quizAdminService.saveNewQuizQuestion(this.question)
         .subscribe(
           (result: any) => {
@@ -305,17 +352,48 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   questionTypeChanged(questionType: string, index: number): void {
-    console.log('questionType: ', questionType);
-    console.log('index: ', index);
+    this.formQuestions[index].value.answer = this.getAnswer(questionType);
   }
 
-  setDefaultQuestionType(index: number): void {
-    let formQuestionsControls: FormGroup = this.formQuestions.controls[index] as FormGroup;
+  getAnswer(questionType: string, question?: QuizQuestion): any {
+    const answer: any = {};
+    switch (questionType) {
+      case 'textQuestionMultipleChoice':
+        if (question) {
+          answer.options = question.options;
+          answer.correctAnswer = question.correctAnswer;
+        }
+        else {
+          answer.options = [];
+          answer.correctAnswer = '';
+        }
+        break;
+      case 'textQuestionShortAnswer':
+        if (question) {
+          answer.correctAnswer = question.correctAnswer;
+          answer.correctAnswerArray = question.correctAnswerArray;
+        }
+        else {
+          answer.correctAnswer = '';
+          answer.correctAnswerArray = [];
+        }
+        break;
+    }
+    return answer;
+  }
+
+  getDefaultQuestionType(): string {
     const defaultQuestionType = this.questionTypes.find(
       (type: any) => {
         return type.default === true;
       }
     );
-    formQuestionsControls.controls.typeSelect.setValue(defaultQuestionType.name);
+    return defaultQuestionType.name;
+  }
+
+  setDefaultQuestionType(index: number): void {
+    let formQuestionsControls: FormGroup = this.formQuestions.controls[index] as FormGroup;
+    formQuestionsControls.controls.typeSelect.setValue(this.getDefaultQuestionType());
+
   }
 }
