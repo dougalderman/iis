@@ -33,20 +33,19 @@
         <br>
         <label>Answer:</label>
         <div *ngIf="questionType === 'textQuestionMultipleChoice'">
-          <div *ngFor="let option of question.value.answer.options; let j=index">
+          <div *ngFor="let option of question.controls.answer.controls.options; let j=index">
             <div [formGroupName]="j">
               <input type="text" formControlName="option">
-              <button type="button" *ngIf="question.value.answer.options.length > 1" (click)="deleteOption(i,j)">Delete Option</button>
+              <button type="button" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i,j)">Delete Option</button>
             </div>
           </div>
           <button type="button" (click)="addOption()">Add New Option</button>
           <input type="text" formControlName="correctAnswer">
+          <div *ngIf="question.controls.answer.controls.correctAnswer.invalid && (question.controls.answer.controls.correctAnswer.dirty || question.controls.answer.controls.correctAnswer.touched)">
+            <div *ngIf="question.controls.answer.controls.correctAnswer.errors.required" style="color: red">Correct Answer is required</div>
+          </div>
         </div>
         <div *ngIf= "questionType === 'textQuestionShortAnswer'">
-          <input type="text" formControlName="answer.correctAnswer">
-          <div *ngIf="question.controls.answer.correctAnswer.invalid && (question.controls.answer.correctAnswer.dirty || question.controls.answer.correctAnswer.touched)">
-            <div *ngIf="question.controls.answer.correctAnswer.errors.required" style="color: red">Question answer is required</div>
-          </div>
           <div *ngFor="let correctAnswer of question.value.answer.correctAnswerArray; let j=index">
             <div [formGroupName]="j">
               <input type="text" formControlName="correctAnswer">

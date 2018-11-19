@@ -96,6 +96,13 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.subscribeToQuestionTypeChanges();
   }
 
+  get formQuestions(): FormArray {
+    return this.createModifyQuizTemplateForm.get('formQuestions') as FormArray;
+  }
+
+  get name(): AbstractControl { return this.createModifyQuizTemplateForm.get('name'); }
+  get description(): AbstractControl { return this.createModifyQuizTemplateForm.get('description'); }
+
   subscribeToQuestionTypeChanges(): void {
     if (this.formQuestions && this.formQuestions.controls) {
       for (let i = 0; i < this.formQuestions.controls.length; i++) {
@@ -122,13 +129,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       }
     }
   }
-
-  get formQuestions(): FormArray {
-    return this.createModifyQuizTemplateForm.get('formQuestions') as FormArray;
-  }
-
-  get name(): AbstractControl { return this.createModifyQuizTemplateForm.get('name'); }
-  get description(): AbstractControl { return this.createModifyQuizTemplateForm.get('description'); }
 
   getTemplates(): void {
     this.quizAdminService.getAllQuizTemplates()
@@ -352,30 +352,73 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   questionTypeChanged(questionType: string, index: number): void {
-    this.formQuestions[index].value.answer = this.getAnswer(questionType);
+    let formQuestion: FormGroup = this.formQuestions.controls[index] as FormGroup;
+    formQuestion.controls.answer.setValue(this.getAnswer(questionType));
   }
 
-  getAnswer(questionType: string, question?: QuizQuestion): any {
-    const answer: any = {};
+  /* question.options = questions[i].options;
+  question.booleanCorrectAnswer = questions[i].boolean_correct_answer;
+  question.correctAnswer = questions[i].correct_answer;
+  question.correctAnswerArray = questions[i].correct_answer_array;
+  question.integerCorrectAnswer = questions[i].integer_correct_answer;
+  question.integerStartCorrectAnswer = questions[i].integer_start_correct_answer;
+  question.integerEndCorrectAnswer = questions[i].integer_end_correct_answer;
+
+
+ answer: this.fb.group({
+  options: this.fb.array([
+    this.fb.group({
+      option: this.fb.group({
+        id: [''],
+        answer: ['']
+      })
+    })
+  ]),
+  booleanCorrectAnswer: [false],
+  correctAnswer: [''],
+  correctAnswerArray: this.fb.array([
+    this.fb.group({
+      correctAnswer: ['']
+    })
+  ]),
+  integerCorrectAnswer: [0],
+  integerStartCorrectAnswer: [0],
+  integerEndCorrectAnswer: [0]
+})
+}) */
+
+  getAnswer(questionType: string, question?: QuizQuestion): AbstractControl {
+    const answer = this.fb.group({});
+    const options = answer.controls.options as FormArray;
+    const correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
     switch (questionType) {
       case 'textQuestionMultipleChoice':
         if (question) {
-          answer.options = question.options;
-          answer.correctAnswer = question.correctAnswer;
-        }
-        else {
-          answer.options = [];
-          answer.correctAnswer = '';
+          if (question.options && question.options.length) {
+            for (let i = 0; i < question.options.length; i++) {
+              options.push(
+                this.fb.group({
+                  id: [question.options[i].id],
+                  answer: [question.options[i].answer]
+                })
+              )
+            }
+          }
+          answer.controls.correctAnswer.setValue(question.correctAnswer);
         }
         break;
       case 'textQuestionShortAnswer':
         if (question) {
-          answer.correctAnswer = question.correctAnswer;
-          answer.correctAnswerArray = question.correctAnswerArray;
-        }
-        else {
-          answer.correctAnswer = '';
-          answer.correctAnswerArray = [];
+          if (question.correctAnswerArray && question.correctAnswerArray.length) {
+            for (let i = 0; i < question.correctAnswerArray.length; i++) {
+              correctAnswerArray.push(
+                this.fb.group({
+                  id: [question.options[i].id],
+                  answer: [question.options[i].answer]
+                })
+              )
+            }
+          }
         }
         break;
     }
@@ -392,8 +435,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   setDefaultQuestionType(index: number): void {
-    let formQuestionsControls: FormGroup = this.formQuestions.controls[index] as FormGroup;
-    formQuestionsControls.controls.typeSelect.setValue(this.getDefaultQuestionType());
+    let formQuestion: FormGroup = this.formQuestions.controls[index] as FormGroup;
+    formQuestion.controls.typeSelect.setValue(this.getDefaultQuestionType());
 
   }
 }
