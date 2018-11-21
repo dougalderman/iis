@@ -24,6 +24,6 @@ export class QuizQuestion {
 }
 
 export class QuizQuestionOption {
-  id: string;
-  answer: string;
+  optionId: string;
+  optionAnswer: string;
 }

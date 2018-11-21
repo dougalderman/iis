@@ -51,16 +51,15 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         answer: this.fb.group({
           options: this.fb.array([
             this.fb.group({
-              option: this.fb.group({
-                id: [this.alphaSequenceStart],
-                answer: ['']
-              })
+              optionId: [this.alphaSequenceStart],
+              optionAnswer: ['']
             })
           ]),
           booleanCorrectAnswer: [false],
           correctAnswer: [''],
           correctAnswerArray: this.fb.array([
             this.fb.group({
+              correctAnswerId: [this.alphaSequenceStart],
               correctAnswer: ['']
             })
           ]),
@@ -401,8 +400,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
             for (let i = 0; i < question.options.length; i++) {
               options.push(
                 this.fb.group({
-                  id: [question.options[i].id],
-                  answer: [question.options[i].answer]
+                  optionId: [question.options[i].optionId],
+                  optionAnswer: [question.options[i].optionAnswer]
                 })
               )
             }
@@ -416,8 +415,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
             for (let i = 0; i < question.correctAnswerArray.length; i++) {
               correctAnswerArray.push(
                 this.fb.group({
-                  id: [question.options[i].id],
-                  answer: [question.options[i].answer]
+                  correctAnswerid: [question.correctAnswer[i].correctAnswerId],
+                  correctAnswer: [question.correctAnswer[i].correctAnswer]
                 })
               )
             }
