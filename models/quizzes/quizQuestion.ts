@@ -23,7 +23,7 @@ export class QuizQuestion {
   constructor() {}
 }
 
-class QuizQuestionOption {
+export class QuizQuestionOption {
   id: string;
   answer: string;
 }

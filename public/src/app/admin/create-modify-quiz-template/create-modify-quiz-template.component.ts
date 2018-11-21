@@ -30,10 +30,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   templates: QuizTemplate[];
   question: QuizQuestion = new Question();
   questionTypes: any[] = QUESTION_TYPES;
+  questionType: string = this.getDefaultQuestionType();
   answer: any[] = [];
   questionTypeChangedSubscription: Subscription[] = [];
   success: boolean = false;
   error: boolean = false;
+  alphaSequenceStart = 'a';
 
   selectTemplateForm: FormGroup = this.fb.group({
     templateSelect: new FormControl('')
@@ -45,12 +47,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     formQuestions: this.fb.array([
       this.fb.group({
         text: ['', Validators.required],
-        typeSelect: new FormControl(''),
+        typeSelect: new FormControl(this.getDefaultQuestionType()),
         answer: this.fb.group({
           options: this.fb.array([
             this.fb.group({
               option: this.fb.group({
-                id: [''],
+                id: [this.alphaSequenceStart],
                 answer: ['']
               })
             })
@@ -77,7 +79,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTemplates();
-    this.setDefaultQuestionType(0);
+    // this.setDefaultQuestionType(0);
     this.onChanges();
   }
 
@@ -110,6 +112,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         this.questionTypeChangedSubscription[i] = formQuestionsControls.controls.typeSelect.valueChanges.subscribe(
           (val: string) => {
             if (val) {
+              this.questionType = val;
               this.questionTypeChanged(val, i);
             }
           },
@@ -437,6 +440,5 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   setDefaultQuestionType(index: number): void {
     let formQuestion: FormGroup = this.formQuestions.controls[index] as FormGroup;
     formQuestion.controls.typeSelect.setValue(this.getDefaultQuestionType());
-
   }
 }

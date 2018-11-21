@@ -33,27 +33,27 @@
         <br>
         <label>Answer:</label>
         <div *ngIf="questionType === 'textQuestionMultipleChoice'">
-          <div *ngFor="let option of question.controls.answer.controls.options; let j=index">
+          <div *ngFor="let option of question.controls.answer.controls.options.controls; let j=index">
             <div [formGroupName]="j">
-              <input type="text" formControlName="option">
+              {{option.id}}:&nbsp;<input type="text" formControlName="option.answer">
               <button type="button" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i,j)">Delete Option</button>
             </div>
           </div>
           <button type="button" (click)="addOption()">Add New Option</button>
-          <input type="text" formControlName="correctAnswer">
+          <!--<input type="text" formControlName="correctAnswer">
           <div *ngIf="question.controls.answer.controls.correctAnswer.invalid && (question.controls.answer.controls.correctAnswer.dirty || question.controls.answer.controls.correctAnswer.touched)">
             <div *ngIf="question.controls.answer.controls.correctAnswer.errors.required" style="color: red">Correct Answer is required</div>
-          </div>
+          </div>-->
         </div>
-        <div *ngIf= "questionType === 'textQuestionShortAnswer'">
-          <div *ngFor="let correctAnswer of question.value.answer.correctAnswerArray; let j=index">
-            <div [formGroupName]="j">
+        <!--<div *ngIf= "questionType === 'textQuestionShortAnswer'">
+          <div *ngFor="let correctAnswer of question.value.answer.correctAnswerArray.controls; let k=index">
+            <div [formGroupName]="k">
               <input type="text" formControlName="correctAnswer">
               <button type="button" *ngIf="question.value.answer.correctAnswerArray.length > 1" (click)="deleteCorrectAnswer(i,j)">Delete Correct Answer</button>
             </div>
           </div>
           <button type="button" (click)="addCorrectAnswer()">Add New Correct Answer</button>
-        </div>
+        </div>-->
         <br>
         <button type="button" *ngIf="formQuestions.length > 1" (click)="deleteQuestion(i)">Delete Question</button>
         <br><br>
