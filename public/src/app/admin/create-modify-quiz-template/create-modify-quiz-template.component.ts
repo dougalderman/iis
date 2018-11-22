@@ -31,7 +31,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   question: QuizQuestion = new Question();
   questionTypes: any[] = QUESTION_TYPES;
   questionType: string = this.getDefaultQuestionType();
-  answer: any[] = [];
   questionTypeChangedSubscription: Subscription[] = [];
   success: boolean = false;
   error: boolean = false;
@@ -41,6 +40,24 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     templateSelect: new FormControl('')
   })
 
+  formAnswer = this.fb.group({
+    options: this.fb.array([
+      this.fb.group({
+        option: ['']
+      })
+    ]),
+    booleanCorrectAnswer: [false],
+    correctAnswer: [''],
+    correctAnswerArray: this.fb.array([
+      this.fb.group({
+        correctAnswer: ['']
+      })
+    ]),
+    integerCorrectAnswer: [0],
+    integerStartCorrectAnswer: [0],
+    integerEndCorrectAnswer: [0]
+  })
+
   createModifyQuizTemplateForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
     description: [''],
@@ -48,23 +65,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.fb.group({
         text: ['', Validators.required],
         typeSelect: new FormControl(this.getDefaultQuestionType()),
-        answer: this.fb.group({
-          options: this.fb.array([
-            this.fb.group({
-              option: ['']
-            })
-          ]),
-          booleanCorrectAnswer: [false],
-          correctAnswer: [''],
-          correctAnswerArray: this.fb.array([
-            this.fb.group({
-              correctAnswer: ['']
-            })
-          ]),
-          integerCorrectAnswer: [0],
-          integerStartCorrectAnswer: [0],
-          integerEndCorrectAnswer: [0]
-        })
+        answer: this.formAnswer
       })
     ])
   });
@@ -320,7 +321,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       console.log('in deleteOption()');
 
       options.removeAt(optionIndex);
-      const len = options.length;
     }
   }
 
@@ -383,23 +383,16 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   getAnswer(questionType: string, question?: QuizQuestion): AbstractControl {
-    let answer = this.fb.group({});
-    answer.controls.options = this.fb.array([
-      this.fb.group({
-        option: ['']
-      })
-    ]);
-    answer.controls.correctAnswerArray = this.fb.array([
-      this.fb.group({
-        correctAnswer: ['']
-      })
-    ])
+    let answer = this.formAnswer;
+
     switch (questionType) {
       case 'textQuestionMultipleChoice':
         if (question) {
+          let options = answer.controls.options as FormArray;
           if (question.options && question.options.length) {
             for (let i = 0; i < question.options.length; i++) {
-              answer.controls.options.push(
+              options.removeAt(0);
+              options.push(
                 this.fb.group({
                   option: [question.options[i]]
                 })
@@ -407,19 +400,15 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
             }
           }
         }
-        else {
-          options.push(
-            this.fb.group({
-              option: ['']
-            })
-          )
-        }
         answer.controls.correctAnswer.setValue(question.correctAnswer);
         break;
+
       case 'textQuestionShortAnswer':
         if (question) {
+          let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
           if (question.correctAnswerArray && question.correctAnswerArray.length) {
             for (let i = 0; i < question.correctAnswerArray.length; i++) {
+              correctAnswerArray.removeAt(0);
               correctAnswerArray.push(
                 this.fb.group({
                   correctAnswer: [question.correctAnswer[i]]
@@ -427,13 +416,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
               )
             }
           }
-        }
-        else {
-          correctAnswerArray.push(
-            this.fb.group({
-              correctAnswer: ['']
-            })
-          )
         }
         break;
     }
