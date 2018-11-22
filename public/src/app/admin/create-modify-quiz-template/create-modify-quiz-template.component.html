@@ -30,23 +30,25 @@
         <div *ngIf="question.controls.text.invalid && (question.controls.text.dirty || question.controls.text.touched)">
           <div *ngIf="question.controls.text.errors.required" style="color: red">Question text is required</div>
         </div>
-        <br>
+        <br><br>
         <div formGroupName="answer">
           <div *ngIf="questionType === 'textQuestionMultipleChoice'">
-            <label>Multiple Choice Answer:</label>
+            <label>Multiple Choice Options:</label>
             <div formArrayName="options">
-            <div *ngFor="let option of question.controls.answer.controls.options.controls; let j=index">
-              <div [formGroupName]="j">
-                {{option.optionId}}:&nbsp;<input type="text" formControlName="optionAnswer">
-                <button type="button" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i,j)">Delete Option</button>
+              <div *ngFor="let option of question.controls.answer.controls.options.controls; let j=index">
+                <div [formGroupName]="j">
+                  {{alphaIdArray[j]}}:&nbsp;<input type="text" formControlName="option">
+                  <button type="button" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i,j)">Delete Option</button>
+                </div>
               </div>
+              <button type="button" (click)="addOption(i)">Add New Option</button>
             </div>
-            <button type="button" (click)="addOption()">Add New Option</button>
-            </div>
-            <!--<input type="text" formControlName="correctAnswer">
+            <br>
+            <label>Correct Answer:</label>
+            <input type="text" formControlName="correctAnswer">
             <div *ngIf="question.controls.answer.controls.correctAnswer.invalid && (question.controls.answer.controls.correctAnswer.dirty || question.controls.answer.controls.correctAnswer.touched)">
               <div *ngIf="question.controls.answer.controls.correctAnswer.errors.required" style="color: red">Correct Answer is required</div>
-            </div>-->
+            </div>
           </div>
           <!--<div *ngIf= "questionType === 'textQuestionShortAnswer'">
             <div *ngFor="let correctAnswer of question.value.answer.correctAnswerArray.controls; let k=index">

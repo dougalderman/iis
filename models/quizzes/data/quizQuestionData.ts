@@ -5,7 +5,7 @@ export class QuizQuestionData {
   text_question: string;
   picture_question: string;
   question_type: string;
-  options: QuizQuestionOption[];
+  options: string[];
   boolean_correct_answer: boolean;
   correct_answer: string;
   correct_answer_array: string[];
@@ -21,9 +21,4 @@ export class QuizQuestionData {
   real_end_correct_answer: number;
 
   constructor() {}
-}
-
-export class QuizQuestionOption {
-  optionId: string;
-  optionAnswer: string;
 }

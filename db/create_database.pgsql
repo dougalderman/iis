@@ -46,7 +46,7 @@ CREATE TABLE QuizQuestions (
   text_question text,
   picture_question text,
   question_type quiz_question_type,
-  options jsonb,
+  options text[],
   boolean_correct_answer boolean,
   correct_answer text,
   correct_answer_array text[],

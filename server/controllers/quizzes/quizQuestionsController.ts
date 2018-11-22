@@ -1,4 +1,4 @@
-import { QuizQuestion, QuizQuestionOption } from  '../../../models/quizzes/quizQuestion';
+import { QuizQuestion } from  '../../../models/quizzes/quizQuestion';
 import { Pool } from 'pg';
 
 class Question extends QuizQuestion {
@@ -9,7 +9,7 @@ class Question extends QuizQuestion {
     reqTextQuestion: string,
     reqPictureQuestion: string,
     reqQuestionType: string,
-    reqOptions: QuizQuestionOption[],
+    reqOptions: string[],
     reqBooleanCorrectAnswer: boolean,
     reqCorrectAnswer: string,
     reqCorrectAnswerArray: string[],
