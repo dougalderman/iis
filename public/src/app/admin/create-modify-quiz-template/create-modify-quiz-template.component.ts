@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl } from '@angular/forms'
-import { Subscription } from 'rxjs'
+import { Subscription } from 'rxjs';
+import * as _ from 'lodash';
+
 import { QuizTemplate } from  '../../../../../models/quizzes/quizTemplate';
 import { QuizQuestion } from  '../../../../../models/quizzes/quizQuestion';
 import { QuizTemplateData } from  '../../../../../models/quizzes/data/quizTemplateData';
@@ -40,7 +42,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     templateSelect: new FormControl('')
   })
 
-  formAnswer = this.fb.group({
+  formAnswer: FormGroup = this.fb.group({
     options: this.fb.array([
       this.fb.group({
         option: ['']
@@ -65,7 +67,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.fb.group({
         text: ['', Validators.required],
         typeSelect: new FormControl(this.getDefaultQuestionType()),
-        answer: this.formAnswer
+        answer: _.cloneDeep(this.formAnswer)
       })
     ])
   });
@@ -264,19 +266,19 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   addQuestion(question?: QuizQuestion): void {
-    this.unsubscribeToQuestionTypeChanges()
+    this.unsubscribeToQuestionTypeChanges();
     if (question) {
       this.formQuestions.push(this.fb.group({
         text: [question.textQuestion, Validators.required],
         typeSelect: new FormControl(question.questionType),
-        answer: new FormControl(this.getAnswer(question.questionType, question))
+        answer: this.getAnswer(question.questionType, question)
       }));
     }
     else {
       this.formQuestions.push(this.fb.group({
           text: ['', Validators.required],
           typeSelect: new FormControl(''),
-          answer: new FormControl(this.getAnswer(this.getDefaultQuestionType()))
+          answer:  this.getAnswer(this.getDefaultQuestionType())
       }));
       const indxLastQuestion = this.formQuestions.length - 1;
       this.setDefaultQuestionType(indxLastQuestion);
@@ -309,7 +311,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
           option: [''],
         }));
       }
-      const len = options.length;
     }
   }
 
@@ -324,12 +325,35 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     }
   }
 
-  addCorrectAnswer(): void {
-    console.log('in addCorrectAnswer()');
+  addCorrectAnswer(questionIndex, correctAnswer?: string): void {
+    if (typeof questionIndex === 'number') {
+      let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
+      let answer = formQuestion.controls.answer as FormGroup;
+      let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
+      console.log('in addCorrectAnswer()');
+
+      if (correctAnswer) {
+        correctAnswerArray.push(this.fb.group({
+          correctAnswer: [correctAnswer],
+        }));
+      }
+      else {
+        correctAnswerArray.push(this.fb.group({
+          correctAnswer: [''],
+        }));
+      }
+    }
   }
 
-  deleteCorrectAnswer(indx1, indx2): void {
-    console.log('in deleteCorrectAnswer()')
+  deleteCorrectAnswer(questionIndex, correctAnswerIndex): void {
+    if (typeof questionIndex === 'number' && typeof correctAnswerIndex === 'number') {
+      let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
+      let answer = formQuestion.controls.answer as FormGroup;
+      let correctAnswerArray =  answer.controls.correctAnswerArray as FormArray;
+      console.log('in deleteOption()');
+
+      correctAnswerArray.removeAt(correctAnswerIndex);
+    }
   }
 
   saveAllTemplateQuestions(templateId: number): void {
@@ -340,10 +364,20 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.question.templateId = templateId;
       this.question.textQuestion = question.text;
       this.question.questionType = question.typeSelect;
-      this.question.options = questions.options;
+      this.question.options = [];
+      for (let option of question.answer.options) {
+        if (option.option) {
+          this.question.options.push(option.option);
+        }
+      }
       this.question.booleanCorrectAnswer = question.answer.booleanCorrectAnswer;
-      this.question.correctAnswer = question.answer.correctAanswer;
-      this.question.correctAnswerArray = question.answer.correctAnswerArray;
+      this.question.correctAnswer = question.answer.correctAnswer;
+      this.question.correctAnswerArray = [];
+      for (let correctAnswer of question.answer.correctAnswerArray) {
+        if (correctAnswer.correctAnswer) {
+          this.question.correctAnswerArray.push(correctAnswer.correctAnswer);
+        }
+      }
       this.question.integerCorrectAnswer = question.answer.integerCorrectAnswer;
       this.question.integerStartCorrectAnswer = question.answer.integerStartCorrectAnswer;
       this.question.integerEndCorrectAnswer = question.answer.integerEndCorrectAnswer;
@@ -379,19 +413,19 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   questionTypeChanged(questionType: string, index: number): void {
     let formQuestion: FormGroup = this.formQuestions.controls[index] as FormGroup;
-    formQuestion.controls.answer.setValue(this.getAnswer(questionType));
+    formQuestion.controls.answer = this.getAnswer(questionType);
   }
 
-  getAnswer(questionType: string, question?: QuizQuestion): AbstractControl {
-    let answer = this.formAnswer;
+  getAnswer(questionType: string, question?: QuizQuestion): FormGroup {
+    let answer: FormGroup = _.cloneDeep(this.formAnswer);
 
     switch (questionType) {
       case 'textQuestionMultipleChoice':
         if (question) {
           let options = answer.controls.options as FormArray;
           if (question.options && question.options.length) {
+            options.removeAt(0);
             for (let i = 0; i < question.options.length; i++) {
-              options.removeAt(0);
               options.push(
                 this.fb.group({
                   option: [question.options[i]]
@@ -399,16 +433,19 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
               )
             }
           }
+          answer.controls.correctAnswer.setValue(question.correctAnswer);
         }
-        answer.controls.correctAnswer.setValue(question.correctAnswer);
+        else {
+          answer.controls.correctAnswer.setValue('');
+        }
         break;
 
       case 'textQuestionShortAnswer':
         if (question) {
           let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
           if (question.correctAnswerArray && question.correctAnswerArray.length) {
+            correctAnswerArray.removeAt(0);
             for (let i = 0; i < question.correctAnswerArray.length; i++) {
-              correctAnswerArray.removeAt(0);
               correctAnswerArray.push(
                 this.fb.group({
                   correctAnswer: [question.correctAnswer[i]]
@@ -419,6 +456,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         }
         break;
     }
+
     return answer;
   }
 
