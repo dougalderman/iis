@@ -32,7 +32,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   templates: QuizTemplate[];
   question: QuizQuestion = new Question();
   questionTypes: any[] = QUESTION_TYPES;
-  questionType: string = this.getDefaultQuestionType();
   questionTypeChangedSubscription: Subscription[] = [];
   success: boolean = false;
   error: boolean = false;
@@ -80,7 +79,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   ngOnInit(): void {
     this.alphaIdArray = this.fillIdArray(this.alphaIdArray);
     this.getTemplates();
-    // this.setDefaultQuestionType(0);
     this.onChanges();
   }
 
@@ -89,6 +87,18 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       (val: number) => {
         if (val) {
           this.templateSelectionChanged(val);
+        }
+      },
+      error => {
+        console.error(error);
+        this.error = true;
+      }
+    );
+    this.createModifyQuizTemplateForm.get('name').valueChanges.subscribe(
+      (val: string) => {
+        if (val) {
+          this.success = false;
+          this.error = false;
         }
       },
       error => {
@@ -113,7 +123,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         this.questionTypeChangedSubscription[i] = formQuestionsControls.controls.typeSelect.valueChanges.subscribe(
           (val: string) => {
             if (val) {
-              this.questionType = val;
               this.questionTypeChanged(val, i);
             }
           },
@@ -448,7 +457,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
             for (let i = 0; i < question.correctAnswerArray.length; i++) {
               correctAnswerArray.push(
                 this.fb.group({
-                  correctAnswer: [question.correctAnswer[i]]
+                  correctAnswer: [question.correctAnswerArray[i]]
                 })
               )
             }

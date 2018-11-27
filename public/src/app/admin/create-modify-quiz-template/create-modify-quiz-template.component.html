@@ -32,7 +32,7 @@
         </div>
         <br><br>
         <div formGroupName="answer">
-          <div *ngIf="questionType === 'textQuestionMultipleChoice'">
+          <div *ngIf="question.controls.typeSelect.value==='textQuestionMultipleChoice'">
             <label>Multiple Choice Options:</label>
             <div formArrayName="options">
               <div *ngFor="let option of question.controls.answer.controls.options.controls; let j=index">
@@ -47,7 +47,7 @@
             <label>Correct Answer:</label>
             <input type="text" formControlName="correctAnswer">
           </div>
-          <div *ngIf= "questionType === 'textQuestionShortAnswer'">
+          <div *ngIf="question.controls.typeSelect.value==='textQuestionShortAnswer'">
             <label>Correct Answer Options:</label>
             <div formArrayName="correctAnswerArray">
               <div *ngFor="let correctAnswer of question.controls.answer.controls.correctAnswerArray.controls; let k=index">
