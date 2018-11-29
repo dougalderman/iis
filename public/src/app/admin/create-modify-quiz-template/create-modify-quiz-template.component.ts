@@ -284,13 +284,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       }));
     }
     else {
+      const defaultQuestionType = this.getDefaultQuestionType();
       this.formQuestions.push(this.fb.group({
-          text: ['', Validators.required],
-          typeSelect: new FormControl(''),
-          answer:  this.getAnswer(this.getDefaultQuestionType())
+        text: ['', Validators.required],
+        typeSelect: new FormControl(defaultQuestionType),
+        answer: this.getAnswer(defaultQuestionType)
       }));
-      const indxLastQuestion = this.formQuestions.length - 1;
-      this.setDefaultQuestionType(indxLastQuestion);
     }
     this.subscribeToQuestionTypeChanges()
   }
@@ -421,8 +420,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   questionTypeChanged(questionType: string, index: number): void {
-    let formQuestion: FormGroup = this.formQuestions.controls[index] as FormGroup;
-    formQuestion.controls.answer = this.getAnswer(questionType);
+    this.formQuestions.removeAt(index);
+    this.formQuestions.insert(index, this.fb.group({
+      text: ['', Validators.required],
+      typeSelect: new FormControl(questionType),
+      answer: this.getAnswer(questionType)
+    }));
   }
 
   getAnswer(questionType: string, question?: QuizQuestion): FormGroup {
@@ -476,11 +479,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       }
     );
     return defaultQuestionType.name;
-  }
-
-  setDefaultQuestionType(index: number): void {
-    let formQuestion = this.formQuestions.controls[index] as FormGroup;
-    formQuestion.controls.typeSelect.setValue(this.getDefaultQuestionType());
   }
 
   fillIdArray(id: string[]): string[] {
