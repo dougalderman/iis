@@ -166,7 +166,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         .subscribe(
           (template: QuizTemplateData[]) => {
             if (template && template.length) {
-              this.template = template[0];
+              this.template = template[0] as QuizTemplate;
               this.createModifyQuizTemplateForm.reset();
               this.resetFormQuestions();
               this.createModifyQuizTemplateForm.controls.name.setValue(this.template.name);
@@ -213,6 +213,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.createModifyQuizTemplateForm.reset();
     this.resetFormQuestions();
     this.selectTemplateForm.reset();
+    this.template = new Template();
   }
 
   saveTemplate(): void {
@@ -402,10 +403,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
               questionSavedCount++;
               if (questionSavedCount === questions.length) {
                 this.success = true;
-                this.createModifyQuizTemplateForm.reset();
-                this.resetFormQuestions();
                 this.getTemplates();
-                this.selectTemplateForm.reset();
+                this.clearTemplate();
               }
             }
           },
