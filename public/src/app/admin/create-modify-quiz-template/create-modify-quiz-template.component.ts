@@ -209,6 +209,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     }
   }
 
+  clearTemplate(): void {
+    this.createModifyQuizTemplateForm.reset();
+    this.resetFormQuestions();
+    this.selectTemplateForm.reset();
+  }
+
   saveTemplate(): void {
     this.error = false;
     const name = this.createModifyQuizTemplateForm.get('name').value;
@@ -420,12 +426,14 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   questionTypeChanged(questionType: string, index: number): void {
+    this.unsubscribeToQuestionTypeChanges();
     this.formQuestions.removeAt(index);
     this.formQuestions.insert(index, this.fb.group({
       text: ['', Validators.required],
       typeSelect: new FormControl(questionType),
       answer: this.getAnswer(questionType)
     }));
+    this.subscribeToQuestionTypeChanges();
   }
 
   getAnswer(questionType: string, question?: QuizQuestion): FormGroup {

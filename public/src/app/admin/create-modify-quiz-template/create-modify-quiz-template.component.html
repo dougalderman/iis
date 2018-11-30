@@ -67,8 +67,12 @@
     </div>
   </div>
   <button type="button" (click)="addQuestion()">Add New Question</button>
-  <br>
+  <br><br>
   <button type="submit" [disabled]="!createModifyQuizTemplateForm.valid">Save</button>
+  <div *ngIf="template.id">
+    <br>
+    <button type="button" (click)="clearTemplate()">Clear Template</button>
+  </div>
   <div *ngIf="success" style="color: green">Template successfully saved</div>
   <div *ngIf="error" style="color: red">Error saving template</div>
  </form>
