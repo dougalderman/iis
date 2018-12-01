@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl } from '@angular/forms'
 import { Subscription } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
 
 import { QuizTemplate } from  '../../../../../models/quizzes/quizTemplate';
@@ -9,6 +10,7 @@ import { QuizTemplateData } from  '../../../../../models/quizzes/data/quizTempla
 import { QuizQuestionData } from  '../../../../../models/quizzes/data/quizQuestionData';
 
 import { QuizAdminService } from '../../services/quiz-admin.service'
+import { ConfirmModalComponent } from '../../bootstrap-components/confirm-modal/confirm-modal.component';
 
 class Template extends QuizTemplate {}
 class Question extends QuizQuestion {}
@@ -33,8 +35,11 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   question: QuizQuestion = new Question();
   questionTypes: any[] = QUESTION_TYPES;
   questionTypeChangedSubscription: Subscription[] = [];
-  success: boolean = false;
-  error: boolean = false;
+  saveSuccess: boolean = false;
+  deleteSuccess: boolean = false;
+  saveError: boolean = false;
+  deleteError: boolean = false;
+  generalError: boolean = false;
   alphaIdArray = [];
 
   selectTemplateForm: FormGroup = this.fb.group({
@@ -73,7 +78,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   constructor(
     private quizAdminService: QuizAdminService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -91,19 +97,18 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       },
       error => {
         console.error(error);
-        this.error = true;
+        this.generalError = true;
       }
     );
     this.createModifyQuizTemplateForm.get('name').valueChanges.subscribe(
       (val: string) => {
         if (val) {
-          this.success = false;
-          this.error = false;
+          this.clearStatusFlags();
         }
       },
       error => {
         console.error(error);
-        this.error = true;
+        this.generalError = true;
       }
     );
     this.subscribeToQuestionTypeChanges();
@@ -128,7 +133,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
           },
           error => {
             console.error(error);
-            this.error = true;
+            this.generalError = true;
           }
         );
       }
@@ -153,15 +158,14 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         },
         error => {
           console.error(error);
-          this.error = true;
+          this.generalError = true;
         }
       );
   }
 
   templateSelectionChanged(templateSelected: number): void {
     if (templateSelected) {
-      this.success = false;
-      this.error = false;
+      this.clearStatusFlags();
       this.quizAdminService.getQuizTemplate(templateSelected)
         .subscribe(
           (template: QuizTemplateData[]) => {
@@ -192,32 +196,60 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                   },
                   error => {
                     console.error(error);
-                    this.error = true;
+                    this.generalError = true;
                   }
                 );
             }
             else {
               console.error('Error retrieving selected quiz template');
-              this.error = true;
+              this.generalError = true;
             }
         },
         error => {
           console.error(error);
-          this.error = true;
+          this.generalError = true;
         }
       );
     }
   }
 
   clearTemplate(): void {
-    this.createModifyQuizTemplateForm.reset();
-    this.resetFormQuestions();
-    this.selectTemplateForm.reset();
-    this.template = new Template();
+    this.modalService.open(ConfirmModalComponent)
+      .result.then(
+        (result) => {
+          if (result === 'OK Click') {
+            this.createModifyQuizTemplateForm.reset();
+            this.resetFormQuestions();
+            this.selectTemplateForm.reset();
+            this.template = new Template();
+          }
+        }
+      );
+  }
+
+  deleteTemplate(): void {
+    this.clearStatusFlags();
+    if (this.template.id && name === this.template.name) {
+      this.quizAdminService.deleteQuizTemplate(this.template.id)
+        .subscribe(
+          (result: any) => {
+            if (result) {
+              this.deleteSuccess = true;
+            }
+            else {
+              this.deleteError = true;
+            }
+          },
+          error => {
+            console.error(error);
+            this.deleteError = true;
+          }
+        )
+    }
   }
 
   saveTemplate(): void {
-    this.error = false;
+    this.clearStatusFlags();
     const name = this.createModifyQuizTemplateForm.get('name').value;
     this.template.description = this.createModifyQuizTemplateForm.get('description').value;
     if (!this.template.id || name !== this.template.name) { // if new template or template name changed
@@ -238,19 +270,19 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                     }
                     else {
                       console.error('Error retrieving quiz template');
-                      this.error = true;
+                      this.saveError = true;
                     }
                   },
                   error => {
                     console.error(error);
-                    this.error = true;
+                    this.saveError = true;
                   }
                 );
             }
           },
           error => {
             console.error(error);
-            this.error = true;
+            this.saveError = true;
           }
         );
       }
@@ -268,14 +300,14 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                     },
                     error => {
                       console.error(error);
-                      this.error = true;
+                      this.saveError = true;
                     }
                   )
               }
             },
             error => {
               console.error(error);
-              this.error = true;
+              this.saveError = true;
             }
           );
       }
@@ -402,7 +434,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
             if (result) {
               questionSavedCount++;
               if (questionSavedCount === questions.length) {
-                this.success = true;
+                this.saveSuccess = true;
                 this.getTemplates();
                 this.clearTemplate();
               }
@@ -410,7 +442,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
           },
           error => {
             console.error(error);
-            this.error = true;
+            this.saveError = true;
           }
         );
     }
@@ -500,5 +532,13 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   nextChar(c) {
     return String.fromCharCode(c.charCodeAt(0) + 1);
+  }
+
+  clearStatusFlags() {
+    this.saveSuccess = false;
+    this.deleteSuccess = false;
+    this.saveError = false;
+    this.deleteError = false;
+    this.generalError = false;
   }
 }

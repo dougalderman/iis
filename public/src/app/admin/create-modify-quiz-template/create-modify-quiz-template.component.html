@@ -1,78 +1,86 @@
-<h2>Create / Modify Quiz Template</h2>
-
-<form [formGroup]="selectTemplateForm">
-  <select id="template-select" formControlName="templateSelect">
-    <option value="" disabled selected>Select Template</option>
-    <option *ngFor="let templ of templates" [ngValue]="templ.id">{{templ.name}}</option>
-  </select>
-  <br><br>
-</form>
-<form [formGroup]="createModifyQuizTemplateForm" (ngSubmit)="saveTemplate()">
-  <label>Name:</label>
-  <input type="text" id="name" formControlName="name" required>
-  <div *ngIf="name.invalid && (name.dirty || name.touched)">
-    <div *ngIf="name.errors.required" style="color: red">Template name is required</div>
-  </div>
-  <br>
-  <label>Description:</label>
-  <input type="text" id="text" formControlName="description">
-  <br><br>
-  <div formArrayName="formQuestions">
-    <div *ngFor="let question of formQuestions.controls; let i=index">
-      <div [formGroupName]="i">
-        <select formControlName="typeSelect">
-          <option value="" disabled>Select Question Type</option>
-          <option *ngFor="let questionType of questionTypes" [ngValue]="questionType.name">{{questionType.description}}</option>
-        </select>
-        <br>
-        <label>Question Text:</label>
-        <input type="text" formControlName="text">
-        <div *ngIf="question.controls.text.invalid && (question.controls.text.dirty || question.controls.text.touched)">
-          <div *ngIf="question.controls.text.errors.required" style="color: red">Question text is required</div>
-        </div>
-        <br><br>
-        <div formGroupName="answer">
-          <div *ngIf="question.controls.typeSelect.value==='textQuestionMultipleChoice'">
-            <label>Multiple Choice Options:</label>
-            <div formArrayName="options">
-              <div *ngFor="let option of question.controls.answer.controls.options.controls; let j=index">
-                <div [formGroupName]="j">
-                  {{alphaIdArray[j]}}:&nbsp;<input type="text" formControlName="option">
-                  <button type="button" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i,j)">Delete Option</button>
-                </div>
-              </div>
-              <button type="button" (click)="addOption(i)">Add New Option</button>
-            </div>
-            <br>
-            <label>Correct Answer:</label>
-            <input type="text" formControlName="correctAnswer">
+<div class="container">
+  <h2>Create / Modify Quiz Template</h2>
+  <form [formGroup]="selectTemplateForm">
+    <select id="template-select" formControlName="templateSelect">
+      <option value="" disabled selected>Select Template</option>
+      <option *ngFor="let templ of templates" [ngValue]="templ.id">{{templ.name}}</option>
+    </select>
+    <br><br>
+  </form>
+  <form [formGroup]="createModifyQuizTemplateForm" (ngSubmit)="saveTemplate()">
+    <label>Name:</label>
+    <input type="text" id="name" formControlName="name" required>
+    <div *ngIf="name.invalid && (name.dirty || name.touched)">
+      <div *ngIf="name.errors.required" style="color: red">Template name is required</div>
+    </div>
+    <br>
+    <label>Description:</label>
+    <input type="text" id="text" formControlName="description">
+    <br><br>
+    <div formArrayName="formQuestions">
+      <div *ngFor="let question of formQuestions.controls; let i=index">
+        <div [formGroupName]="i">
+          <select formControlName="typeSelect">
+            <option value="" disabled>Select Question Type</option>
+            <option *ngFor="let questionType of questionTypes" [ngValue]="questionType.name">{{questionType.description}}</option>
+          </select>
+          <br>
+          <label>Question Text:</label>
+          <div>
+            <input type="text" class="double-wide" formControlName="text">
+            <img class="delete_icon" *ngIf="formQuestions.length > 1" (click)="deleteQuestion(i)" src="../../../assets/images/delete_icon.jpg" height="20">
           </div>
-          <div *ngIf="question.controls.typeSelect.value==='textQuestionShortAnswer'">
-            <label>Correct Answer Options:</label>
-            <div formArrayName="correctAnswerArray">
-              <div *ngFor="let correctAnswer of question.controls.answer.controls.correctAnswerArray.controls; let k=index">
-                <div [formGroupName]="k">
-                  {{alphaIdArray[k]}}:&nbsp;<input type="text" formControlName="correctAnswer">
-                  <button type="button" *ngIf="question.controls.answer.controls.correctAnswerArray.length > 1" (click)="deleteCorrectAnswer(i,k)">Delete Correct Answer</button>
+          <div *ngIf="question.controls.text.invalid && (question.controls.text.dirty || question.controls.text.touched)">
+            <div *ngIf="question.controls.text.errors.required" style="color: red">Question text is required</div>
+          </div>
+          <br><br>
+          <div formGroupName="answer">
+            <div *ngIf="question.controls.typeSelect.value==='textQuestionMultipleChoice'">
+              <label>Multiple Choice Options:</label>
+              <div formArrayName="options">
+                <div *ngFor="let option of question.controls.answer.controls.options.controls; let j=index">
+                  <div [formGroupName]="j">
+                    {{alphaIdArray[j]}}:&nbsp;<input type="text" formControlName="option">
+                    <img class="delete_icon" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i,j)" src="../../../assets/images/delete_icon.jpg" height="20">
+                  </div>
                 </div>
+                <button type="button" class="btn btn-secondary"(click)="addOption(i)">Add New Option</button>
               </div>
-              <button type="button" (click)="addCorrectAnswer(i)">Add New Correct Answer</button>
+              <br>
+              <label>Correct Answer:</label>
+              <input type="text" formControlName="correctAnswer">
+            </div>
+            <div *ngIf="question.controls.typeSelect.value==='textQuestionShortAnswer'">
+              <label>Correct Answer Options:</label>
+              <div formArrayName="correctAnswerArray">
+                <div *ngFor="let correctAnswer of question.controls.answer.controls.correctAnswerArray.controls; let k=index">
+                  <div [formGroupName]="k">
+                    {{alphaIdArray[k]}}:&nbsp;<input type="text" formControlName="correctAnswer">
+                    <img class="delete_icon" *ngIf="question.controls.answer.controls.correctAnswerArray.length > 1" (click)="deleteCorrectAnswer(i,k)" src="../../../assets/images/delete_icon.jpg" height="20">
+                  </div>
+                </div>
+                <button type="button" class="btn btn-secondary" (click)="addCorrectAnswer(i)">Add New Correct Answer</button>
+              </div>
             </div>
           </div>
+          <br>
+          <br><br>
         </div>
-        <br>
-        <button type="button" *ngIf="formQuestions.length > 1" (click)="deleteQuestion(i)">Delete Question</button>
-        <br><br>
       </div>
     </div>
-  </div>
-  <button type="button" (click)="addQuestion()">Add New Question</button>
-  <br><br>
-  <button type="submit" [disabled]="!createModifyQuizTemplateForm.valid">Save</button>
-  <div *ngIf="name.value">
-    <br>
-    <button type="button" (click)="clearTemplate()">Clear Template</button>
-  </div>
-  <div *ngIf="success" style="color: green">Template successfully saved</div>
-  <div *ngIf="error" style="color: red">Error saving template</div>
- </form>
+    <button type="button" class="btn btn-secondary" (click)="addQuestion()">Add New Question</button>
+    <br><br>
+    <button type="submit" class="btn btn-primary" [disabled]="!createModifyQuizTemplateForm.valid">Save</button>
+    <div *ngIf="name.value">
+      <br>
+      <button type="button" class="btn btn-warning" (click)="clearTemplate()">Clear Template</button>
+      <br><br>
+      <button type="button" class="btn btn-danger" (click)="deleteTemplate()">Delete Template</button>
+    </div>
+    <div *ngIf="saveSuccess" style="color: green">Template successfully saved</div>
+    <div *ngIf="deleteSuccess" style="color: green">Template successfully deleted</div>
+    <div *ngIf="saveError" style="color: red">Error saving template</div>
+    <div *ngIf="deleteError" style="color: red">Error deleting template</div>
+    <div *ngIf="generalError" style="color: red">An error occurred. Please try again.</div>
+  </form>
+ </div>

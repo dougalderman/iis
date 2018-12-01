@@ -7,13 +7,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { FibroArticleComponent } from './fibro-article/fibro-article.component';
 import { AdminModule } from './admin/admin.module';
 import { QuizAdminService } from './services/quiz-admin.service'
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ConfirmModalComponent } from './bootstrap-components/confirm-modal/confirm-modal.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     FibroArticleComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    ConfirmModalComponent
   ],
   imports: [
     BrowserModule,

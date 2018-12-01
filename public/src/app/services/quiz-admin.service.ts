@@ -55,6 +55,12 @@ export class QuizAdminService {
     }
   }
 
+  deleteQuizTemplate(templateId: number) {
+    if (templateId) {
+      return this.http.delete(this.quizTemplatesUrl + '/' + templateId)
+    }
+  }
+
   saveNewQuizQuestion(questionData: QuizQuestion) {
     if (questionData) {
       return this.http.post(this.quizQuestionsUrl, questionData)

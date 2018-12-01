@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FibroArticleComponent implements OnInit {
 
-  LOGO = require('./enwiki-1.5x.png');
+  LOGO = require('../../assets/images/enwiki-1.5x.png');
 
   constructor() { }
 
