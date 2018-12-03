@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl } from '@angular/forms'
 import { Subscription } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as _ from 'lodash';
 
 import { QuizTemplate } from  '../../../../../models/quizzes/quizTemplate';
@@ -9,8 +8,8 @@ import { QuizQuestion } from  '../../../../../models/quizzes/quizQuestion';
 import { QuizTemplateData } from  '../../../../../models/quizzes/data/quizTemplateData';
 import { QuizQuestionData } from  '../../../../../models/quizzes/data/quizQuestionData';
 
-import { QuizAdminService } from '../../services/quiz-admin.service'
-import { ConfirmModalComponent } from '../../bootstrap-components/confirm-modal/confirm-modal.component';
+import { QuizAdminService } from '../../services/quiz-admin.service';
+import { ModalService } from '../../services/modal.service';
 
 class Template extends QuizTemplate {}
 class Question extends QuizQuestion {}
@@ -40,6 +39,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   saveError: boolean = false;
   deleteError: boolean = false;
   generalError: boolean = false;
+  errorMessage: string = '';
   alphaIdArray = [];
 
   selectTemplateForm: FormGroup = this.fb.group({
@@ -78,8 +78,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   constructor(
     private quizAdminService: QuizAdminService,
+    private modalService: ModalService,
     private fb: FormBuilder,
-    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -214,37 +214,68 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   clearTemplate(): void {
-    this.modalService.open(ConfirmModalComponent)
+    this.modalService.open(
+      'confirm',
+      'Clear Template',
+      'clear',
+      this.template.name,
+      'All information on the page will be cleared out, but the template data will remain in the database.',
+    )
       .result.then(
         (result) => {
           if (result === 'OK Click') {
-            this.createModifyQuizTemplateForm.reset();
-            this.resetFormQuestions();
-            this.selectTemplateForm.reset();
-            this.template = new Template();
+            this.clearTemplateNoConfirm();
           }
-        }
+        },
+        () => {}
       );
   }
 
   deleteTemplate(): void {
-    this.clearStatusFlags();
+    const name = this.createModifyQuizTemplateForm.get('name').value;
     if (this.template.id && name === this.template.name) {
-      this.quizAdminService.deleteQuizTemplate(this.template.id)
-        .subscribe(
-          (result: any) => {
-            if (result) {
-              this.deleteSuccess = true;
-            }
-            else {
-              this.deleteError = true;
+      this.modalService.open(
+        'confirm',
+        'Delete Template',
+        'delete',
+        this.template.name,
+        'The template data will be deleted from the database.',
+      )
+        .result.then(
+          (result) => {
+            if (result === 'OK Click') {
+              this.clearStatusFlags();
+              this.quizAdminService.deleteQuizQuestionsByTemplateId(this.template.id)
+                .subscribe(
+                  (result: any) => {
+                    if (result) {
+                      this.quizAdminService.deleteQuizTemplate(this.template.id)
+                        .subscribe(
+                          (result: any) => {
+                            if (result) {
+                              this.deleteSuccess = true;
+                              this.clearTemplateNoConfirm();
+                              this.getTemplates();
+                            }
+                            else {
+                              this.deleteError = true;
+                            }
+                          },
+                          error => {
+                            console.error(error);
+                            this.deleteError = true;
+                          }
+                        );
+                    }
+                  }
+                );
             }
           },
-          error => {
-            console.error(error);
-            this.deleteError = true;
-          }
-        )
+          () => {}
+      );
+    }
+    else {
+      this.errorMessage='Cannot delete new template that hasn\'t yet been saved.'
     }
   }
 
@@ -302,7 +333,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                       console.error(error);
                       this.saveError = true;
                     }
-                  )
+                  );
               }
             },
             error => {
@@ -436,7 +467,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
               if (questionSavedCount === questions.length) {
                 this.saveSuccess = true;
                 this.getTemplates();
-                this.clearTemplate();
+                this.clearTemplateNoConfirm();
               }
             }
           },
@@ -540,5 +571,13 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.saveError = false;
     this.deleteError = false;
     this.generalError = false;
+    this.errorMessage = '';
+  }
+
+  clearTemplateNoConfirm() {
+    this.createModifyQuizTemplateForm.reset();
+    this.resetFormQuestions();
+    this.selectTemplateForm.reset();
+    this.template = new Template();
   }
 }
