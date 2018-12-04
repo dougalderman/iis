@@ -4,6 +4,7 @@ import * as expressSession from 'express-session';
 import * as passport from 'passport';
 import * as bodyParser from 'body-parser';
 import { EndpointsController } from './controllers/endpointsController';
+import { TimedTasksController } from './controllers/timedTasksController';
 
 dotenv.config();
 let node_env = process.env.NODE_ENV;
@@ -23,6 +24,9 @@ app.use(expressSession({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Execute timed tasks
+new TimedTasksController();
 
 // Endpoints
 new EndpointsController(app);
