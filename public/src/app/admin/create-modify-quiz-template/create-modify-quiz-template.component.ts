@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl } from '@angular/forms'
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators'
 import * as _ from 'lodash';
 
 import { QuizTemplate } from  '../../../../../models/quizzes/quizTemplate';
@@ -40,7 +41,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   deleteError: boolean = false;
   generalError: boolean = false;
   errorMessage: string = '';
-  alphaIdArray = [];
+  alphaIdArray: string[] = [];
+  deletedQuestions: number[] = [];
 
   selectTemplateForm: FormGroup = this.fb.group({
     templateSelect: new FormControl('')
@@ -69,6 +71,9 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     description: [''],
     formQuestions: this.fb.array([
       this.fb.group({
+        id: [0],
+        quizId: [0],
+        templateId: [0],
         text: ['', Validators.required],
         typeSelect: new FormControl(this.getDefaultQuestionType()),
         answer: _.cloneDeep(this.formAnswer)
@@ -86,6 +91,10 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.alphaIdArray = this.fillIdArray(this.alphaIdArray);
     this.getTemplates();
     this.onChanges();
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe from multi value observables;
   }
 
   onChanges(): void {
@@ -166,6 +175,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   templateSelectionChanged(templateSelected: number): void {
     if (templateSelected) {
       this.clearStatusFlags();
+      this.deletedQuestions = [];
       this.quizAdminService.getQuizTemplate(templateSelected)
         .subscribe(
           (template: QuizTemplateData[]) => {
@@ -181,6 +191,9 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                     if (questions && questions.length) {
                       for (let i = 0; i < questions.length; i++) {
                         let question = new Question();
+                        question.id = questions[i].id;
+                        question.quizId = questions[i].quiz_id;
+                        question.templateId = questions[i].template_id;
                         question.textQuestion = questions[i].text_question;
                         question.questionType = questions[i].question_type;
                         question.options = questions[i].options;
@@ -296,7 +309,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                     if (template && template.length) {
                       const templateId = template[0].id;
                       if (templateId) {
-                        this.saveAllTemplateQuestions(templateId)
+                        this.saveAllNewTemplateQuestions(templateId)
                       }
                     }
                     else {
@@ -322,18 +335,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
           .subscribe(
             (result: any) => {
               if (result) {
-                this.quizAdminService.deleteQuizQuestionsByTemplateId(this.template.id)
-                  .subscribe(
-                    (result: any) => {
-                      if (result) {
-                        this.saveAllTemplateQuestions(this.template.id)
-                      }
-                    },
-                    error => {
-                      console.error(error);
-                      this.saveError = true;
-                    }
-                  );
+                this.handleAllExistingTemplateQuestions();
               }
             },
             error => {
@@ -348,6 +350,9 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.unsubscribeToQuestionTypeChanges();
     if (question) {
       this.formQuestions.push(this.fb.group({
+        id: [question.id],
+        quizId: [question.quizId],
+        templateId: [question.templateId],
         text: [question.textQuestion, Validators.required],
         typeSelect: new FormControl(question.questionType),
         answer: this.getAnswer(question.questionType, question)
@@ -356,6 +361,9 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     else {
       const defaultQuestionType = this.getDefaultQuestionType();
       this.formQuestions.push(this.fb.group({
+        id: [0],
+        quizId: [0],
+        templateId: [0],
         text: ['', Validators.required],
         typeSelect: new FormControl(defaultQuestionType),
         answer: this.getAnswer(defaultQuestionType)
@@ -367,15 +375,18 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   deleteQuestion(index: number): void {
     this.unsubscribeToQuestionTypeChanges()
     if (typeof index === 'number') {
-      this.formQuestions.removeAt(index)
+      this.formQuestions.removeAt(index);
+      const formQuestion = this.formQuestions.controls[index] as FormGroup;
+      const questionId = formQuestion.controls.id.value
+      this.deletedQuestions.push(questionId);
     }
     this.subscribeToQuestionTypeChanges()
   }
 
   addOption(questionIndex, option?: string): void {
     if (typeof questionIndex === 'number') {
-      let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
-      let answer = formQuestion.controls.answer as FormGroup;
+      const formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
+      const answer = formQuestion.controls.answer as FormGroup;
       let options =  answer.controls.options as FormArray;
       console.log('in addOption()');
 
@@ -434,7 +445,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     }
   }
 
-  saveAllTemplateQuestions(templateId: number): void {
+  saveAllNewTemplateQuestions(templateId: number): void {
     let questions = this.formQuestions.value;
     let questionSavedCount = 0;
     for (let question of questions) {
@@ -477,6 +488,112 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
           }
         );
     }
+  }
+
+  handleAllExistingTemplateQuestions(): void {
+    combineLatest(
+      this.deleteExistingQuizQuestions();
+      this.saveExistingQuizQuestions();
+     ).pipe(
+      map(([deleteQuestions, saveQuestions]) => {
+        if (deleteQuestions && saveQuestions) {
+
+        }
+      })
+    );
+  }
+
+  deleteExistingQuizQuestions(): void {
+    // Delete in DB all questions deleted by user via UI.
+    let questionDeletedCount = 0;
+    for (let deletedQuestionId of this.deletedQuestions) {
+      this.quizAdminService.deleteQuizQuestion(deletedQuestionId)
+        .subscribe(
+          (result: any) => {
+            if (result) {
+              questionDeletedCount++;
+              if (questionDeletedCount === this.deletedQuestions.length) {
+                this.questionsDeleted = true;
+              }
+            }
+          },
+          error => {
+            console.error(error);
+            this.generalError = true;
+          }
+        );
+    }
+  }
+
+  saveExistingQuizQuestions(): void {
+
+  }
+
+
+    let questions = this.formQuestions.value;
+    let questionSavedCount = 0;
+    for (let question of questions) {
+      this.question = new Question()
+      this.question.id = question.id;
+      this.question.quizId = question.quizId;
+      this.question.templateId = templateId;
+      this.question.textQuestion = question.text;
+      this.question.questionType = question.typeSelect;
+      this.question.options = [];
+      for (let option of question.answer.options) {
+        if (option.option) {
+          this.question.options.push(option.option);
+        }
+      }
+      this.question.booleanCorrectAnswer = question.answer.booleanCorrectAnswer;
+      this.question.correctAnswer = question.answer.correctAnswer;
+      this.question.correctAnswerArray = [];
+      for (let correctAnswer of question.answer.correctAnswerArray) {
+        if (correctAnswer.correctAnswer) {
+          this.question.correctAnswerArray.push(correctAnswer.correctAnswer);
+        }
+      }
+      this.question.integerCorrectAnswer = question.answer.integerCorrectAnswer;
+      this.question.integerStartCorrectAnswer = question.answer.integerStartCorrectAnswer;
+      this.question.integerEndCorrectAnswer = question.answer.integerEndCorrectAnswer;
+      if (this.question.id) { // if existing question
+        this.quizAdminService.saveExistingQuizQuestion(this.question.id, this.question)
+        .subscribe(
+          (result: any) => {
+            if (result) {
+              questionSavedCount++;
+              if (questionSavedCount === questions.length) {
+                this.saveSuccess = true;
+                this.getTemplates();
+                this.clearTemplateNoConfirm();
+              }
+            }
+          },
+          error => {
+            console.error(error);
+            this.saveError = true;
+          }
+        );
+      }
+      else {
+        this.quizAdminService.saveNewQuizQuestion(this.question)
+          .subscribe(
+            (result: any) => {
+              if (result) {
+                questionSavedCount++;
+                if (questionSavedCount === questions.length) {
+                  this.saveSuccess = true;
+                  this.getTemplates();
+                  this.clearTemplateNoConfirm();
+                }
+              }
+            },
+            error => {
+              console.error(error);
+              this.saveError = true;
+            }
+          );
+      }
   }
 
   resetFormQuestions(): void {
@@ -577,6 +694,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   clearTemplateNoConfirm() {
     this.createModifyQuizTemplateForm.reset();
     this.resetFormQuestions();
+    this.deletedQuestions = [];
     this.selectTemplateForm.reset();
     this.template = new Template();
   }
