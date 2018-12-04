@@ -67,18 +67,6 @@ export class QuizAdminService {
     }
   }
 
-  saveExistingQuizQuestion(questionId: number, questionData: QuizQuestion) {
-    if (questionData) {
-      return this.http.put(this.quizQuestionsUrl + '/' + questionId, questionData)
-    }
-  }
-
-  deleteQuizQuestion(questionId: number) {
-    if (questionId) {
-      return this.http.delete(this.quizQuestionsUrl + '/' + questionId)
-    }
-  }
-
   deleteQuizQuestionsByTemplateId(templateId: number) {
     if (templateId) {
       return this.http.delete(this.questionsForQuizTemplateUrl + templateId)
