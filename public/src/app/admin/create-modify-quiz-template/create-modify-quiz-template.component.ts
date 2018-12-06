@@ -18,8 +18,6 @@ const QUESTION_TYPES = [
   {name: 'textQuestionMultipleChoice', description: 'Text Question Multiple Choice', default: true},
   {name: 'textQuestionShortAnswer', description: 'Text Question Short Answer'},
   {name: 'textQuestionBoolean', description: 'Text Question Boolean'},
-  {name: 'textQuestionNumericAnswer', description: 'Text Question Numeric Answer'},
-  {name: 'textQuestionNumericRangeAnswer', description: 'Text Question Numeric Range Answer'},
 ]
 
 @Component({
@@ -517,9 +515,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
           }
           answer.controls.correctAnswer.setValue(question.correctAnswer);
         }
-        else {
-          answer.controls.correctAnswer.setValue('');
-        }
         break;
 
       case 'textQuestionShortAnswer':
@@ -535,6 +530,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
               )
             }
           }
+        }
+        break;
+
+      case 'textQuestionBoolean':
+        if (question) {
+          answer.controls.booleanCorrectAnswer.setValue(question.booleanCorrectAnswer);
         }
         break;
     }
