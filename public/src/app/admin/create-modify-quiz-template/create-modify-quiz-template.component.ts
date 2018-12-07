@@ -10,6 +10,7 @@ import { QuizQuestionData } from  '../../../../../models/quizzes/data/quizQuesti
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';
+import { checkForDuplicatesValidator } from '../../directives/check-for-duplicates.directive';
 
 class Template extends QuizTemplate {}
 class Question extends QuizQuestion {}
@@ -47,14 +48,14 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   formAnswer: FormGroup = this.fb.group({
     options: this.fb.array([
       this.fb.group({
-        option: ['']
+        option: ['', checkForDuplicatesValidator()]
       })
     ]),
     booleanCorrectAnswer: [false],
     correctAnswer: [''],
     correctAnswerArray: this.fb.array([
       this.fb.group({
-        correctAnswer: ['']
+        correctAnswer: ['', checkForDuplicatesValidator()]
       })
     ]),
     integerCorrectAnswer: [0],
