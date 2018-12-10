@@ -5,12 +5,12 @@ export function checkForDuplicatesValidator(type, index): ValidatorFn {
     let duplicate = false;
 
     if (control && control.value && control.parent && control.parent.parent) {
-      const val = control.value.trim();
+      const val = control.value.trim().toLowerCase();
       const previousArray: any[] = control.parent.parent.value;
       for (let i = 0; i < previousArray.length; i++) {
         let previousVal = previousArray[i][type];
         if (previousVal) {
-          previousVal = previousVal.trim();
+          previousVal = previousVal.trim().toLowerCase();
         }
         if (i !== index && val === previousVal) {
           duplicate = true;
