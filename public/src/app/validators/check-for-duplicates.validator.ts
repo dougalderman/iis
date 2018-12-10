@@ -3,18 +3,22 @@ import { ValidatorFn, AbstractControl } from '@angular/forms'
 export function checkForDuplicatesValidator(type, index): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
     let duplicate = false;
-    const val = control.value;
 
     if (control && control.value && control.parent && control.parent.parent) {
+      const val = control.value.trim();
       const previousArray: any[] = control.parent.parent.value;
       for (let i = 0; i < previousArray.length; i++) {
-        if (i !== index && val === previousArray[i][type]) {
+        let previousVal = previousArray[i][type];
+        if (previousVal) {
+          previousVal = previousVal.trim();
+        }
+        if (i !== index && val === previousVal) {
           duplicate = true;
         }
       }
     }
 
-    return duplicate ? {'duplicate': {value: val}} : null;
+    return duplicate ? {'duplicate': {value: control.value}} : null;
   };
 }
 

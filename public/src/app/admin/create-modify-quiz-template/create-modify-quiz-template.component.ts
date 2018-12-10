@@ -280,8 +280,14 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   saveTemplate(): void {
     this.clearStatusFlags();
-    const name = this.createModifyQuizTemplateForm.get('name').value;
+    let name = this.createModifyQuizTemplateForm.get('name').value;
+    if (name) {
+      name = name.trim();
+    }
     this.template.description = this.createModifyQuizTemplateForm.get('description').value;
+    if (this.template.description) {
+      this.template.description = this.template.description.trim();
+    }
     if (!this.template.id || name !== this.template.name) { // if new template or template name changed
       this.template.name = name;
       this.template.id = null;
@@ -426,19 +432,25 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.question = new Question()
       this.question.templateId = templateId;
       this.question.textQuestion = question.text;
+      if (this.question.textQuestion) {
+        this.question.textQuestion = this.question.textQuestion.trim();
+      }
       this.question.questionType = question.typeSelect;
       this.question.options = [];
       for (let option of question.answer.options) {
         if (option.option) {
-          this.question.options.push(option.option);
+          this.question.options.push(option.option.trim());
         }
       }
       this.question.booleanCorrectAnswer = question.answer.booleanCorrectAnswer;
       this.question.correctAnswer = question.answer.correctAnswer;
+      if (this.question.correctAnswer) {
+        this.question.correctAnswer = this.question.correctAnswer.trim();
+      }
       this.question.correctAnswerArray = [];
       for (let correctAnswer of question.answer.correctAnswerArray) {
         if (correctAnswer.correctAnswer) {
-          this.question.correctAnswerArray.push(correctAnswer.correctAnswer);
+          this.question.correctAnswerArray.push(correctAnswer.correctAnswer.trim());
         }
       }
       this.question.integerCorrectAnswer = question.answer.integerCorrectAnswer;
