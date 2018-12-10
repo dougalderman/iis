@@ -10,7 +10,7 @@ import { QuizQuestionData } from  '../../../../../models/quizzes/data/quizQuesti
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';
-import { checkForDuplicatesValidator } from '../../directives/check-for-duplicates.directive';
+import { checkForDuplicatesValidator } from '../../validators/check-for-duplicates.validator';
 
 class Template extends QuizTemplate {}
 class Question extends QuizQuestion {}
@@ -48,14 +48,14 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   formAnswer: FormGroup = this.fb.group({
     options: this.fb.array([
       this.fb.group({
-        option: ['', checkForDuplicatesValidator()]
+        option: ['', checkForDuplicatesValidator('option', 0)]
       })
     ]),
     booleanCorrectAnswer: [false],
     correctAnswer: [''],
     correctAnswerArray: this.fb.array([
       this.fb.group({
-        correctAnswer: ['', checkForDuplicatesValidator()]
+        correctAnswer: ['', checkForDuplicatesValidator('correctAnswer', 0)]
       })
     ]),
     integerCorrectAnswer: [0],
@@ -371,27 +371,20 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.subscribeToQuestionTypeChanges()
   }
 
-  addOption(questionIndex, option?: string): void {
+  addOption(questionIndex: number): void {
     if (typeof questionIndex === 'number') {
       let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
       let answer = formQuestion.controls.answer as FormGroup;
       let options =  answer.controls.options as FormArray;
       console.log('in addOption()');
 
-      if (option) {
-        options.push(this.fb.group({
-          option: [option],
-        }));
-      }
-      else {
-        options.push(this.fb.group({
-          option: [''],
-        }));
-      }
+      options.push(this.fb.group({
+        option: ['', checkForDuplicatesValidator('option', options.length)],
+      }));
     }
   }
 
-  deleteOption(questionIndex, optionIndex): void {
+  deleteOption(questionIndex: number, optionIndex: number): void {
     if (typeof questionIndex === 'number' && typeof optionIndex === 'number') {
       let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
       let answer = formQuestion.controls.answer as FormGroup;
@@ -402,27 +395,20 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     }
   }
 
-  addCorrectAnswer(questionIndex, correctAnswer?: string): void {
+  addCorrectAnswer(questionIndex: number): void {
     if (typeof questionIndex === 'number') {
       let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
       let answer = formQuestion.controls.answer as FormGroup;
       let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
       console.log('in addCorrectAnswer()');
 
-      if (correctAnswer) {
-        correctAnswerArray.push(this.fb.group({
-          correctAnswer: [correctAnswer],
-        }));
-      }
-      else {
-        correctAnswerArray.push(this.fb.group({
-          correctAnswer: [''],
-        }));
-      }
+      correctAnswerArray.push(this.fb.group({
+        correctAnswer: ['', checkForDuplicatesValidator('correctAnswer', correctAnswerArray.length)],
+      }));
     }
   }
 
-  deleteCorrectAnswer(questionIndex, correctAnswerIndex): void {
+  deleteCorrectAnswer(questionIndex: number, correctAnswerIndex: number): void {
     if (typeof questionIndex === 'number' && typeof correctAnswerIndex === 'number') {
       let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
       let answer = formQuestion.controls.answer as FormGroup;
@@ -509,7 +495,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
             for (let i = 0; i < question.options.length; i++) {
               options.push(
                 this.fb.group({
-                  option: [question.options[i]]
+                  option: [question.options[i], checkForDuplicatesValidator('option', i)]
                 })
               )
             }
@@ -526,7 +512,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
             for (let i = 0; i < question.correctAnswerArray.length; i++) {
               correctAnswerArray.push(
                 this.fb.group({
-                  correctAnswer: [question.correctAnswerArray[i]]
+                  correctAnswer: [question.correctAnswerArray[i], checkForDuplicatesValidator('correctAnswer', i)]
                 })
               )
             }
