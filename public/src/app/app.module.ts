@@ -11,6 +11,7 @@ import { QuizAdminService } from './services/quiz-admin.service';
 import { ModalService } from './services/modal.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ConfirmModalComponent } from './bootstrap-components/confirm-modal/confirm-modal.component';
+import { CheckTemplateNameValidator } from './validators/check-template-name.validator';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { ConfirmModalComponent } from './bootstrap-components/confirm-modal/conf
   entryComponents: [
     ConfirmModalComponent
   ],
-  providers: [QuizAdminService, ModalService],
+  providers: [QuizAdminService, ModalService, CheckTemplateNameValidator],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
