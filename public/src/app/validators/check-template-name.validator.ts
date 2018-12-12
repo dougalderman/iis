@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AsyncValidator, ValidationErrors, AbstractControl } from '@angular/forms'
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { QuizAdminService } from '../services/quiz-admin.service';
@@ -22,7 +22,7 @@ export class CheckTemplateNameValidator implements AsyncValidator {
       );
     }
     else {
-      return new Observable(() => null);
+      return of(null);
     }
   }
 }
