@@ -16,6 +16,9 @@
           <input type="text" id="name" class="form-control" formControlName="name" required>
           <div *ngIf="name.invalid && (name.dirty || name.touched)">
             <div *ngIf="name.errors.required" class="alert alert-warning">Template name is required</div>
+            <div *ngIf="name.errors.templateNameTaken" class="alert alert-warning">
+              Template name is already being used. If you want to modify an existing template, select it from the menu above.
+            </div>
           </div>
         </div>
         <div class="form-group">

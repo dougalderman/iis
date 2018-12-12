@@ -65,8 +65,9 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   })
 
   createModifyQuizTemplateForm: FormGroup = this.fb.group({
-    name: ['', Validators.required, {
-      asyncValidators: [this.checkTemplateName.validate.bind(this.checkTemplateName)],
+    name: ['', {
+      validators: Validators.required,
+      asyncValidators: this.checkTemplateName.validate.bind(this.checkTemplateName),
       updateOn: 'blur'
     }],
     description: [''],

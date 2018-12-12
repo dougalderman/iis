@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 
 import { QuizTemplate } from  '../../../../models/quizzes/quizTemplate';
 import { QuizQuestion } from  '../../../../models/quizzes/quizQuestion';
@@ -13,6 +13,7 @@ export class QuizAdminService {
   private quizTemplatesUrl = '/api/admin/quiz_templates';
   private quizTemplateByIdUrl = '/api/admin/quiz_templates/id/';
   private quizTemplateByNameUrl = '/api/admin/quiz_templates/name/';
+  private isQuizTemplateNameTakenUrl = '/api/admin/quiz_templates/name_taken/';
 
   private quizQuestionsUrl = '/api/admin/quiz_questions'
   private questionsForQuizTemplateUrl = '/api/admin/quiz_questions/template_id/';
@@ -22,54 +23,60 @@ export class QuizAdminService {
   ) {}
 
   getAllQuizTemplates(): Observable<QuizTemplateData[]> {
-    return this.http.get<QuizTemplate[]>(this.quizTemplatesUrl)
+    return this.http.get<QuizTemplate[]>(this.quizTemplatesUrl);
   }
 
   getQuizTemplate(templateId: number): Observable<QuizTemplateData[]> {
     if (templateId) {
-      return this.http.get<QuizTemplate[]>(this.quizTemplateByIdUrl + templateId)
+      return this.http.get<QuizTemplate[]>(this.quizTemplateByIdUrl + templateId);
     }
   }
 
   getQuizTemplateByName(templateName: string): Observable<QuizTemplateData[]> {
     if (templateName) {
-      return this.http.get<QuizTemplate[]>(this.quizTemplateByNameUrl + templateName)
+      return this.http.get<QuizTemplate[]>(this.quizTemplateByNameUrl + templateName);
+    }
+  }
+
+  isQuizTemplateNameTaken(templateName: string): Observable<boolean> {
+    if (templateName) {
+      return this.http.get<boolean>(this.isQuizTemplateNameTakenUrl + templateName);
     }
   }
 
   getQuestionsForQuizTemplate(templateId: number): Observable<QuizQuestionData[]> {
     if (templateId) {
-      return this.http.get<any[]>(this.questionsForQuizTemplateUrl + templateId)
+      return this.http.get<any[]>(this.questionsForQuizTemplateUrl + templateId);
     }
   }
 
   saveNewQuizTemplate(templateData: QuizTemplate) {
     if (templateData) {
-      return this.http.post(this.quizTemplatesUrl, templateData)
+      return this.http.post(this.quizTemplatesUrl, templateData);
     }
   }
 
   saveExistingQuizTemplate(templateId: number, templateData: QuizTemplate) {
     if (templateId && templateData) {
-      return this.http.put(this.quizTemplatesUrl + '/' + templateId, templateData)
+      return this.http.put(this.quizTemplatesUrl + '/' + templateId, templateData);
     }
   }
 
   deleteQuizTemplate(templateId: number) {
     if (templateId) {
-      return this.http.delete(this.quizTemplatesUrl + '/' + templateId)
+      return this.http.delete(this.quizTemplatesUrl + '/' + templateId);
     }
   }
 
   saveNewQuizQuestion(questionData: QuizQuestion) {
     if (questionData) {
-      return this.http.post(this.quizQuestionsUrl, questionData)
+      return this.http.post(this.quizQuestionsUrl, questionData);
     }
   }
 
   deleteQuizQuestionsByTemplateId(templateId: number) {
     if (templateId) {
-      return this.http.delete(this.questionsForQuizTemplateUrl + templateId)
+      return this.http.delete(this.questionsForQuizTemplateUrl + templateId);
     }
   }
 }
