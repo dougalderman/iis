@@ -52,18 +52,20 @@
                 <div formArrayName="options" class="form-group">
                   <div class="form-group">
                     <div *ngFor="let option of question.controls.answer.controls.options.controls; let j=index">
-                      <div [formGroupName]="j" class="flex-display">
-                        {{alphaIdArray[j]}}:&nbsp;<input type="text"  class="form-control" formControlName="option">
+                      <div [formGroupName]="j" class="double-wide flex-display">
+                        <span class="multiple-choice-option-id">{{alphaIdArray[j]}}:</span>
+                        <div class="custom-control custom-radio multiple-choice-option-radio">
+                          <input type="radio" id="{{'option' + j}}" class="custom-control-input" name="optionCorrectAnswer" formControlName="optionCorrectAnswer" [value]="j">
+                          <label class="custom-control-label" for="{{'option' + j}}">Correct Answer</label>
+                        </div>
+                        <span class="multiple-choice-option">Option:</span>
+                        <input type="text"  class="form-control" formControlName="option">
                         <img class="delete_icon" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i,j)" src="../../../assets/images/delete_icon.jpg" height="20">
                       </div>
                       <div *ngIf="option.controls.option.errors && option.controls.option.errors.duplicate" class="alert alert-warning">Duplicate option</div>
                     </div>
                   </div>
                   <button type="button" class="btn btn-secondary"(click)="addOption(i)">Add New Option</button>
-                </div>
-                <div class="form-group">
-                  <label>Correct Answer:</label>
-                  <input type="text"  class="form-control" formControlName="correctAnswer">
                 </div>
               </div>
               <div *ngIf="question.controls.typeSelect.value==='textQuestionShortAnswer'" class="form-group">
@@ -85,11 +87,11 @@
                 <label>Correct Answer:</label>
                 <br>
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="{{'booleanTrueAnswer' + i}}" class="custom-control-input" formControlName="booleanCorrectAnswer" [value]="true">
+                  <input type="radio" id="{{'booleanTrueAnswer' + i}}" class="custom-control-input" name="booleanCorrectAnswer" formControlName="booleanCorrectAnswer" [value]="true">
                   <label class="custom-control-label" for="{{'booleanTrueAnswer' + i}}">True</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="{{'booleanFalseAnswer' + i}}" class="custom-control-input" formControlName="booleanCorrectAnswer" [value]="false">
+                  <input type="radio" id="{{'booleanFalseAnswer' + i}}" class="custom-control-input" name="booleanCorrectAnswer" formControlName="booleanCorrectAnswer" [value]="false">
                   <label class="custom-control-label" for="{{'booleanFalseAnswer' + i}}">False</label>
                 </div>
               </div>

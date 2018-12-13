@@ -5,11 +5,11 @@ export class QuizQuestion {
   textQuestion: string;
   pictureQuestion: string;
   questionType: string;
-  options: string[];
+  options: QuizQuestionOption[];
   booleanCorrectAnswer: boolean;
   correctAnswer: string;
   correctAnswerArray: string[];
-  locationCorrectAnswers: object[];
+  locationCorrectAnswers: any[];
   dateCorrectAnswer: Date;
   dateStartCorrectAnswer: Date;
   dateEndCorrectAnswer: Date;
@@ -21,4 +21,9 @@ export class QuizQuestion {
   realEndCorrectAnswer: number;
 
   constructor() {}
+}
+
+export class QuizQuestionOption {
+  optionCorrectAnswer: boolean;
+  option: string
 }

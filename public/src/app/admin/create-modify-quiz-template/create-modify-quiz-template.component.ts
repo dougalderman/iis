@@ -49,11 +49,11 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   formAnswer: FormGroup = this.fb.group({
     options: this.fb.array([
       this.fb.group({
+        optionCorrectAnswer: [false],
         option: ['', checkForDuplicatesValidator('option', 0)]
       })
     ]),
     booleanCorrectAnswer: [false],
-    correctAnswer: [''],
     correctAnswerArray: this.fb.array([
       this.fb.group({
         correctAnswer: ['', checkForDuplicatesValidator('correctAnswer', 0)]
@@ -190,7 +190,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                         question.questionType = questions[i].question_type;
                         question.options = questions[i].options;
                         question.booleanCorrectAnswer = questions[i].boolean_correct_answer;
-                        question.correctAnswer = questions[i].correct_answer;
                         question.correctAnswerArray = questions[i].correct_answer_array;
                         question.integerCorrectAnswer = questions[i].integer_correct_answer;
                         question.integerStartCorrectAnswer = questions[i].integer_start_correct_answer;
@@ -390,6 +389,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       let options =  answer.controls.options as FormArray;
 
       options.push(this.fb.group({
+        optionCorrectAnswer: [false],
         option: ['', checkForDuplicatesValidator('option', options.length)],
       }));
     }
@@ -441,14 +441,13 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.question.options = [];
       for (let option of question.answer.options) {
         if (option.option) {
-          this.question.options.push(option.option.trim());
+          this.question.options.push({
+            optionCorrectAnswer: option.correctAnswer,
+            option: option.option.trim()
+          });
         }
       }
       this.question.booleanCorrectAnswer = question.answer.booleanCorrectAnswer;
-      this.question.correctAnswer = question.answer.correctAnswer;
-      if (this.question.correctAnswer) {
-        this.question.correctAnswer = this.question.correctAnswer.trim();
-      }
       this.question.correctAnswerArray = [];
       for (let correctAnswer of question.answer.correctAnswerArray) {
         if (correctAnswer.correctAnswer) {
@@ -509,12 +508,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
             for (let i = 0; i < question.options.length; i++) {
               options.push(
                 this.fb.group({
-                  option: [question.options[i], checkForDuplicatesValidator('option', i)]
+                  optionCorrectAnswer: [question.options[i].optionCorrectAnswer],
+                  option: [question.options[i].option, checkForDuplicatesValidator('option', i)]
                 })
               )
             }
           }
-          answer.controls.correctAnswer.setValue(question.correctAnswer);
         }
         break;
 

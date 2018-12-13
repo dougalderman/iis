@@ -1,4 +1,4 @@
-import { QuizQuestion } from  '../../../models/quizzes/quizQuestion';
+import { QuizQuestion, QuizQuestionOption } from  '../../../models/quizzes/quizQuestion';
 import { Pool } from 'pg';
 
 class Question extends QuizQuestion {
@@ -9,11 +9,10 @@ class Question extends QuizQuestion {
     reqTextQuestion: string,
     reqPictureQuestion: string,
     reqQuestionType: string,
-    reqOptions: string[],
+    reqOptions: QuizQuestionOption[],
     reqBooleanCorrectAnswer: boolean,
-    reqCorrectAnswer: string,
     reqCorrectAnswerArray: string[],
-    reqLocationCorrectAnswers: object[],
+    reqLocationCorrectAnswers: any[],
     reqDateCorrectAnswer: Date,
     reqDateStartCorrectAnswer: Date,
     reqDateEndCorrectAnswer: Date,
@@ -33,7 +32,6 @@ class Question extends QuizQuestion {
     this.questionType = reqQuestionType;
     this.options = reqOptions;
     this.booleanCorrectAnswer = reqBooleanCorrectAnswer;
-    this.correctAnswer = reqCorrectAnswer;
     this.correctAnswerArray = reqCorrectAnswerArray;
     this.locationCorrectAnswers = reqLocationCorrectAnswers;
     this.dateCorrectAnswer = reqDateCorrectAnswer;
@@ -63,7 +61,6 @@ export class QuizQuestionsController {
         req.body.questionType,
         req.body.options,
         req.body.booleanCorrectAnswer,
-        req.body.correctAnswer,
         req.body.correctAnswerArray,
         req.body.locationCorrectAnswers,
         req.body.dateCorrectAnswer,
@@ -92,7 +89,6 @@ export class QuizQuestionsController {
           question.questionType,
           question.options,
           question.booleanCorrectAnswer,
-          question.correctAnswer,
           question.correctAnswerArray,
           question.locationCorrectAnswers,
           question.dateCorrectAnswer,
@@ -238,7 +234,6 @@ export class QuizQuestionsController {
         req.body.questionType,
         req.body.options,
         req.body.booleanCorrectAnswer,
-        req.body.correctAnswer,
         req.body.correctAnswerArray,
         req.body.locationCorrectAnswers,
         req.body.dateCorrectAnswer,
@@ -267,7 +262,6 @@ export class QuizQuestionsController {
           question.questionType,
           question.options,
           question.booleanCorrectAnswer,
-          question.correctAnswer,
           question.correctAnswerArray,
           question.locationCorrectAnswers,
           question.dateCorrectAnswer,

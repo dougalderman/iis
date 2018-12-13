@@ -14,10 +14,10 @@
   width: 30%;
 }
 
-input[type='text']  {
+/* input[type='text']  {
   width: 90%;
   margin-right: .5rem;
-}
+} */
 
 h2 {
   margin-bottom: 2rem;
@@ -26,4 +26,17 @@ h2 {
 
 div.extra-margin-bottom {
   margin-bottom: 3rem;
+}
+
+span.multiple-choice-option-id {
+  padding-right: .7rem;
+}
+
+span.multiple-choice-option {
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
+div.multiple-choice-option-radio {
+  width: 30%;
 }

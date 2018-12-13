@@ -5,11 +5,11 @@ export class QuizQuestionData {
   text_question: string;
   picture_question: string;
   question_type: string;
-  options: string[];
+  options: QuizQuestionOption[];
   boolean_correct_answer: boolean;
   correct_answer: string;
   correct_answer_array: string[];
-  location_correct_answers: object[];
+  location_correct_answers: any[];
   date_correct_answer: Date;
   date_start_correct_answer: Date;
   date_end_correct_answer: Date;
@@ -21,4 +21,9 @@ export class QuizQuestionData {
   real_end_correct_answer: number;
 
   constructor() {}
+}
+
+export class QuizQuestionOption {
+  optionCorrectAnswer: boolean;
+  option: string
 }
