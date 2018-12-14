@@ -11,6 +11,7 @@ import { QuizQuestionData } from  '../../../../../models/quizzes/data/quizQuesti
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';
 import { checkForDuplicatesValidator } from '../../validators/check-for-duplicates.validator';
+import { optionsCorrectAnswerRequiredValidator } from '../../validators/options-correct-answer-required.validator';
 import { CheckTemplateNameValidator } from '../../validators/check-template-name.validator';
 
 class Template extends QuizTemplate {}
@@ -52,7 +53,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         optionCorrectAnswer: [false],
         option: ['', checkForDuplicatesValidator('option', 0)]
       })
-    ]),
+    ],
+      {
+        validators: optionsCorrectAnswerRequiredValidator,
+        updateOn: 'blur'
+      }
+    ),
     booleanCorrectAnswer: [false],
     correctAnswerArray: this.fb.array([
       this.fb.group({
@@ -157,7 +163,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.quizAdminService.getAllQuizTemplates()
       .subscribe(
         (templates: QuizTemplateData[]) => {
-          if (templates && templates.length) {
+          if (templates) {
             this.templates = templates;
           }
         },
@@ -442,7 +448,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       for (let option of question.answer.options) {
         if (option.option) {
           this.question.options.push({
-            optionCorrectAnswer: option.correctAnswer,
+            optionCorrectAnswer: option.optionCorrectAnswer,
             option: option.option.trim()
           });
         }

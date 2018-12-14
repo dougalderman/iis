@@ -1,7 +1,7 @@
-import { ValidatorFn, AbstractControl } from '@angular/forms'
+import { ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms'
 
 export function checkForDuplicatesValidator(type, index): ValidatorFn {
-  return (control: AbstractControl): {[key: string]: any} | null => {
+  return (control: AbstractControl): ValidationErrors | null => {
     let duplicate = false;
 
     if (control && control.value && control.parent && control.parent.parent) {
