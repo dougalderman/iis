@@ -55,7 +55,7 @@
                       <div [formGroupName]="j" class="double-wide flex-display">
                         <span class="multiple-choice-option-id">{{alphaIdArray[j]}}:</span>
                         <div class="custom-control custom-radio multiple-choice-option-radio">
-                          <input type="radio" id="{{'option' + i.toString() + j.toString()}}" class="custom-control-input" name="{{'optionCorrectAnswer' + i}}" formControlName="{{'optionCorrectAnswer' + i}}" [value]="true">
+                          <input type="radio" id="{{'option' + i.toString() + j.toString()}}" class="custom-control-input" name="optionCorrectAnswer" formControlName="optionCorrectAnswer" [value]="true">
                           <label class="custom-control-label" for="{{'option' + i.toString() + j.toString()}}">Correct Answer</label>
                         </div>
                         <span class="multiple-choice-option">Option:</span>
@@ -67,9 +67,7 @@
                         <div *ngIf="option.controls.option.errors && option.controls.option.errors.requiredTrimWhitespace" class="alert alert-warning">Option is required</div>
                       </div>
                     </div>
-                    <div *ngIf="question.controls.answer.controls.options.invalid && (question.controls.answer.controls.options.dirty || question.controls.answer.controls.options.touched)">
-                      <div *ngIf="question.controls.answer.controls.options.length > 1 && question.controls.answer.controls.options.errors && question.controls.answer.controls.options.errors.noOptionsCorrectAnswer" class="alert alert-warning">Please select a correct answer</div>
-                    </div>
+                    <div *ngIf="question.controls.answer.controls.options.length > 1 && question.controls.answer.controls.options.errors && question.controls.answer.controls.options.errors.noOptionsCorrectAnswer" class="alert alert-warning">Please select a correct answer</div>
                   </div>
                   <button type="button" class="btn btn-secondary"(click)="addOption(i)">Add New Option</button>
                 </div>

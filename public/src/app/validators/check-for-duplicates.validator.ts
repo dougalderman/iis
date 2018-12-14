@@ -6,9 +6,9 @@ export function checkForDuplicatesValidator(type, index): ValidatorFn {
 
     if (control && control.value && control.parent && control.parent.parent) {
       const val = control.value.trim().toLowerCase();
-      const previousArray: any[] = control.parent.parent.value;
-      for (let i = 0; i < previousArray.length; i++) {
-        let previousVal = previousArray[i][type];
+      const arr: any[] = control.parent.parent.value;
+      for (let i = 0; i < arr.length; i++) {
+        let previousVal = arr[i][type];
         if (previousVal) {
           previousVal = previousVal.trim().toLowerCase();
         }

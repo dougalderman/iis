@@ -49,7 +49,11 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   })
 
   formAnswer: FormGroup = this.fb.group({
-    options: this.fb.array([]),
+    options: this.fb.array([],
+      {
+        validators: optionsCorrectAnswerRequiredValidator,
+      }
+    ),
     booleanCorrectAnswer: [false],
     correctAnswerArray: this.fb.array([]),
   })
@@ -348,7 +352,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.formQuestions.push(this.fb.group({
         text: [question.textQuestion, requiredTrimWhitespaceValidator()],
         typeSelect: new FormControl(question.questionType),
-        answer: this.getAnswer(question.questionType, len, question)
+        answer: this.getAnswer(question.questionType, question)
       }));
     }
     else {
@@ -356,7 +360,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.formQuestions.push(this.fb.group({
         text: ['', requiredTrimWhitespaceValidator()],
         typeSelect: new FormControl(defaultQuestionType),
-        answer: this.getAnswer(defaultQuestionType, len)
+        answer: this.getAnswer(defaultQuestionType)
       }));
     }
     this.subscribeToQuestionTypeChanges()
@@ -377,14 +381,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       let options =  answer.controls.options as FormArray;
 
       options.push(this.fb.group({
-        ['optionCorrectAnswer' + questionIndex]: [false],
-        option: ['',
-          [
-            requiredTrimWhitespaceValidator(),
-            checkForDuplicatesValidator('option', options.length),
-            optionsCorrectAnswerRequiredValidator(questionIndex)
-          ]
-        ],
+        optionCorrectAnswer: [false],
+        option: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', options.length)]]
       }));
     }
   }
@@ -436,7 +434,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       for (let option of questions[i].answer.options) {
         if (option.option) {
           this.question.options.push({
-            optionCorrectAnswer: option['optionCorrectAnswer' + i],
+            optionCorrectAnswer: option.optionCorrectAnswer,
             option: option.option.trim()
           });
         }
@@ -482,12 +480,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.formQuestions.insert(index, this.fb.group({
       text: ['', requiredTrimWhitespaceValidator()],
       typeSelect: new FormControl(questionType),
-      answer: this.getAnswer(questionType, index)
+      answer: this.getAnswer(questionType)
     }));
     this.subscribeToQuestionTypeChanges();
   }
 
-  getAnswer(questionType: string, questionIndex: number, question?: QuizQuestion): FormGroup {
+  getAnswer(questionType: string, question?: QuizQuestion): FormGroup {
     let answer: FormGroup = _.cloneDeep(this.formAnswer);
 
     switch (questionType) {
@@ -496,18 +494,10 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
           let options = answer.controls.options as FormArray;
           if (question.options && question.options.length) {
             for (let i = 0; i < question.options.length; i++) {
-              options.push(
-                this.fb.group({
-                  ['optionCorrectAnswer' + questionIndex]: [question.options[i].optionCorrectAnswer],
-                  option: [question.options[i].option,
-                    [
-                      requiredTrimWhitespaceValidator(),
-                      checkForDuplicatesValidator('option', i),
-                      optionsCorrectAnswerRequiredValidator(questionIndex)
-                    ]
-                  ]
-                })
-              )
+              options.push(this.fb.group({
+                optionCorrectAnswer: [question.options[i].optionCorrectAnswer],
+                option: [question.options[i].option, [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', i)]]
+              }));
             }
           }
         }

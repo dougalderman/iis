@@ -1,11 +1,9 @@
-import { ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms'
+import { ValidatorFn, ValidationErrors, FormArray } from '@angular/forms'
 
-export function optionsCorrectAnswerRequiredValidator(index): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
+export const optionsCorrectAnswerRequiredValidator: ValidatorFn = (control: FormArray):  ValidationErrors | null => {
   let noCorrectAnswer = true;
 
-  if (control && control.value && control.parent && control.parent.parent) {
-    const previousArray: any[] = control.parent.parent.value;
+  if (control && control.value && control.value.length > 1) {
     for (let option of control.value) {
       if (option.optionCorrectAnswer) {
         noCorrectAnswer = false;
@@ -19,3 +17,4 @@ export function optionsCorrectAnswerRequiredValidator(index): ValidatorFn {
 
   return noCorrectAnswer ? { 'noOptionsCorrectAnswer': true } : null;
 };
+
