@@ -76,18 +76,18 @@ export class QuizQuestionsController {
       const query = {
         text: 'INSERT INTO QuizQuestions(quiz_id, template_id, text_question, ' +
           'picture_question, question_type, options, boolean_correct_answer, ' +
-          'correct_answer, correct_answer_array, location_correct_answers, date_correct_answer, ' +
+          'correct_answer_array, location_correct_answers, date_correct_answer, ' +
           'date_start_correct_answer, date_end_correct_answer, integer_correct_answer, ' +
           'integer_start_correct_answer, integer_end_correct_answer, real_correct_answer, ' +
           'real_start_correct_answer, real_end_correct_answer) VALUES($1, $2, $3, $4, $5, $6, $7, ' +
-          '$8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)',
+          '$8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)',
         values: [
           question.quizId,
           question.templateId,
           question.textQuestion,
           question.pictureQuestion,
           question.questionType,
-          question.options,
+          JSON.stringify(question.options),
           question.booleanCorrectAnswer,
           question.correctAnswerArray,
           question.locationCorrectAnswers,
@@ -250,17 +250,17 @@ export class QuizQuestionsController {
       const query = {
         text: 'UPDATE QuizQuestions SET quiz_id = $1, template_id = $2, text_question = $3, ' +
         'picture_question = $4, question_type = $5, options = $6, boolean_correct_answer = $7, ' +
-        'correct_answer = $8, correct_answer_array = $9, location_correct_answers = $10, date_correct_answer = $11, ' +
-        'date_start_correct_answer = $12, date_end_correct_answer = $13, integer_correct_answer = $14, ' +
-        'integer_start_correct_answer = $15, integer_end_correct_answer = $16, real_correct_answer = $17, ' +
-        'real_start_correct_answer = $18, real_end_correct_answer = $19 WHERE id = $20',
+        'correct_answer_array = $8, location_correct_answers = $9, date_correct_answer = $10, ' +
+        'date_start_correct_answer = $11, date_end_correct_answer = $12, integer_correct_answer = $13, ' +
+        'integer_start_correct_answer = $14, integer_end_correct_answer = $15, real_correct_answer = $16, ' +
+        'real_start_correct_answer = $17, real_end_correct_answer = $18 WHERE id = $19',
         values: [
           question.quizId,
           question.templateId,
           question.textQuestion,
           question.pictureQuestion,
           question.questionType,
-          question.options,
+          JSON.stringify(question.options),
           question.booleanCorrectAnswer,
           question.correctAnswerArray,
           question.locationCorrectAnswers,

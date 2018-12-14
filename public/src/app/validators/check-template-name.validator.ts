@@ -10,8 +10,8 @@ export class CheckTemplateNameValidator implements AsyncValidator {
   constructor(private quizAdminService: QuizAdminService) {}
 
   validate(ctrl: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    if ((ctrl.dirty || ctrl.touched) && ctrl.value) {
-      return this.quizAdminService.isQuizTemplateNameTaken(ctrl.value).pipe(
+    if ((ctrl.dirty || ctrl.touched) && ctrl.value && ctrl.value.trim()) {
+      return this.quizAdminService.isQuizTemplateNameTaken(ctrl.value.trim()).pipe(
         map((isTaken: boolean) => {
           return isTaken ? { templateNameTaken: true } : null;
         }),
