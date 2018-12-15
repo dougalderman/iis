@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators, FormArray, FormGroup, AbstractControl } from '@angular/forms'
+import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms'
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
@@ -366,57 +366,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.subscribeToQuestionTypeChanges()
   }
 
-  deleteQuestion(index: number): void {
+  onDeletedQuestion(index: number): void {
     this.unsubscribeToQuestionTypeChanges()
     if (typeof index === 'number') {
       this.formQuestions.removeAt(index)
     }
     this.subscribeToQuestionTypeChanges()
-  }
-
-  addOption(questionIndex: number): void {
-    if (typeof questionIndex === 'number') {
-      let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
-      let answer = formQuestion.controls.answer as FormGroup;
-      let options =  answer.controls.options as FormArray;
-
-      options.push(this.fb.group({
-        optionCorrectAnswer: [false],
-        option: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', options.length)]]
-      }));
-    }
-  }
-
-  deleteOption(questionIndex: number, optionIndex: number): void {
-    if (typeof questionIndex === 'number' && typeof optionIndex === 'number') {
-      let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
-      let answer = formQuestion.controls.answer as FormGroup;
-      let options =  answer.controls.options as FormArray;
-
-      options.removeAt(optionIndex);
-    }
-  }
-
-  addCorrectAnswer(questionIndex: number): void {
-    if (typeof questionIndex === 'number') {
-      let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
-      let answer = formQuestion.controls.answer as FormGroup;
-      let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
-
-      correctAnswerArray.push(this.fb.group({
-        correctAnswer: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('correctAnswer', correctAnswerArray.length)]],
-      }));
-    }
-  }
-
-  deleteCorrectAnswer(questionIndex: number, correctAnswerIndex: number): void {
-    if (typeof questionIndex === 'number' && typeof correctAnswerIndex === 'number') {
-      let formQuestion = this.formQuestions.controls[questionIndex] as FormGroup;
-      let answer = formQuestion.controls.answer as FormGroup;
-      let correctAnswerArray =  answer.controls.correctAnswerArray as FormArray;
-
-      correctAnswerArray.removeAt(correctAnswerIndex);
-    }
   }
 
   saveAllTemplateQuestions(templateId: number): void {
@@ -469,7 +424,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   resetFormQuestions(): void {
     const len = this.formQuestions.controls.length;
     for (let i = len - 1; i >= 0; i--) {
-      this.deleteQuestion(i);
+      this.onDeletedQuestion(i);
     }
     this.formQuestions.reset();
   }

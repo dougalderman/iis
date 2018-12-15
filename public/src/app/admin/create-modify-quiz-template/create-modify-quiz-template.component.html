@@ -27,84 +27,11 @@
         </div>
       </div>
       <div formArrayName="formQuestions" class="form-group extra-margin-bottom">
-        <div *ngFor="let question of formQuestions.controls; let i=index">
-          <div [formGroupName]="i" class="form-group extra-margin-bottom">
-            <div class="form-group">
-              <label>Question Type:</label>
-              <select class="form-control" formControlName="typeSelect">
-                <option value="" disabled>Select Question Type</option>
-                <option *ngFor="let questionType of questionTypes" [ngValue]="questionType.name">{{questionType.description}}</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Question Text:</label>
-              <div class="double-wide flex-display">
-                <input type="text" class="form-control" formControlName="text" required>
-                <img class="delete_icon" *ngIf="formQuestions.length > 1" (click)="deleteQuestion(i)" src="../../../assets/images/delete_icon.jpg" height="20">
-              </div>
-              <div *ngIf="question.controls.text.invalid && (question.controls.text.dirty || question.controls.text.touched)">
-                <div *ngIf="question.controls.text.errors.requiredTrimWhitespace" class="alert alert-warning">Question text is required</div>
-              </div>
-            </div>
-            <div formGroupName="answer">
-              <div *ngIf="question.controls.typeSelect.value==='textQuestionMultipleChoice'">
-                <label>Multiple Choice Options:</label>
-                <div formArrayName="options" class="form-group">
-                  <div class="form-group">
-                    <div *ngFor="let option of question.controls.answer.controls.options.controls; let j=index">
-                      <div [formGroupName]="j" class="double-wide flex-display">
-                        <span class="multiple-choice-option-id">{{alphaIdArray[j]}}:</span>
-                        <div class="custom-control custom-radio multiple-choice-option-radio">
-                          <input type="radio" id="{{'option' + i.toString() + j.toString()}}" class="custom-control-input" name="optionCorrectAnswer" formControlName="optionCorrectAnswer" [value]="true">
-                          <label class="custom-control-label" for="{{'option' + i.toString() + j.toString()}}">Correct Answer</label>
-                        </div>
-                        <span class="multiple-choice-option">Option:</span>
-                        <input type="text"  class="form-control" formControlName="option" required>
-                        <img class="delete_icon" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i,j)" src="../../../assets/images/delete_icon.jpg" height="20">
-                      </div>
-                      <div *ngIf="option.controls.option.invalid && (option.controls.option.dirty || option.controls.option.touched)">
-                        <div *ngIf="option.controls.option.errors && option.controls.option.errors.duplicate" class="alert alert-warning">Duplicate option</div>
-                        <div *ngIf="option.controls.option.errors && option.controls.option.errors.requiredTrimWhitespace" class="alert alert-warning">Option is required</div>
-                      </div>
-                    </div>
-                    <div *ngIf="question.controls.answer.controls.options.length > 1 && question.controls.answer.controls.options.errors && question.controls.answer.controls.options.errors.noOptionsCorrectAnswer" class="alert alert-warning">Please select a correct answer</div>
-                  </div>
-                  <button type="button" class="btn btn-secondary"(click)="addOption(i)">Add New Option</button>
-                </div>
-              </div>
-              <div *ngIf="question.controls.typeSelect.value==='textQuestionShortAnswer'" class="form-group">
-                <label>Correct Answer Options:</label>
-                <div formArrayName="correctAnswerArray">
-                  <div class="form-group">
-                    <div *ngFor="let correctAnswer of question.controls.answer.controls.correctAnswerArray.controls; let k=index">
-                      <div [formGroupName]="k" class="flex-display">
-                        {{alphaIdArray[k]}}:&nbsp;<input type="text" class="form-control" formControlName="correctAnswer" required>
-                        <img class="delete_icon" *ngIf="question.controls.answer.controls.correctAnswerArray.length > 1" (click)="deleteCorrectAnswer(i,k)" src="../../../assets/images/delete_icon.jpg" height="20">
-                      </div>
-                      <div *ngIf="correctAnswer.controls.correctAnswer.invalid && (correctAnswer.controls.correctAnswer.dirty || correctAnswer.controls.correctAnswer.touched)">
-                        <div *ngIf="correctAnswer.controls.correctAnswer.errors && correctAnswer.controls.correctAnswer.errors.requiredTrimWhitespace" class="alert alert-warning">Correct answer is required</div>
-                        <div *ngIf="correctAnswer.controls.correctAnswer.errors && correctAnswer.controls.correctAnswer.errors.duplicate" class="alert alert-warning">Duplicate correct answer</div>
-                      </div>
-                    </div>
-                  </div>
-                  <button type="button" class="btn btn-secondary" (click)="addCorrectAnswer(i)">Add New Correct Answer</button>
-                </div>
-              </div>
-              <div *ngIf="question.controls.typeSelect.value==='textQuestionBoolean'" class="form-group">
-                <label>Correct Answer:</label>
-                <br>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="{{'booleanTrueAnswer' + i}}" class="custom-control-input" name="booleanCorrectAnswer" formControlName="booleanCorrectAnswer" [value]="true">
-                  <label class="custom-control-label" for="{{'booleanTrueAnswer' + i}}">True</label>
-                </div>
-                <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" id="{{'booleanFalseAnswer' + i}}" class="custom-control-input" name="booleanCorrectAnswer" formControlName="booleanCorrectAnswer" [value]="false">
-                  <label class="custom-control-label" for="{{'booleanFalseAnswer' + i}}">False</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <app-template-quiz-question *ngFor="let question of formQuestions.controls; let i=index"
+          [question]="question"
+          [index]="i"
+          (deletedQuestion)="onDeletedQuestion($event)">
+        </app-template-quiz-question>
       </div>
       <div class="form-group extra-margin-bottom">
         <button type="button" class="btn btn-secondary" (click)="addQuestion()">Add New Question</button>
