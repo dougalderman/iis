@@ -1,16 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms'
-import * as _ from 'lodash';
+import { FormBuilder, FormGroup } from '@angular/forms'
 
-import { checkForDuplicatesValidator } from '../../validators/check-for-duplicates.validator';
-import { requiredTrimWhitespaceValidator } from '../../validators/required-trim-whitespace.validator';
-import { optionsCorrectAnswerRequiredValidator } from '../../validators/options-correct-answer-required.validator';
-
-const QUESTION_TYPES = [
-  {name: 'textQuestionMultipleChoice', description: 'Text Question Multiple Choice', default: true},
-  {name: 'textQuestionShortAnswer', description: 'Text Question Short Answer'},
-  {name: 'textQuestionBoolean', description: 'Text Question Boolean'},
-]
+import { QuizTemplateForm } from '../../../../../models/quizzes/forms/quizTemplateForm';
+import { QUIZ_QUESTION_TYPES } from '../../constants/quiz-question-types.constant';
+import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
   selector: 'app-template-quiz-question',
@@ -24,70 +17,35 @@ export class TemplateQuizQuestionComponent implements OnInit {
   @Output() deletedQuestion = new EventEmitter<number>();
 
   alphaIdArray = [];
-  questionTypes: any[] = QUESTION_TYPES;
-
-  formAnswer: FormGroup = this.fb.group({
-    options: this.fb.array([],
-      {
-        validators: optionsCorrectAnswerRequiredValidator,
-      }
-    ),
-    booleanCorrectAnswer: [false],
-    correctAnswerArray: this.fb.array([]),
-  })
-
-  formQuestion: FormGroup = this.fb.group({
-    text: ['', requiredTrimWhitespaceValidator()],
-    typeSelect: new FormControl(this.getDefaultQuestionType()),
-    answer: _.cloneDeep(this.formAnswer)
-  })
+  questionTypes: any[] = QUIZ_QUESTION_TYPES;
+  quizTemplateForm = new QuizTemplateForm(this.fb);
 
   constructor(
-    private fb: FormBuilder,
-  ) { }
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit() {
-    this.alphaIdArray = this.fillIdArray(this.alphaIdArray);
+    this.alphaIdArray = fillIdArray(this.alphaIdArray);
   }
 
   deleteQuestion() {
     this.deletedQuestion.emit(this.index);
   }
 
-  addOption(): void {
-    let answer = this.question.controls.answer as FormGroup;
-    let options =  answer.controls.options as FormArray;
-
-    options.push(this.fb.group({
-      optionCorrectAnswer: [false],
-      option: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', options.length)]]
-    }));
+  addOption() {
+    this.quizTemplateForm.addOption();
   }
 
-  deleteOption(optionIndex: number): void {
-    if (typeof optionIndex === 'number') {
-      let answer = this.question.controls.answer as FormGroup;
-      let options =  answer.controls.options as FormArray;
-      options.removeAt(optionIndex);
-    }
+  deleteOption(indx: number) {
+    this.quizTemplateForm.deleteOption(indx);
   }
 
-  addCorrectAnswer(): void {
-    let answer = this.question.controls.answer as FormGroup;
-    let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
-
-    correctAnswerArray.push(this.fb.group({
-      correctAnswer: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('correctAnswer', correctAnswerArray.length)]],
-    }));
+  addCorrectAnswer() {
+    this.quizTemplateForm.addCorrectAnswer();
   }
 
-  deleteCorrectAnswer(correctAnswerIndex: number): void {
-    if (typeof correctAnswerIndex === 'number') {
-      let answer = this.question.controls.answer as FormGroup;
-      let correctAnswerArray =  answer.controls.correctAnswerArray as FormArray;
-
-      correctAnswerArray.removeAt(correctAnswerIndex);
-    }
+  deleteCorrectAnswer(indx: number) {
+    this.quizTemplateForm.deleteCorrectAnswer(indx);
   }
 
   getDefaultQuestionType(): string {
@@ -96,22 +54,7 @@ export class TemplateQuizQuestionComponent implements OnInit {
         return type.default === true;
       }
     );
+
     return defaultQuestionType.name;
   }
-
-  fillIdArray(id: string[]): string[] {
-    let c = 'a';
-
-    for (let i = 0; i < 26; i++) {
-      id.push(c);
-      c = this.nextChar(c)
-    }
-    return id;
-  }
-
-  nextChar(c) {
-    return String.fromCharCode(c.charCodeAt(0) + 1);
-  }
-
-
 }

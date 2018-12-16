@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms'
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
@@ -10,10 +9,6 @@ import { QuizQuestionData } from  '../../../../../models/quizzes/data/quizQuesti
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';
-import { checkForDuplicatesValidator } from '../../validators/check-for-duplicates.validator';
-import { optionsCorrectAnswerRequiredValidator } from '../../validators/options-correct-answer-required.validator';
-import { requiredTrimWhitespaceValidator } from '../../validators/required-trim-whitespace.validator';
-import { CheckTemplateNameValidator } from '../../validators/check-template-name.validator';
 
 class Template extends QuizTemplate {}
 class Question extends QuizQuestion {}
@@ -34,7 +29,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   template: QuizTemplate = new Template();
   templates: QuizTemplate[];
   question: QuizQuestion = new Question();
-  questionTypes: any[] = QUESTION_TYPES;
   questionTypeChangedSubscription: Subscription[] = [];
   saveSuccess: boolean = false;
   deleteSuccess: boolean = false;
@@ -44,45 +38,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   errorMessage: string = '';
   alphaIdArray = [];
 
-  selectTemplateForm: FormGroup = this.fb.group({
-    templateSelect: new FormControl('')
-  })
-
-  formAnswer: FormGroup = this.fb.group({
-    options: this.fb.array([],
-      {
-        validators: optionsCorrectAnswerRequiredValidator,
-      }
-    ),
-    booleanCorrectAnswer: [false],
-    correctAnswerArray: this.fb.array([]),
-  })
-
-  createModifyQuizTemplateForm: FormGroup = this.fb.group({
-    name: ['', {
-      validators: requiredTrimWhitespaceValidator(),
-      asyncValidators: this.checkTemplateName.validate.bind(this.checkTemplateName),
-      updateOn: 'blur'
-    }],
-    description: [''],
-    formQuestions: this.fb.array([
-      this.fb.group({
-        text: ['', requiredTrimWhitespaceValidator()],
-        typeSelect: new FormControl(this.getDefaultQuestionType()),
-        answer: _.cloneDeep(this.formAnswer)
-      })
-    ])
-  });
-
   constructor(
     private quizAdminService: QuizAdminService,
     private modalService: ModalService,
-    private fb: FormBuilder,
-    private checkTemplateName: CheckTemplateNameValidator
   ) {}
 
   ngOnInit(): void {
-    this.alphaIdArray = this.fillIdArray(this.alphaIdArray);
     this.getTemplates();
     this.onChanges();
   }
@@ -348,29 +309,13 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   addQuestion(question?: QuizQuestion): void {
     this.unsubscribeToQuestionTypeChanges();
     const len = this.formQuestions.length;
-    if (question) {
-      this.formQuestions.push(this.fb.group({
-        text: [question.textQuestion, requiredTrimWhitespaceValidator()],
-        typeSelect: new FormControl(question.questionType),
-        answer: this.getAnswer(question.questionType, question)
-      }));
-    }
-    else {
-      const defaultQuestionType = this.getDefaultQuestionType();
-      this.formQuestions.push(this.fb.group({
-        text: ['', requiredTrimWhitespaceValidator()],
-        typeSelect: new FormControl(defaultQuestionType),
-        answer: this.getAnswer(defaultQuestionType)
-      }));
-    }
+    // addQuestion
     this.subscribeToQuestionTypeChanges()
   }
 
   onDeletedQuestion(index: number): void {
     this.unsubscribeToQuestionTypeChanges()
-    if (typeof index === 'number') {
-      this.formQuestions.removeAt(index)
-    }
+    // deleteQuestion
     this.subscribeToQuestionTypeChanges()
   }
 
@@ -481,29 +426,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     }
 
     return answer;
-  }
-
-  getDefaultQuestionType(): string {
-    const defaultQuestionType = this.questionTypes.find(
-      (type: any) => {
-        return type.default === true;
-      }
-    );
-    return defaultQuestionType.name;
-  }
-
-  fillIdArray(id: string[]): string[] {
-    let c = 'a';
-
-    for (let i = 0; i < 26; i++) {
-      id.push(c);
-      c = this.nextChar(c)
-    }
-    return id;
-  }
-
-  nextChar(c) {
-    return String.fromCharCode(c.charCodeAt(0) + 1);
   }
 
   clearStatusFlags() {
