@@ -1,4 +1,4 @@
-import { QuizModel } from  '../../../models/quizzes/quiz';
+import { QuizModel } from  '../../../models/quizzes/quiz.model';
 import { Pool } from 'pg';
 
 class Quiz extends QuizModel {

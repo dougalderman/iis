@@ -1,11 +1,11 @@
-export class QuizQuestionData {
+export class QuizQuestionDataModel {
   id: number;
   quiz_id: number;
   template_id: number;
   text_question: string;
   picture_question: string;
   question_type: string;
-  options: QuizQuestionOption[];
+  options: QuizQuestionOptionDataModel[];
   boolean_correct_answer: boolean;
   correct_answer: string;
   correct_answer_array: string[];
@@ -23,7 +23,7 @@ export class QuizQuestionData {
   constructor() {}
 }
 
-export class QuizQuestionOption {
+export class QuizQuestionOptionDataModel {
   optionCorrectAnswer: boolean;
   option: string
 }

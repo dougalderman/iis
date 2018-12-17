@@ -1,7 +1,7 @@
-import { QuizQuestion, QuizQuestionOption } from  '../../../models/quizzes/quizQuestion';
+import { QuizQuestionModel, QuizQuestionOptionModel } from  '../../../models/quizzes/quiz-question.model';
 import { Pool } from 'pg';
 
-class Question extends QuizQuestion {
+class Question extends QuizQuestionModel {
 
   constructor(
     reqQuizId: number,
@@ -9,7 +9,7 @@ class Question extends QuizQuestion {
     reqTextQuestion: string,
     reqPictureQuestion: string,
     reqQuestionType: string,
-    reqOptions: QuizQuestionOption[],
+    reqOptions: QuizQuestionOptionModel[],
     reqBooleanCorrectAnswer: boolean,
     reqCorrectAnswerArray: string[],
     reqLocationCorrectAnswers: any[],

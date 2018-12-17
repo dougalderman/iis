@@ -1,4 +1,4 @@
-export class QuizAnswerData {
+export class QuizAnswerDataModel {
   id: number;
   quiz_id: number;
   question_id: number;

@@ -1,4 +1,4 @@
-export class QuizResult {
+export class QuizResultModel {
   id: number;
   quizId: number;
   dateTaken: Date;

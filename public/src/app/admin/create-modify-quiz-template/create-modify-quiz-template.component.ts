@@ -3,18 +3,18 @@ import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/for
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
-import { QuizTemplate } from  '../../../../../models/quizzes/quizTemplate';
-import { QuizQuestion } from  '../../../../../models/quizzes/quizQuestion';
-import { QuizTemplateData } from  '../../../../../models/quizzes/data/quizTemplateData';
-import { QuizQuestionData } from  '../../../../../models/quizzes/data/quizQuestionData';
-import { QuizTemplateForm } from '../../../../../models/quizzes/forms/quizTemplateForm';
+import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.model';
+import { QuizQuestionModel } from  '../../../../../models/quizzes/quiz-question.model';
+import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-template-data.model';
+import { QuizQuestionDataModel } from  '../../../../../models/quizzes/data/quiz-question-data.model';
+import { CreateModifyQuizTemplateFormModel } from '../../../../../models/quizzes/forms/create-modify-quiz-template-form.model';
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';
 import { CheckTemplateNameValidator } from '../../validators/check-template-name.validator';
 
-class Template extends QuizTemplate {}
-class Question extends QuizQuestion {}
+class Template extends QuizTemplateModel {}
+class Question extends QuizQuestionModel {}
 
 @Component({
   selector: 'app-create-modify-quiz-template',
@@ -23,9 +23,9 @@ class Question extends QuizQuestion {}
 })
 export class CreateModifyQuizTemplateComponent implements OnInit {
 
-  template: QuizTemplate = new Template();
-  templates: QuizTemplate[];
-  question: QuizQuestion = new Question();
+  template: QuizTemplateModel = new Template();
+  templates: QuizTemplateModel[];
+  question: QuizQuestionModel = new Question();
   questionTypeChangedSubscription: Subscription[] = [];
   saveSuccess: boolean = false;
   deleteSuccess: boolean = false;
@@ -35,7 +35,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   errorMessage: string = '';
   alphaIdArray = [];
 
-  quizTemplateForm = new QuizTemplateForm(this.fb, this.checkTemplateName);
+  quizTemplateForm = new CreateModifyQuizTemplateFormModel(this.fb, this.checkTemplateName);
   selectTemplateForm = this.quizTemplateForm.selectTemplateForm;
   createModifyQuizTemplateForm = this.quizTemplateForm.createModifyQuizTemplateForm;
 
@@ -114,7 +114,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   getTemplates(): void {
     this.quizAdminService.getAllQuizTemplates()
       .subscribe(
-        (templates: QuizTemplateData[]) => {
+        (templates: QuizTemplateDataModel[]) => {
           if (templates) {
             this.templates = templates;
           }
@@ -131,16 +131,16 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.clearStatusFlags();
       this.quizAdminService.getQuizTemplate(templateSelected)
         .subscribe(
-          (template: QuizTemplateData[]) => {
+          (template: QuizTemplateDataModel[]) => {
             if (template && template.length) {
-              this.template = template[0] as QuizTemplate;
+              this.template = template[0] as QuizTemplateModel;
               this.createModifyQuizTemplateForm.reset();
               this.resetFormQuestions();
               this.createModifyQuizTemplateForm.controls.name.setValue(this.template.name);
               this.createModifyQuizTemplateForm.controls.description.setValue(this.template.description);
               this.quizAdminService.getQuestionsForQuizTemplate(templateSelected)
                 .subscribe(
-                  (questions: QuizQuestionData[]) => {
+                  (questions: QuizQuestionDataModel[]) => {
                     if (questions && questions.length) {
                       for (let i = 0; i < questions.length; i++) {
                         let question = new Question();
@@ -257,7 +257,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
             if (result) {
               this.quizAdminService.getQuizTemplateByName(this.template.name)
                 .subscribe(
-                  (template: QuizTemplateData[]) => {
+                  (template: QuizTemplateDataModel[]) => {
                     if (template && template.length) {
                       const templateId = template[0].id;
                       if (templateId) {
@@ -309,7 +309,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       }
   }
 
-  addQuestion(question?: QuizQuestion): void {
+  addQuestion(question?: QuizQuestionModel): void {
     this.unsubscribeToQuestionTypeChanges();
     const len = this.formQuestions.length;
     this.quizTemplateForm.addQuestion(question);

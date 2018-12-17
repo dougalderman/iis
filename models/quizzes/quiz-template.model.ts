@@ -1,4 +1,4 @@
-export class QuizTemplateData {
+export class QuizTemplateModel {
   id: number;
   name: string;
   description: string;

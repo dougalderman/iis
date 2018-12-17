@@ -1,7 +1,7 @@
-import { QuizTemplate } from  '../../../models/quizzes/quizTemplate';
+import { QuizTemplateModel } from  '../../../models/quizzes/quiz-template.model';
 import { Pool } from 'pg';
 
-class Template extends QuizTemplate {
+class Template extends QuizTemplateModel {
 
   constructor(reqName: string, reqDescription: string) {
     super();

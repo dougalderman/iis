@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { QuizTemplate } from  '../../../../models/quizzes/quizTemplate';
-import { QuizQuestion } from  '../../../../models/quizzes/quizQuestion';
-import { QuizTemplateData } from  '../../../../models/quizzes/data/quizTemplateData';
-import { QuizQuestionData } from  '../../../../models/quizzes/data/quizQuestionData';
+import { QuizTemplateModel } from  '../../../../models/quizzes/quiz-template.model';
+import { QuizQuestionModel } from  '../../../../models/quizzes/quiz-question.model';
+import { QuizTemplateDataModel } from  '../../../../models/quizzes/data/quiz-template-data.model';
+import { QuizQuestionDataModel } from  '../../../../models/quizzes/data/quiz-question-data.model';
 
 @Injectable()
 export class QuizAdminService {
@@ -22,19 +22,19 @@ export class QuizAdminService {
     private http: HttpClient
   ) {}
 
-  getAllQuizTemplates(): Observable<QuizTemplateData[]> {
-    return this.http.get<QuizTemplate[]>(this.quizTemplatesUrl);
+  getAllQuizTemplates(): Observable<QuizTemplateDataModel[]> {
+    return this.http.get<QuizTemplateModel[]>(this.quizTemplatesUrl);
   }
 
-  getQuizTemplate(templateId: number): Observable<QuizTemplateData[]> {
+  getQuizTemplate(templateId: number): Observable<QuizTemplateDataModel[]> {
     if (templateId) {
-      return this.http.get<QuizTemplate[]>(this.quizTemplateByIdUrl + templateId);
+      return this.http.get<QuizTemplateModel[]>(this.quizTemplateByIdUrl + templateId);
     }
   }
 
-  getQuizTemplateByName(templateName: string): Observable<QuizTemplateData[]> {
+  getQuizTemplateByName(templateName: string): Observable<QuizTemplateDataModel[]> {
     if (templateName) {
-      return this.http.get<QuizTemplate[]>(this.quizTemplateByNameUrl + templateName);
+      return this.http.get<QuizTemplateModel[]>(this.quizTemplateByNameUrl + templateName);
     }
   }
 
@@ -44,19 +44,19 @@ export class QuizAdminService {
     }
   }
 
-  getQuestionsForQuizTemplate(templateId: number): Observable<QuizQuestionData[]> {
+  getQuestionsForQuizTemplate(templateId: number): Observable<QuizQuestionDataModel[]> {
     if (templateId) {
       return this.http.get<any[]>(this.questionsForQuizTemplateUrl + templateId);
     }
   }
 
-  saveNewQuizTemplate(templateData: QuizTemplate) {
+  saveNewQuizTemplate(templateData: QuizTemplateModel) {
     if (templateData) {
       return this.http.post(this.quizTemplatesUrl, templateData);
     }
   }
 
-  saveExistingQuizTemplate(templateId: number, templateData: QuizTemplate) {
+  saveExistingQuizTemplate(templateId: number, templateData: QuizTemplateModel) {
     if (templateId && templateData) {
       return this.http.put(this.quizTemplatesUrl + '/' + templateId, templateData);
     }
@@ -68,7 +68,7 @@ export class QuizAdminService {
     }
   }
 
-  saveNewQuizQuestion(questionData: QuizQuestion) {
+  saveNewQuizQuestion(questionData: QuizQuestionModel) {
     if (questionData) {
       return this.http.post(this.quizQuestionsUrl, questionData);
     }

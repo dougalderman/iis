@@ -1,7 +1,7 @@
-import { QuizAnswer } from  '../../../models/quizzes/quizAnswer';
+import { QuizAnswerModel } from  '../../../models/quizzes/quiz-answer.model';
 import { Pool } from 'pg';
 
-class Answer extends QuizAnswer {
+class Answer extends QuizAnswerModel {
 
   constructor(
     reqQuizId: number,

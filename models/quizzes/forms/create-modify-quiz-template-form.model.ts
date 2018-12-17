@@ -1,14 +1,14 @@
 import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
 import * as _ from 'lodash';
 
-import { QuizQuestion } from  '../quizQuestion';
+import { QuizQuestionModel } from  '../quiz-question.model';
 import { checkForDuplicatesValidator } from '../../../public/src/app/validators/check-for-duplicates.validator';
 import { optionsCorrectAnswerRequiredValidator } from '../../../public/src/app/validators/options-correct-answer-required.validator';
 import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
 import { CheckTemplateNameValidator } from '../../../public/src/app/validators/check-template-name.validator';
 import { getDefaultQuestionType } from '../../../public/src/app/utilities/get-default-question-type.utility';
 
-export class QuizTemplateForm {
+export class CreateModifyQuizTemplateFormModel {
   constructor(
     private fb: FormBuilder,
     private checkTemplateName: CheckTemplateNameValidator
@@ -48,7 +48,7 @@ export class QuizTemplateForm {
     formQuestions: this.formQuestions
   });
 
-  addQuestion(question?: QuizQuestion) {
+  addQuestion(question?: QuizQuestionModel) {
     if (question) {
       this.formQuestions.push(this.fb.group({
         text: [question.textQuestion, requiredTrimWhitespaceValidator()],
@@ -81,7 +81,7 @@ export class QuizTemplateForm {
     }));
   }
 
-  getAnswer(questionType: string, question?: QuizQuestion): FormGroup {
+  getAnswer(questionType: string, question?: QuizQuestionModel): FormGroup {
     let answer: FormGroup = _.cloneDeep(this.formAnswer);
 
     switch (questionType) {
