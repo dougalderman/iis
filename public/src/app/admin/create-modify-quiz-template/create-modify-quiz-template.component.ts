@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms'
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
@@ -6,18 +7,14 @@ import { QuizTemplate } from  '../../../../../models/quizzes/quizTemplate';
 import { QuizQuestion } from  '../../../../../models/quizzes/quizQuestion';
 import { QuizTemplateData } from  '../../../../../models/quizzes/data/quizTemplateData';
 import { QuizQuestionData } from  '../../../../../models/quizzes/data/quizQuestionData';
+import { QuizTemplateForm } from '../../../../../models/quizzes/forms/quizTemplateForm';
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';
+import { CheckTemplateNameValidator } from '../../validators/check-template-name.validator';
 
 class Template extends QuizTemplate {}
 class Question extends QuizQuestion {}
-
-const QUESTION_TYPES = [
-  {name: 'textQuestionMultipleChoice', description: 'Text Question Multiple Choice', default: true},
-  {name: 'textQuestionShortAnswer', description: 'Text Question Short Answer'},
-  {name: 'textQuestionBoolean', description: 'Text Question Boolean'},
-]
 
 @Component({
   selector: 'app-create-modify-quiz-template',
@@ -38,9 +35,15 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   errorMessage: string = '';
   alphaIdArray = [];
 
+  quizTemplateForm = new QuizTemplateForm(this.fb, this.checkTemplateName);
+  selectTemplateForm = this.quizTemplateForm.selectTemplateForm;
+  createModifyQuizTemplateForm = this.quizTemplateForm.createModifyQuizTemplateForm;
+
   constructor(
     private quizAdminService: QuizAdminService,
     private modalService: ModalService,
+    private fb: FormBuilder,
+    private checkTemplateName: CheckTemplateNameValidator
   ) {}
 
   ngOnInit(): void {
@@ -309,13 +312,13 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   addQuestion(question?: QuizQuestion): void {
     this.unsubscribeToQuestionTypeChanges();
     const len = this.formQuestions.length;
-    // addQuestion
+    this.quizTemplateForm.addQuestion(question);
     this.subscribeToQuestionTypeChanges()
   }
 
   onDeletedQuestion(index: number): void {
     this.unsubscribeToQuestionTypeChanges()
-    // deleteQuestion
+    this.quizTemplateForm.deleteQuestion(index);
     this.subscribeToQuestionTypeChanges()
   }
 
@@ -376,56 +379,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   questionTypeChanged(questionType: string, index: number): void {
     this.unsubscribeToQuestionTypeChanges();
-    this.formQuestions.removeAt(index);
-    this.formQuestions.insert(index, this.fb.group({
-      text: ['', requiredTrimWhitespaceValidator()],
-      typeSelect: new FormControl(questionType),
-      answer: this.getAnswer(questionType)
-    }));
+    this.quizTemplateForm.questionTypeChanged(questionType, index);
     this.subscribeToQuestionTypeChanges();
-  }
-
-  getAnswer(questionType: string, question?: QuizQuestion): FormGroup {
-    let answer: FormGroup = _.cloneDeep(this.formAnswer);
-
-    switch (questionType) {
-      case 'textQuestionMultipleChoice':
-        if (question) {
-          let options = answer.controls.options as FormArray;
-          if (question.options && question.options.length) {
-            for (let i = 0; i < question.options.length; i++) {
-              options.push(this.fb.group({
-                optionCorrectAnswer: [question.options[i].optionCorrectAnswer],
-                option: [question.options[i].option, [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', i)]]
-              }));
-            }
-          }
-        }
-        break;
-
-      case 'textQuestionShortAnswer':
-        if (question) {
-          let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
-          if (question.correctAnswerArray && question.correctAnswerArray.length) {
-            for (let i = 0; i < question.correctAnswerArray.length; i++) {
-              correctAnswerArray.push(
-                this.fb.group({
-                  correctAnswer: [question.correctAnswerArray[i], [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('correctAnswer', i)]]
-                })
-              )
-            }
-          }
-        }
-        break;
-
-      case 'textQuestionBoolean':
-        if (question) {
-          answer.controls.booleanCorrectAnswer.setValue(question.booleanCorrectAnswer);
-        }
-        break;
-    }
-
-    return answer;
   }
 
   clearStatusFlags() {

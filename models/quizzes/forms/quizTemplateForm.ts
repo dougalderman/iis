@@ -1,19 +1,18 @@
-import { FormBuilder, FormControl, FormArray, FormGroup, AbstractControl } from '@angular/forms'
+import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { QuizQuestion } from  '../quizQuestion';
-import { checkForDuplicatesValidator } from 'public/src/app/validators/check-for-duplicates.validator';
-import { optionsCorrectAnswerRequiredValidator } from 'public/src/app/validators/options-correct-answer-required.validator';
-import { requiredTrimWhitespaceValidator } from 'public/src/app/validators/required-trim-whitespace.validator';
-import { CheckTemplateNameValidator } from 'public/src/app/validators/check-template-name.validator';
-import { getDefaultQuestionType } from 'public/src/app/utilities/get-default-question-type.utility';
+import { checkForDuplicatesValidator } from '../../../public/src/app/validators/check-for-duplicates.validator';
+import { optionsCorrectAnswerRequiredValidator } from '../../../public/src/app/validators/options-correct-answer-required.validator';
+import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
+import { CheckTemplateNameValidator } from '../../../public/src/app/validators/check-template-name.validator';
+import { getDefaultQuestionType } from '../../../public/src/app/utilities/get-default-question-type.utility';
 
 export class QuizTemplateForm {
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private checkTemplateName: CheckTemplateNameValidator
   ) {}
-
-  private checkTemplateName: CheckTemplateNameValidator
 
   selectTemplateForm: FormGroup = this.fb.group({
     templateSelect: new FormControl('')
@@ -71,6 +70,15 @@ export class QuizTemplateForm {
     if (typeof index === 'number') {
       this.formQuestions.removeAt(index)
     }
+  }
+
+  questionTypeChanged(questionType: string, index: number): void {
+    this.formQuestions.removeAt(index);
+    this.formQuestions.insert(index, this.fb.group({
+      text: ['', requiredTrimWhitespaceValidator()],
+      typeSelect: new FormControl(questionType),
+      answer: this.getAnswer(questionType)
+    }));
   }
 
   getAnswer(questionType: string, question?: QuizQuestion): FormGroup {

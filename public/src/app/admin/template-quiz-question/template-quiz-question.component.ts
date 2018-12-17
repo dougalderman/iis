@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms'
+import { FormArray, FormGroup } from '@angular/forms'
 
-import { QuizTemplateForm } from '../../../../../models/quizzes/forms/quizTemplateForm';
 import { QUIZ_QUESTION_TYPES } from '../../constants/quiz-question-types.constant';
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
@@ -12,20 +11,23 @@ import { fillIdArray } from '../../utilities/fill-id-array.utility';
 })
 export class TemplateQuizQuestionComponent implements OnInit {
 
-  @Input() question: FormGroup;
+  @Input() quizTemplateForm: any;
   @Input() index: number;
   @Output() deletedQuestion = new EventEmitter<number>();
 
   alphaIdArray = [];
   questionTypes: any[] = QUIZ_QUESTION_TYPES;
-  quizTemplateForm = new QuizTemplateForm(this.fb);
+  questions: FormArray;
+  question: FormGroup;
 
-  constructor(
-    private fb: FormBuilder
-  ) {}
+  constructor() {}
 
   ngOnInit() {
     this.alphaIdArray = fillIdArray(this.alphaIdArray);
+    if (this.quizTemplateForm) {
+      this.questions = this.quizTemplateForm.createModifyQuizTemplateForm.get('formQuestions') as FormArray;
+      this.question = this.questions.controls[this.index] as FormGroup;
+    }
   }
 
   deleteQuestion() {
@@ -33,19 +35,19 @@ export class TemplateQuizQuestionComponent implements OnInit {
   }
 
   addOption() {
-    this.quizTemplateForm.addOption();
+    this.quizTemplateForm.addOption.call(this.question);
   }
 
   deleteOption(indx: number) {
-    this.quizTemplateForm.deleteOption(indx);
+    this.quizTemplateForm.deleteOption.call(this.question, indx);
   }
 
   addCorrectAnswer() {
-    this.quizTemplateForm.addCorrectAnswer();
+    this.quizTemplateForm.addCorrectAnswer.call(this.question);
   }
 
   deleteCorrectAnswer(indx: number) {
-    this.quizTemplateForm.deleteCorrectAnswer(indx);
+    this.quizTemplateForm.deleteCorrectAnswer.call(this.question, indx);
   }
 
   getDefaultQuestionType(): string {

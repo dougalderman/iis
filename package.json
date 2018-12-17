@@ -12,9 +12,9 @@
     "build:prod": "prod_build.sh",
     "build:dev": "dev_build.sh",
     "build:prodangular": "webpack --config webpack.prod.js",
-    "build:devangular": "webpack --config webpack.dev.js",
+    "build:devangular": "webpack --config webpack.dev.js --watch",
     "build:prodserver": "webpack --config webpack.prod.server.js",
-    "build:devserver": "webpack --config webpack.dev.server.js"
+    "build:devserver": "webpack --config webpack.dev.server.js --watch"
   },
   "private": true,
   "dependencies": {

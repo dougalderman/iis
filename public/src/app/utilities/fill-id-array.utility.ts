@@ -3,7 +3,7 @@ export function fillIdArray(id: string[]): string[] {
 
   for (let i = 0; i < 26; i++) {
     id.push(c);
-    c = this.nextChar(c)
+    c = nextChar(c)
   }
   return id;
 }
