@@ -1,0 +1,29 @@
+.delete_icon {
+  margin-left: 0.3rem;
+}
+
+.delete_icon:hover {
+  cursor: pointer;
+}
+
+.double-wide {
+  width: 200%;
+}
+
+input[type='text']  {
+  width: 90%;
+  margin-right: .5rem;
+}
+
+span.multiple-choice-option-id {
+  padding-right: .7rem;
+}
+
+span.multiple-choice-option {
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
+div.multiple-choice-option-radio {
+  width: 30%;
+}

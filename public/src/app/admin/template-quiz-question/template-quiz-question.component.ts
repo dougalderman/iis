@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms'
+import { FormArray, FormGroup, AbstractControl } from '@angular/forms'
 
 import { QUIZ_QUESTION_TYPES } from '../../constants/quiz-question-types.constant';
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
@@ -17,17 +17,21 @@ export class TemplateQuizQuestionComponent implements OnInit {
 
   alphaIdArray = [];
   questionTypes: any[] = QUIZ_QUESTION_TYPES;
-  questions: FormArray;
-  question: FormGroup;
+  createModifyQuizTemplateForm: FormGroup
+  questions: FormArray
 
   constructor() {}
 
   ngOnInit() {
     this.alphaIdArray = fillIdArray(this.alphaIdArray);
     if (this.quizTemplateForm) {
-      this.questions = this.quizTemplateForm.createModifyQuizTemplateForm.get('formQuestions') as FormArray;
-      this.question = this.questions.controls[this.index] as FormGroup;
+      this.createModifyQuizTemplateForm = this.quizTemplateForm.createModifyQuizTemplateForm;
+      this.questions = this.createModifyQuizTemplateForm.get('formQuestions') as FormArray;
     }
+  }
+
+  get question(): FormGroup {
+    return this.questions.controls[this.index] as FormGroup;
   }
 
   deleteQuestion() {
