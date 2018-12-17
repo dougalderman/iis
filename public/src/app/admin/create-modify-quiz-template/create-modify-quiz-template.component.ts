@@ -311,7 +311,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
 
   addQuestion(question?: QuizQuestionModel): void {
     this.unsubscribeToQuestionTypeChanges();
-    const len = this.formQuestions.length;
     this.quizTemplateForm.addQuestion(question);
     this.subscribeToQuestionTypeChanges()
   }

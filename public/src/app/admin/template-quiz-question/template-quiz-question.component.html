@@ -25,8 +25,8 @@
             <div [formGroupName]="i" class="double-wide flex-display">
               <span class="multiple-choice-option-id">{{alphaIdArray[i]}}:</span>
               <div class="custom-control custom-radio multiple-choice-option-radio">
-                <input type="radio" id="{{'option' + index.toString() + i.toString()}}" class="custom-control-input" name="optionCorrectAnswer" formControlName="optionCorrectAnswer" [value]="true">
-                <label class="custom-control-label" for="{{'option' + index.toString() + i.toString()}}">Correct Answer</label>
+                <input type="radio" id="{{'option' + questionIndex.toString() + i.toString()}}" class="custom-control-input" name="optionCorrectAnswer" formControlName="optionCorrectAnswer" [value]="true">
+                <label class="custom-control-label" for="{{'option' + questionIndex.toString() + i.toString()}}">Correct Answer</label>
               </div>
               <span class="multiple-choice-option">Option:</span>
               <input type="text"  class="form-control" formControlName="option" required>
@@ -64,12 +64,12 @@
       <label>Correct Answer:</label>
       <br>
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="{{'booleanTrueAnswer' + index}}" class="custom-control-input" name="booleanCorrectAnswer" formControlName="booleanCorrectAnswer" [value]="true">
-        <label class="custom-control-label" for="{{'booleanTrueAnswer' + index}}">True</label>
+        <input type="radio" id="{{'booleanTrueAnswer' + questionIndex}}" class="custom-control-input" name="booleanCorrectAnswer" formControlName="booleanCorrectAnswer" [value]="true">
+        <label class="custom-control-label" for="{{'booleanTrueAnswer' + questionIndex}}">True</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="{{'booleanFalseAnswer' + index}}" class="custom-control-input" name="booleanCorrectAnswer" formControlName="booleanCorrectAnswer" [value]="false">
-        <label class="custom-control-label" for="{{'booleanFalseAnswer' + index}}">False</label>
+        <input type="radio" id="{{'booleanFalseAnswer' + questionIndex}}" class="custom-control-input" name="booleanCorrectAnswer" formControlName="booleanCorrectAnswer" [value]="false">
+        <label class="custom-control-label" for="{{'booleanFalseAnswer' + questionIndex}}">False</label>
       </div>
     </div>
   </div>

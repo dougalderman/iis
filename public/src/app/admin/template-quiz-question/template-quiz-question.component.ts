@@ -12,7 +12,7 @@ import { fillIdArray } from '../../utilities/fill-id-array.utility';
 export class TemplateQuizQuestionComponent implements OnInit {
 
   @Input() quizTemplateForm: any;
-  @Input() index: number;
+  @Input() questionIndex: number;
   @Output() deletedQuestion = new EventEmitter<number>();
 
   alphaIdArray = [];
@@ -31,27 +31,27 @@ export class TemplateQuizQuestionComponent implements OnInit {
   }
 
   get question(): FormGroup {
-    return this.questions.controls[this.index] as FormGroup;
+    return this.questions.controls[this.questionIndex] as FormGroup;
   }
 
   deleteQuestion() {
-    this.deletedQuestion.emit(this.index);
+    this.deletedQuestion.emit(this.questionIndex);
   }
 
   addOption() {
-    this.quizTemplateForm.addOption.call(this.question);
+    this.quizTemplateForm.addOption(this.questionIndex);
   }
 
   deleteOption(indx: number) {
-    this.quizTemplateForm.deleteOption.call(this.question, indx);
+    this.quizTemplateForm.deleteOption(this.questionIndex, indx);
   }
 
   addCorrectAnswer() {
-    this.quizTemplateForm.addCorrectAnswer.call(this.question);
+    this.quizTemplateForm.addCorrectAnswer(this.questionIndex);
   }
 
   deleteCorrectAnswer(indx: number) {
-    this.quizTemplateForm.deleteCorrectAnswer.call(this.question, indx);
+    this.quizTemplateForm.deleteCorrectAnswer(this.questionIndex, indx);
   }
 
   getDefaultQuestionType(): string {

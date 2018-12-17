@@ -18,7 +18,7 @@ export class CreateModifyQuizTemplateFormModel {
     templateSelect: new FormControl('')
   })
 
-  formAnswer: FormGroup = this.fb.group({
+  answer: FormGroup = this.fb.group({
     options: this.fb.array([],
       {
         validators: optionsCorrectAnswerRequiredValidator,
@@ -28,14 +28,14 @@ export class CreateModifyQuizTemplateFormModel {
     correctAnswerArray: this.fb.array([]),
   })
 
-  formQuestion: FormGroup = this.fb.group({
+  question: FormGroup = this.fb.group({
     text: ['', requiredTrimWhitespaceValidator()],
     typeSelect: new FormControl(getDefaultQuestionType()),
-    answer: _.cloneDeep(this.formAnswer)
+    answer: _.cloneDeep(this.answer)
   })
 
-  formQuestions: FormArray = this.fb.array([
-    this.formQuestion
+  questions: FormArray = this.fb.array([
+    this.question
   ])
 
   createModifyQuizTemplateForm: FormGroup = this.fb.group({
@@ -45,8 +45,12 @@ export class CreateModifyQuizTemplateFormModel {
       updateOn: 'blur'
     }],
     description: [''],
-    formQuestions: this.formQuestions
+    formQuestions: this.questions
   });
+
+  get formQuestions(): FormArray {
+    return this.createModifyQuizTemplateForm.get('formQuestions') as FormArray;
+  }
 
   addQuestion(question?: QuizQuestionModel) {
     if (question) {
@@ -82,7 +86,7 @@ export class CreateModifyQuizTemplateFormModel {
   }
 
   getAnswer(questionType: string, question?: QuizQuestionModel): FormGroup {
-    let answer: FormGroup = _.cloneDeep(this.formAnswer);
+    let answer: FormGroup = _.cloneDeep(this.answer);
 
     switch (questionType) {
       case 'textQuestionMultipleChoice':
@@ -124,40 +128,48 @@ export class CreateModifyQuizTemplateFormModel {
     return answer;
   }
 
-  addOption(): void {
-    let answer = this.formQuestion.controls.answer as FormGroup;
-    let options =  answer.controls.options as FormArray;
+  addOption(questionIndex: number): void {
+    if (typeof questionIndex === 'number') {
+      let question = this.formQuestions.controls[questionIndex] as FormGroup;
+      let answer = question.controls.answer as FormGroup;
+      let options =  answer.controls.options as FormArray;
 
-    options.push(this.fb.group({
-      optionCorrectAnswer: [false],
-      option: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', options.length)]]
-    }));
+      options.push(this.fb.group({
+        optionCorrectAnswer: [false],
+        option: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', options.length)]]
+      }));
+    }
   }
 
-  deleteOption(optionIndex: number): void {
-    if (typeof optionIndex === 'number') {
-      let answer = this.formQuestion.controls.answer as FormGroup;
+  deleteOption(questionIndex: number, optionIndex: number): void {
+    if (typeof questionIndex === 'number' && typeof optionIndex === 'number') {
+      let question = this.formQuestions.controls[questionIndex] as FormGroup;
+      let answer = question.controls.answer as FormGroup;
       let options =  answer.controls.options as FormArray;
+
       options.removeAt(optionIndex);
     }
   }
 
-  addCorrectAnswer(): void {
-    let answer = this.formQuestion.controls.answer as FormGroup;
-    let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
+  addCorrectAnswer(questionIndex: number): void {
+    if (typeof questionIndex === 'number') {
+      let question = this.formQuestions.controls[questionIndex] as FormGroup;
+      let answer = question.controls.answer as FormGroup;
+      let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
 
-    correctAnswerArray.push(this.fb.group({
-      correctAnswer: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('correctAnswer', correctAnswerArray.length)]],
-    }));
+      correctAnswerArray.push(this.fb.group({
+        correctAnswer: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('correctAnswer', correctAnswerArray.length)]],
+      }));
+    }
   }
 
-  deleteCorrectAnswer(correctAnswerIndex: number): void {
-    if (typeof correctAnswerIndex === 'number') {
-      let answer = this.formQuestion.controls.answer as FormGroup;
+  deleteCorrectAnswer(questionIndex: number, correctAnswerIndex: number): void {
+    if (typeof questionIndex === 'number' && typeof correctAnswerIndex === 'number') {
+      let question = this.formQuestions.controls[questionIndex] as FormGroup;
+      let answer = question.controls.answer as FormGroup;
       let correctAnswerArray =  answer.controls.correctAnswerArray as FormArray;
 
       correctAnswerArray.removeAt(correctAnswerIndex);
     }
   }
-
 }

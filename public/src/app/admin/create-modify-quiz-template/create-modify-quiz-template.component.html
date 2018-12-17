@@ -29,7 +29,7 @@
       <div formArrayName="formQuestions" class="form-group extra-margin-bottom">
         <app-template-quiz-question *ngFor="let question of formQuestions.controls; let i=index"
           [quizTemplateForm]="quizTemplateForm"
-          [index]="i"
+          [questionIndex]="i"
           (deletedQuestion)="onDeletedQuestion($event)">
         </app-template-quiz-question>
       </div>
