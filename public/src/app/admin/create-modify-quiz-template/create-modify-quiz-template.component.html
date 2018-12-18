@@ -34,10 +34,10 @@
         </app-template-quiz-question>
       </div>
       <div class="form-group extra-margin-bottom">
-        <button type="button" class="btn btn-secondary" (click)="addQuestion()">Add New Question</button>
+        <button type="button" class="btn btn-primary" (click)="addQuestion()">Add New Question</button>
       </div>
       <div class="form-group extra-margin-bottom">
-        <button type="submit" class="btn btn-primary" [disabled]="!createModifyQuizTemplateForm.valid">Save Template</button>
+        <button type="submit" class="btn btn-success" [disabled]="!createModifyQuizTemplateForm.valid">Save Template</button>
       </div>
       <div *ngIf="name.value" class="form-inline">
         <button type="button" class="btn btn-warning" (click)="clearTemplate()">Clear</button>

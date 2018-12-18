@@ -20,6 +20,11 @@ span.multiple-choice-option-id {
   width: 3%;
 }
 
+span.correct-answer-id {
+  padding-right: .7rem;
+  width: 6%;
+}
+
 span.multiple-choice-option {
   padding-left: .5rem;
   padding-right: .5rem;
@@ -27,4 +32,8 @@ span.multiple-choice-option {
 
 div.multiple-choice-option-radio {
   width: 30%;
+}
+
+form.quiz-question {
+  margin-bottom: 2.5rem;
 }

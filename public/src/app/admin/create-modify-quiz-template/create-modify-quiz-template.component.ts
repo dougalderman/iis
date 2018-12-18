@@ -32,6 +32,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   saveError: boolean = false;
   deleteError: boolean = false;
   generalError: boolean = false;
+  templateSelectionProcessing: boolean = false;
   errorMessage: string = '';
   alphaIdArray = [];
 
@@ -66,6 +67,9 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.createModifyQuizTemplateForm.get('name').valueChanges.subscribe(
       (val: string) => {
         if (val) {
+          if (!this.templateSelectionProcessing) {
+            this.selectTemplateForm.reset();
+          }
           this.clearStatusFlags();
         }
       },
@@ -129,6 +133,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   templateSelectionChanged(templateSelected: number): void {
     if (templateSelected) {
       this.clearStatusFlags();
+      this.templateSelectionProcessing = true;
       this.quizAdminService.getQuizTemplate(templateSelected)
         .subscribe(
           (template: QuizTemplateDataModel[]) => {
@@ -152,21 +157,25 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                         this.addQuestion(question);
                       }
                     }
+                    this.templateSelectionProcessing = false;
                   },
                   error => {
                     console.error(error);
                     this.generalError = true;
+                    this.templateSelectionProcessing = false;
                   }
                 );
             }
             else {
               console.error('Error retrieving selected quiz template');
               this.generalError = true;
+              this.templateSelectionProcessing = false;
             }
         },
         error => {
           console.error(error);
           this.generalError = true;
+          this.templateSelectionProcessing = false;
         }
       );
     }
@@ -388,6 +397,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.saveError = false;
     this.deleteError = false;
     this.generalError = false;
+    this.templateSelectionProcessing = false;
     this.errorMessage = '';
   }
 

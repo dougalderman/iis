@@ -1,4 +1,4 @@
-<form [formGroup]="question">
+<form class="quiz-question" [formGroup]="question">
   <div class="form-group">
     <label>Question Type:</label>
     <select class="form-control" formControlName="typeSelect">
@@ -43,12 +43,13 @@
       </div>
     </div>
     <div *ngIf="question.controls.typeSelect.value==='textQuestionShortAnswer'" class="form-group">
-      <label>Correct Answer Options:</label>
+      <label>Correct Answers:</label>
       <div formArrayName="correctAnswerArray">
         <div class="form-group">
           <div *ngFor="let correctAnswer of question.controls.answer.controls.correctAnswerArray.controls; let j=index">
             <div [formGroupName]="j" class="flex-display">
-              {{alphaIdArray[j]}}:&nbsp;<input type="text" class="form-control" formControlName="correctAnswer" required>
+              <span class="correct-answer-id">{{alphaIdArray[j]}}:</span>
+              <input type="text" class="form-control" formControlName="correctAnswer" required>
               <img class="delete_icon" *ngIf="question.controls.answer.controls.correctAnswerArray.length > 1" (click)="deleteCorrectAnswer(j)" src="../../../assets/images/delete_icon.jpg" height="20">
             </div>
             <div *ngIf="correctAnswer.controls.correctAnswer.invalid && (correctAnswer.controls.correctAnswer.dirty || correctAnswer.controls.correctAnswer.touched)">
