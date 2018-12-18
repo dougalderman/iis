@@ -5,13 +5,14 @@ USE IIS; */
 --Quizzes
 DROP TYPE IF EXISTS quiz_question_type CASCADE;
 CREATE TYPE quiz_question_type AS ENUM (
-  'textMultipleChoice',
-  'textShortAnswer',
-  'textBoolean',
-  'textDateAnswer',
-  'textDateRangeAnswer',
-  'textNumericAnswer',
-  'textNumericRangeAnswer',
+  'textQuestionMultipleChoice',
+  'textQuestionShortAnswer',
+  'textQuestionBoolean',
+  'textQuestionDateAnswer',
+  'textQuestionDateRangeAnswer',
+  'textQuestionNumericAnswer',
+  'textQuestionNumericRangeAnswer',
+  'textQuestionPictureAnswer',
   'pictureQuestionMultipleChoice',
   'pictureQuestionShortAnswer',
   'pictureQuestionBoolean',
@@ -19,8 +20,7 @@ CREATE TYPE quiz_question_type AS ENUM (
   'pictureQuestionDateAnswer',
   'picatureQuestionDateRangeAnswer',
   'pictureQuestionNumericAnswer',
-  'pictureQuestionNumericRangeAnswer',
-  'pictureAnswer'
+  'pictureQuestionNumericRangeAnswer'
  );
 
 DROP TABLE IF EXISTS Quizzes CASCADE;
@@ -48,7 +48,6 @@ CREATE TABLE QuizQuestions (
   question_type quiz_question_type,
   options jsonb,
   boolean_correct_answer boolean,
-  correct_answer text,
   correct_answer_array text[],
   location_correct_answers point[],
   date_correct_answer date,

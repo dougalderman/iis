@@ -1,7 +1,7 @@
-import { QuizResult } from  '../../../models/quizzes/quizResult';
+import { QuizResultModel } from  '../../../models/quizzes/quiz-result.model';
 import { Pool } from 'pg';
 
-class Results extends QuizResult {
+class Results extends QuizResultModel {
 
   constructor(reqQuizId: number, reqDateTaken: Date, reqQuizDuration: string) {
     super();

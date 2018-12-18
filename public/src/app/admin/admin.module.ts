@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule }   from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-
 import { AdminComponent } from './admin.component';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminHomeComponent } from './admin-home/admin-home.component'
@@ -11,6 +10,7 @@ import { CreateModifySurveyTemplateComponent } from './create-modify-survey-temp
 import { ActivateQuizTemplateComponent } from './activate-quiz-template/activate-quiz-template.component';
 import { ActivateSurveyTemplateComponent } from './activate-survey-template/activate-survey-template.component';
 import { QuizQuestionComponent } from './quiz-question/quiz-question.component';
+import { TemplateQuizQuestionComponent } from './template-quiz-question/template-quiz-question.component';
 
 @NgModule({
   imports: [
@@ -25,7 +25,8 @@ import { QuizQuestionComponent } from './quiz-question/quiz-question.component';
     CreateModifySurveyTemplateComponent,
     ActivateQuizTemplateComponent,
     ActivateSurveyTemplateComponent,
-    QuizQuestionComponent
+    QuizQuestionComponent,
+    TemplateQuizQuestionComponent
   ]
 })
 export class AdminModule {}

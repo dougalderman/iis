@@ -1,12 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
-/* div {
-  h1 {
-    color: red;
-  }
-} */
+@import '~bootstrap/scss/bootstrap.scss';
 
-div {
-  h1 {
-  color: red;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial;
+  font-size: 16px;
+}
+
+p {
+  font-family: 'Helvetica', sans-serif;
+  font-size: 1rem;
+  margin-top: 0;
+}
+
+.container {
+  margin: 1rem;
+}
+
+.flex-display {
+  display: flex;
+  align-items: center;
 }

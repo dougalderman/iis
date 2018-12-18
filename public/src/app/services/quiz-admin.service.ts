@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-import { QuizTemplate } from  '../../../../models/quizzes/quizTemplate';
-import { QuizQuestion } from  '../../../../models/quizzes/quizQuestion';
+import { QuizTemplateModel } from  '../../../../models/quizzes/quiz-template.model';
+import { QuizQuestionModel } from  '../../../../models/quizzes/quiz-question.model';
+import { QuizTemplateDataModel } from  '../../../../models/quizzes/data/quiz-template-data.model';
+import { QuizQuestionDataModel } from  '../../../../models/quizzes/data/quiz-question-data.model';
 
 @Injectable()
 export class QuizAdminService {
@@ -12,6 +13,7 @@ export class QuizAdminService {
   private quizTemplatesUrl = '/api/admin/quiz_templates';
   private quizTemplateByIdUrl = '/api/admin/quiz_templates/id/';
   private quizTemplateByNameUrl = '/api/admin/quiz_templates/name/';
+  private isQuizTemplateNameTakenUrl = '/api/admin/quiz_templates/name_taken/';
 
   private quizQuestionsUrl = '/api/admin/quiz_questions'
   private questionsForQuizTemplateUrl = '/api/admin/quiz_questions/template_id/';
@@ -20,90 +22,61 @@ export class QuizAdminService {
     private http: HttpClient
   ) {}
 
-  getAllQuizTemplates(): Observable<QuizTemplate[]> {
-    return this.http.get<QuizTemplate[]>(this.quizTemplatesUrl)
-    .pipe(
-      catchError(this.handleError('getAllQuizTemplates', []))
-    );
+  getAllQuizTemplates(): Observable<QuizTemplateDataModel[]> {
+    return this.http.get<QuizTemplateModel[]>(this.quizTemplatesUrl);
   }
 
-  getQuizTemplate(templateId: number): Observable<QuizTemplate[]> {
+  getQuizTemplate(templateId: number): Observable<QuizTemplateDataModel[]> {
     if (templateId) {
-      return this.http.get<QuizTemplate[]>(this.quizTemplateByIdUrl + templateId)
-      .pipe(
-        catchError(this.handleError('getQuizTemplate', []))
-      );
+      return this.http.get<QuizTemplateModel[]>(this.quizTemplateByIdUrl + templateId);
     }
   }
 
-  getQuizTemplateByName(templateName: string): Observable<QuizTemplate[]> {
+  getQuizTemplateByName(templateName: string): Observable<QuizTemplateDataModel[]> {
     if (templateName) {
-      return this.http.get<QuizTemplate[]>(this.quizTemplateByNameUrl + templateName)
-      .pipe(
-        catchError(this.handleError('getQuizTemplateByName', []))
-      );
+      return this.http.get<QuizTemplateModel[]>(this.quizTemplateByNameUrl + templateName);
     }
   }
 
-  getQuestionsForQuizTemplate(templateId: number): Observable<QuizQuestion[]> {
+  isQuizTemplateNameTaken(templateName: string): Observable<boolean> {
+    if (templateName) {
+      return this.http.get<boolean>(this.isQuizTemplateNameTakenUrl + templateName);
+    }
+  }
+
+  getQuestionsForQuizTemplate(templateId: number): Observable<QuizQuestionDataModel[]> {
     if (templateId) {
-      return this.http.get<any[]>(this.questionsForQuizTemplateUrl + templateId)
-      .pipe(
-        catchError(this.handleError('getQuestionsForQuizTemplate', []))
-      );
+      return this.http.get<any[]>(this.questionsForQuizTemplateUrl + templateId);
     }
   }
 
-  saveNewQuizTemplate(templateData: QuizTemplate) {
+  saveNewQuizTemplate(templateData: QuizTemplateModel) {
     if (templateData) {
-      return this.http.post(this.quizTemplatesUrl, templateData)
-      .pipe(
-        catchError(this.handleError('saveNewQuizTemplate', []))
-      );
+      return this.http.post(this.quizTemplatesUrl, templateData);
     }
   }
 
-  saveExistingQuizTemplate(templateId: number, templateData: QuizTemplate) {
+  saveExistingQuizTemplate(templateId: number, templateData: QuizTemplateModel) {
     if (templateId && templateData) {
-      return this.http.put(this.quizTemplatesUrl + '/' + templateId, templateData)
-      .pipe(
-        catchError(this.handleError('saveExistingQuizTemplate', []))
-      );
+      return this.http.put(this.quizTemplatesUrl + '/' + templateId, templateData);
     }
   }
 
-  saveNewQuizQuestion(questionData: QuizQuestion) {
+  deleteQuizTemplate(templateId: number) {
+    if (templateId) {
+      return this.http.delete(this.quizTemplatesUrl + '/' + templateId);
+    }
+  }
+
+  saveNewQuizQuestion(questionData: QuizQuestionModel) {
     if (questionData) {
-      return this.http.post(this.quizQuestionsUrl, questionData)
-      .pipe(
-        catchError(this.handleError('saveNewQuizQuestion', []))
-      );
+      return this.http.post(this.quizQuestionsUrl, questionData);
     }
   }
 
   deleteQuizQuestionsByTemplateId(templateId: number) {
     if (templateId) {
-      return this.http.delete(this.questionsForQuizTemplateUrl + templateId)
-      .pipe(
-        catchError(this.handleError('deleteQuizQuestionsByTemplateId', []))
-      );
+      return this.http.delete(this.questionsForQuizTemplateUrl + templateId);
     }
-  }
-
-   /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
   }
 }

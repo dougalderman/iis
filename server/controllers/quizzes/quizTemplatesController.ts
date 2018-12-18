@@ -1,7 +1,7 @@
-import { QuizTemplate } from  '../../../models/quizzes/quizTemplate';
+import { QuizTemplateModel } from  '../../../models/quizzes/quiz-template.model';
 import { Pool } from 'pg';
 
-class Template extends QuizTemplate {
+class Template extends QuizTemplateModel {
 
   constructor(reqName: string, reqDescription: string) {
     super();
@@ -82,9 +82,9 @@ export class QuizTemplatesController {
     console.log('req.params: ', req.params);
     if (req.params && req.params.name) {
       const pgSqlPool = new Pool();
-      const name = '%' + req.params.name + '%';
+      const name = req.params.name;
       const query = {
-        text: 'SELECT * FROM QuizTemplates WHERE name ILIKE $1 ORDER BY name',
+        text: 'SELECT * FROM QuizTemplates WHERE name = $1 ORDER BY name',
         values: [name]
       };
       console.log('query: ', query);
@@ -96,6 +96,38 @@ export class QuizTemplatesController {
         }
         else {
           res.send([]);
+        }
+      })
+      .catch(e => {
+        console.error('in error');
+        console.error(e.stack);
+        return res.status(500).send(e);
+      });
+    }
+    else {
+      return res.status(500).send('invalid request');
+    }
+  }
+
+  static isNameTaken(req, res) : void {
+    console.log('in QuizTemplatesController--isNameTaken()');
+    console.log('req.params: ', req.params);
+    if (req.params && req.params.name) {
+      const pgSqlPool = new Pool();
+      const name = req.params.name;
+      const query = {
+        text: 'SELECT * FROM QuizTemplates WHERE name = $1 ORDER BY name',
+        values: [name]
+      };
+      console.log('query: ', query);
+      pgSqlPool.query(query)
+      .then(result => {
+        console.log('result: ', result);
+        if (result && result.rows && result.rows.length) {
+          res.send(true);
+        }
+        else {
+          res.send(false);
         }
       })
       .catch(e => {
