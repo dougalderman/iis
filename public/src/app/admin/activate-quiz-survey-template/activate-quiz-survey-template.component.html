@@ -1,0 +1,10 @@
+<div class="container">
+  <h2>Activate Quiz / Survey Template</h2>
+  <form [formGroup]="selectQuizTemplateForm">
+    <div class="form-group">
+      <select id="quiz-template-select" class="form-control" formControlName="quizTemplateSelect">
+        <option value="" disabled selected>Select Quiz Template</option>
+        <option *ngFor="let quizTempl of quizTemplates" [ngValue]="quizTempl.id">{{quizTempl.name}}</option>
+      </select>
+    </div>
+  </form>

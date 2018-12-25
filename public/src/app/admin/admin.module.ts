@@ -7,9 +7,7 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { AdminHomeComponent } from './admin-home/admin-home.component'
 import { CreateModifyQuizTemplateComponent } from './create-modify-quiz-template/create-modify-quiz-template.component';
 import { CreateModifySurveyTemplateComponent } from './create-modify-survey-template/create-modify-survey-template.component';
-import { ActivateQuizTemplateComponent } from './activate-quiz-template/activate-quiz-template.component';
-import { ActivateSurveyTemplateComponent } from './activate-survey-template/activate-survey-template.component';
-import { QuizQuestionComponent } from './quiz-question/quiz-question.component';
+import { ActivateQuizSurveyTemplateComponent } from './activate-quiz-survey-template/activate-quiz-survey-template.component';
 import { TemplateQuizQuestionComponent } from './template-quiz-question/template-quiz-question.component';
 
 @NgModule({
@@ -23,9 +21,7 @@ import { TemplateQuizQuestionComponent } from './template-quiz-question/template
     AdminHomeComponent,
     CreateModifyQuizTemplateComponent,
     CreateModifySurveyTemplateComponent,
-    ActivateQuizTemplateComponent,
-    ActivateSurveyTemplateComponent,
-    QuizQuestionComponent,
+    ActivateQuizSurveyTemplateComponent,
     TemplateQuizQuestionComponent
   ]
 })
