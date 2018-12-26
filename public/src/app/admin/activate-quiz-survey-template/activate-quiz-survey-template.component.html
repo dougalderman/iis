@@ -1,10 +1,37 @@
 <div class="container">
-  <h2>Activate Quiz / Survey Template</h2>
-  <form [formGroup]="selectQuizTemplateForm">
-    <div class="form-group">
-      <select id="quiz-template-select" class="form-control" formControlName="quizTemplateSelect">
-        <option value="" disabled selected>Select Quiz Template</option>
-        <option *ngFor="let quizTempl of quizTemplates" [ngValue]="quizTempl.id">{{quizTempl.name}}</option>
-      </select>
+  <div class="activate-container">
+    <h2>Activate Quiz / Survey Template</h2>
+    <div class="quiz-survey-select">
+      <form [formGroup]="selectQuizTemplateForm">
+        <div class="form-group">
+          <select id="quiz-template-select" class="form-control" formControlName="quizTemplateSelect">
+            <option value="" disabled selected>Select Quiz Template</option>
+            <option *ngFor="let quizTempl of quizTemplates" [ngValue]="quizTempl.id">{{quizTempl.name}}</option>
+          </select>
+        </div>
+      </form>
+      <form [formGroup]="selectSurveyTemplateForm">
+        <div class="form-group">
+          <select id="survey-template-select" class="form-control" formControlName="surveyTemplateSelect">
+            <option value="" disabled selected>Select Survey Template</option>
+            <option *ngFor="let surveyTempl of surveyTemplates" [ngValue]="surveyTempl.id">{{surveyTempl.name}}</option>
+          </select>
+        </div>
+      </form>
     </div>
-  </form>
+    <form [formGroup]="selectWebPageForm">
+      <div class="form-group">
+        <select id="webpage-select" class="form-control" formControlName="webPageSelect">
+          <option value="" disabled selected>Select Web Page</option>
+          <option *ngFor="let route of activeRoutes" [ngValue]="route.id">{{route.title}}</option>
+        </select>
+      </div>
+    </form>
+    <div class="form-group extra-margin-bottom">
+      <button type="button" class="btn btn-primary" (click)="preview()">Preview</button>
+    </div>
+    <div class="form-group extra-margin-bottom">
+      <button type="button" class="btn btn-success" (click)="activate()">Activate</button>
+    </div>
+  </div>
+</div>    

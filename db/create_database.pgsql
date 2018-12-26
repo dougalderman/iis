@@ -172,6 +172,17 @@ CREATE TABLE SurveyAnswers (
   time_to_answer interval
 );
 
+
+--Webpages
+DROP TABLE IF EXISTS Webpages CASCADE;
+CREATE TABLE Webpages (
+  id serial PRIMARY KEY,
+  quiz_id REFERENCES Quizzes,
+  survey_id REFERENCES Surveys
+  title text NOT NULL UNIQUE,
+);
+
+
 --Admin Users
 DROP TABLE IF EXISTS AdminUsers CASCADE;
 CREATE TABLE AdminUsers (

@@ -12,13 +12,17 @@ import { ModalService } from './services/modal.service';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ConfirmModalComponent } from './bootstrap-components/confirm-modal/confirm-modal.component';
 import { CheckTemplateNameValidator } from './validators/check-template-name.validator';
+import { SamplePageOneComponent } from './sample-page-one/sample-page-one.component';
+import { SamplePageTwoComponent } from './sample-page-two/sample-page-two.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FibroArticleComponent,
     PageNotFoundComponent,
-    ConfirmModalComponent
+    ConfirmModalComponent,
+    SamplePageOneComponent,
+    SamplePageTwoComponent
   ],
   imports: [
     BrowserModule,
