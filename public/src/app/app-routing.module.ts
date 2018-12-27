@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { FibroArticleComponent } from './fibro-article/fibro-article.component';
-import { SamplePageOneComponent } from './sample-page-one/sample-page-one.component';
-import { SamplePageTwoComponent } from './sample-page-two/sample-page-two.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component'
+import { FibroArticleComponent } from './components/fibro-article/fibro-article.component';
+import { SamplePageOneComponent } from './components/sample-page-one/sample-page-one.component';
+import { SamplePageTwoComponent } from './components/sample-page-two/sample-page-two.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component'
 
 export const appRoutes: Routes = [
   { path: 'fibro-article', component: FibroArticleComponent, data: {title: 'Fibromyalgia - Wikipedia'} },

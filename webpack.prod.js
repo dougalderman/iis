@@ -1,6 +1,5 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const helpers = require('./config/helpers');
@@ -19,10 +18,6 @@ module.exports = merge(common, {
     minimizer: [new UglifyJSPlugin()]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: helpers.root('./public/src', 'index.prod.html'),
-      favicon: helpers.root('./public/src', 'favicon.ico')
-    }),
     new AngularCompilerPlugin({
       entryModule: helpers.root('./public/src', 'app/app.module#AppModule'),
       sourceMap: false,

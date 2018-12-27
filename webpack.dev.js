@@ -1,6 +1,5 @@
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const helpers = require('./config/helpers');
 const { AngularCompilerPlugin } = require('@ngtools/webpack');
 
@@ -17,10 +16,6 @@ module.exports = merge(common, {
     publicPath: '/'
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: helpers.root('./public/src', 'index.dev.html'),
-      favicon: helpers.root('./public/src', 'favicon.ico')
-    }),
     new AngularCompilerPlugin({
       entryModule: helpers.root('./public/src', 'app/app.module#AppModule'),
       sourceMap: true,

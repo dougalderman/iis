@@ -1,5 +1,6 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const helpers = require('./config/helpers');
 
 module.exports = {
@@ -16,6 +17,10 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['./dist/public']),
+    new HtmlWebpackPlugin({
+      template: helpers.root('./public/src', 'index.html'),
+      favicon: helpers.root('./public/src', 'favicon.ico')
+    }),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
