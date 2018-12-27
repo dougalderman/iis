@@ -7,7 +7,7 @@ import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.
 import { QuizQuestionModel } from  '../../../../../models/quizzes/quiz-question.model';
 import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-template-data.model';
 import { QuizQuestionDataModel } from  '../../../../../models/quizzes/data/quiz-question-data.model';
-import { CreateModifyQuizTemplateFormModel } from '../../../../../models/quizzes/forms/create-modify-quiz-template-form.model';
+import { CreateModifyQuizTemplateFormModel } from '../../../../../models/forms/create-modify-quiz-template-form.model';
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';

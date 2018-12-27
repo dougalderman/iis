@@ -177,9 +177,9 @@ CREATE TABLE SurveyAnswers (
 DROP TABLE IF EXISTS Webpages CASCADE;
 CREATE TABLE Webpages (
   id serial PRIMARY KEY,
-  quiz_id REFERENCES Quizzes,
-  survey_id REFERENCES Surveys
-  title text NOT NULL UNIQUE,
+  quiz_id int REFERENCES Quizzes,
+  survey_id int REFERENCES Surveys,
+  title text NOT NULL UNIQUE
 );
 
 

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/for
 import { appRoutes } from '../../app-routing.module';
 import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.model';
 import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-template-data.model';
-import { ActivateQuizSurveyTemplateFormModel } from '../../../../../models/quizzes/forms/activate-quiz-survey-template-form.model';
+import { ActivateQuizSurveyTemplateFormModel } from '../../../../../models//forms/activate-quiz-survey-template-form.model';
 import { QuizAdminService } from '../../services/quiz-admin.service';
 
 class QuizTemplate extends QuizTemplateModel {}

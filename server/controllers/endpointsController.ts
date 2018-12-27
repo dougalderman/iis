@@ -3,6 +3,7 @@ import { QuizTemplatesController } from './quizzes/quizTemplatesController';
 import { QuizResultsController } from './quizzes/quizResultsController';
 import { QuizQuestionsController } from './quizzes/quizQuestionsController';
 import { QuizAnswersController } from './quizzes/quizAnswersController';
+import { WebpagesController } from './webpages/webpagesController';
 
 export class EndpointsController {
   constructor(app) {
@@ -51,5 +52,14 @@ export class EndpointsController {
     app.get('/api/admin/quiz_answers/results_id/:resultsId', QuizAnswersController.readByResultsId) // Reads answers by results id.
     app.put('/api/quiz_answers/:id', QuizAnswersController.update) // Updates quiz answer.
     app.delete('/api/admin/quiz_answers/:id', QuizAnswersController.delete) // Deletes quiz answer.
+
+    // Webpages
+    app.post('/api/admin/webpages', WebpagesController.create) // Writes new webpage record
+    app.get('/api/admin/webpages/id/:id', WebpagesController.readById) // Reads webpage by id.
+    app.get('/api/admin/webpages/quiz_id/:quizId', WebpagesController.readByQuizId) // Reads webpages by quiz id.
+    app.get('/api/admin/webpages/survey_id/:surveyId', WebpagesController.readBySurveyId) // Reads webpages by survey id.
+    app.get('/api/admin/webpages/title/:title', WebpagesController.readByTitle) // Reads webpages by title.
+    app.put('/api/admin/webpages/:id', WebpagesController.update) // Updates webpage record.
+    app.delete('/api/admin/webpages/:id', WebpagesController.delete) // Deletes webpage record.
   }
 }

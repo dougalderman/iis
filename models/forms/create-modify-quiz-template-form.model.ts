@@ -1,12 +1,12 @@
 import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
 import * as _ from 'lodash';
 
-import { QuizQuestionModel } from  '../quiz-question.model';
-import { checkForDuplicatesValidator } from '../../../public/src/app/validators/check-for-duplicates.validator';
-import { optionsCorrectAnswerRequiredValidator } from '../../../public/src/app/validators/options-correct-answer-required.validator';
-import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
-import { CheckTemplateNameValidator } from '../../../public/src/app/validators/check-template-name.validator';
-import { getDefaultQuestionType } from '../../../public/src/app/utilities/get-default-question-type.utility';
+import { QuizQuestionModel } from  '../quizzes/quiz-question.model';
+import { checkForDuplicatesValidator } from '../../public/src/app/validators/check-for-duplicates.validator';
+import { optionsCorrectAnswerRequiredValidator } from '../../public/src/app/validators/options-correct-answer-required.validator';
+import { requiredTrimWhitespaceValidator } from '../../public/src/app/validators/required-trim-whitespace.validator';
+import { CheckTemplateNameValidator } from '../../public/src/app/validators/check-template-name.validator';
+import { getDefaultQuestionType } from '../../public/src/app/utilities/get-default-question-type.utility';
 
 export class CreateModifyQuizTemplateFormModel {
   constructor(
