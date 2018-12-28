@@ -9,11 +9,18 @@ export class ActivateQuizSurveyTemplateFormModel {
     quizTemplateSelect: new FormControl('')
   })
 
+  quizOptions: FormGroup = this.fb.group({
+    randomizeQuestionSequence: false,
+    randomizeAnswerSequence: false,
+    autoSubmit: false,
+    percentGreatJob: 0
+  })
+
   selectSurveyTemplateForm: FormGroup = this.fb.group({
     surveyTemplateSelect: new FormControl('')
   })
-  
+
   selectWebPageForm: FormGroup = this.fb.group({
     webPageSelect: new FormControl('')
-  })  
-}  
+  })
+}
