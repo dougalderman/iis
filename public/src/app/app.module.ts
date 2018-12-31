@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { FibroArticleComponent } from './components/fibro-article/fibro-article.component';
 import { AdminModule } from './admin/admin.module';
 import { QuizAdminService } from './services/quiz-admin.service';
+import { WebpageAdminService } from './services/webpage-admin.service';
 import { ModalService } from './services/modal.service';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { ConfirmModalComponent } from './components/bootstrap-components/confirm-modal/confirm-modal.component';
@@ -34,7 +35,12 @@ import { SamplePageTwoComponent } from './components/sample-page-two/sample-page
   entryComponents: [
     ConfirmModalComponent
   ],
-  providers: [QuizAdminService, ModalService, CheckTemplateNameValidator],
+  providers: [
+    QuizAdminService,
+    WebpageAdminService,
+    ModalService,
+    CheckTemplateNameValidator
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

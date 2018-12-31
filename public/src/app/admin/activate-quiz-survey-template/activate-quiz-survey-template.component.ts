@@ -4,8 +4,11 @@ import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/for
 import { appRoutes } from '../../app-routing.module';
 import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.model';
 import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-template-data.model';
+import { WebpageModel } from  '../../../../../models/webpages/webpage.model';
+import { WebpageDataModel } from  '../../../../../models/webpages/data/webpage-data.model';
 import { ActivateQuizSurveyTemplateFormModel } from '../../../../../models//forms/activate-quiz-survey-template-form.model';
 import { QuizAdminService } from '../../services/quiz-admin.service';
+import { WebpageAdminService } from '../../services/webpage-admin.service';
 
 class QuizTemplate extends QuizTemplateModel {}
 
@@ -19,7 +22,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   quizTemplate: QuizTemplateModel = new QuizTemplate();
   quizTemplates: QuizTemplateModel[];
   surveyTemplates = []; // modify later
-  activeRoutes = [];
+  activeRoutes: WebpageModel[] = [];
   activateQuizSurveyTemplateForm = new ActivateQuizSurveyTemplateFormModel(this.fb);
   selectQuizTemplateForm = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
   selectSurveyTemplateForm = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
@@ -31,11 +34,14 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
   constructor(
     private quizAdminService: QuizAdminService,
+    private webpageAdminService: WebpageAdminService,
     private fb: FormBuilder,
   ) {}
 
   ngOnInit() {
-    this.activeRoutes = this.getActiveRoutes();
+    this.getActiveRoutes();
+    this.getQuizTemplates();
+    this.getSurveyTemplates();
     this.onChanges();
   }
 
@@ -51,7 +57,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
         this.generalError = true;
       }
     );
-    
+
     this.selectSurveyTemplateForm.get('surveyTemplateSelect').valueChanges.subscribe(
       (val: number) => {
         if (val) {
@@ -75,18 +81,69 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
         this.generalError = true;
       }
     ); */
-  }  
+  }
 
-  getActiveRoutes(): string[] {
-    let routes = [];
-
+  getActiveRoutes(): void {
     for (let route of appRoutes) {
       if (route && route.data && route.data.title) {
-        routes.push(route.data.title);
+        this.webpageAdminService.getWebpageByTitle(route.data.title)
+          .subscribe(
+            (webpage: WebpageDataModel[]) => {
+              if (webpage && webpage.length) {
+                const page = webpage[0];
+                if (page.id) {
+                  let thisPage: WebpageModel = new WebpageModel();
+                  thisPage.id = page.id;
+                  thisPage.quizId = page.quiz_id;
+                  thisPage.surveyId = page.survey_id;
+                  thisPage.title = page.title;
+                  this.activeRoutes.push(thisPage);
+                }
+              }
+              else { // no webpage with this title in db
+                let thisPage: WebpageModel = new WebpageModel();
+                thisPage.title = route.data.title;
+                this.webpageAdminService.saveNewWebpage(thisPage)
+                  .subscribe(
+                    (result: any) => {
+                      if (result) {
+                        this.webpageAdminService.getWebpageByTitle(route.data.title)
+                          .subscribe(
+                            (webpage: WebpageDataModel[]) => {
+                              if (webpage && webpage.length) {
+                                const page = webpage[0];
+                                if (page.id) {
+                                  let thisPage: WebpageModel = new WebpageModel();
+                                  thisPage.id = page.id;
+                                  thisPage.quizId = page.quiz_id;
+                                  thisPage.surveyId = page.survey_id;
+                                  thisPage.title = page.title;
+                                  this.activeRoutes.push(thisPage);
+                                }
+                              }
+                            },
+                            error => {
+                              console.error(error);
+                              this.generalError = true;
+                            }
+                          );
+                      }
+                    },
+                    error => {
+                      console.error(error);
+                      this.generalError = true;
+                    }
+                  );
+
+              }
+            },
+            error => {
+              console.error(error);
+              this.generalError = true;
+            }
+          );
       }
     }
-
-    return routes;
   }
 
   getQuizTemplates(): void {

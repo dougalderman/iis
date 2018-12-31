@@ -23,18 +23,18 @@ export class QuizAdminService {
   ) {}
 
   getAllQuizTemplates(): Observable<QuizTemplateDataModel[]> {
-    return this.http.get<QuizTemplateModel[]>(this.quizTemplatesUrl);
+    return this.http.get<QuizTemplateDataModel[]>(this.quizTemplatesUrl);
   }
 
   getQuizTemplate(templateId: number): Observable<QuizTemplateDataModel[]> {
     if (templateId) {
-      return this.http.get<QuizTemplateModel[]>(this.quizTemplateByIdUrl + templateId);
+      return this.http.get<QuizTemplateDataModel[]>(this.quizTemplateByIdUrl + templateId);
     }
   }
 
   getQuizTemplateByName(templateName: string): Observable<QuizTemplateDataModel[]> {
     if (templateName) {
-      return this.http.get<QuizTemplateModel[]>(this.quizTemplateByNameUrl + templateName);
+      return this.http.get<QuizTemplateDataModel[]>(this.quizTemplateByNameUrl + templateName);
     }
   }
 
@@ -46,7 +46,7 @@ export class QuizAdminService {
 
   getQuestionsForQuizTemplate(templateId: number): Observable<QuizQuestionDataModel[]> {
     if (templateId) {
-      return this.http.get<any[]>(this.questionsForQuizTemplateUrl + templateId);
+      return this.http.get<QuizQuestionDataModel[]>(this.questionsForQuizTemplateUrl + templateId);
     }
   }
 
