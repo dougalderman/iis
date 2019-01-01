@@ -59,6 +59,7 @@ export class EndpointsController {
     app.get('/api/admin/webpages/quiz_id/:quizId', WebpagesController.readByQuizId) // Reads webpages by quiz id.
     app.get('/api/admin/webpages/survey_id/:surveyId', WebpagesController.readBySurveyId) // Reads webpages by survey id.
     app.get('/api/admin/webpages/title/:title', WebpagesController.readByTitle) // Reads webpages by title.
+    app.get('/api/admin/webpages', WebpagesController.readAll) // Reads all webpages.
     app.put('/api/admin/webpages/:id', WebpagesController.update) // Updates webpage record.
     app.delete('/api/admin/webpages/:id', WebpagesController.delete) // Deletes webpage record.
   }

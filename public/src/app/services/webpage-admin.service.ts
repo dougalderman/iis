@@ -16,6 +16,10 @@ export class WebpageAdminService {
     private http: HttpClient
   ) {}
 
+  getAllWebpages(): Observable<WebpageDataModel[]> {
+    return this.http.get<WebpageDataModel[]>(this.webpagesUrl);
+  }
+
   getWebpageById(webpageId: number): Observable<WebpageDataModel[]> {
     if (webpageId) {
       return this.http.get<WebpageDataModel[]>(this.webpageByIdUrl + webpageId);
@@ -37,6 +41,12 @@ export class WebpageAdminService {
   saveExistingWebpage(webpageId: number, webpageData: WebpageModel) {
     if (webpageId && webpageData) {
       return this.http.put(this.webpagesUrl + '/' + webpageId, webpageData);
+    }
+  }
+
+  deleteWebpage(webpageId: number) {
+    if (webpageId) {
+      return this.http.delete(this.webpagesUrl + '/' + webpageId);
     }
   }
 }

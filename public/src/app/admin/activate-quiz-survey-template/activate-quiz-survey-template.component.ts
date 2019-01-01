@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms'
+import * as _ from 'lodash';
 
 import { appRoutes } from '../../app-routing.module';
 import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.model';
@@ -84,49 +85,64 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   }
 
   getActiveRoutes(): void {
-    for (let route of appRoutes) {
-      if (route && route.data && route.data.title) {
-        this.webpageAdminService.getWebpageByTitle(route.data.title)
-          .subscribe(
-            (webpage: WebpageDataModel[]) => {
-              if (webpage && webpage.length) {
-                const page = webpage[0];
-                if (page.id) {
-                  let thisPage: WebpageModel = new WebpageModel();
-                  thisPage.id = page.id;
-                  thisPage.quizId = page.quiz_id;
-                  thisPage.surveyId = page.survey_id;
-                  thisPage.title = page.title;
-                  this.activeRoutes.push(thisPage);
-                }
+    this.webpageAdminService.getAllWebpages()
+      .subscribe(
+        (webpages: WebpageDataModel[]) => {
+          if (webpages && webpages.length) {
+            for (let page of webpages) {
+              if (_.find(appRoutes, ['data.title', page.title])) {
+                // if page title from db is an active route
+                let route: WebpageModel = new WebpageModel();
+                route.id = page.id;
+                route.quizId = page.quiz_id;
+                route.surveyId = page.survey_id;
+                route.title = page.title;
+                this.activeRoutes.push(route);
               }
-              else { // no webpage with this title in db
+              else {
+                // remove page from db
+                this.webpageAdminService.deleteWebpage(page.id)
+                .subscribe(
+                  (result: any) => {},
+                  error => {
+                    console.error(error);
+                    this.generalError = true;
+                  }
+                );
+              }
+            }
+          }
+          for (let route of appRoutes) {
+            if (route && route.data && route.data.title) {
+              if (!_.find(webpages, ['title', route.data.title])) {
+                // If active route doesn't exist in DB
                 let thisPage: WebpageModel = new WebpageModel();
                 thisPage.title = route.data.title;
-                this.webpageAdminService.saveNewWebpage(thisPage)
+                  this.webpageAdminService.saveNewWebpage(thisPage)
                   .subscribe(
                     (result: any) => {
                       if (result) {
                         this.webpageAdminService.getWebpageByTitle(route.data.title)
-                          .subscribe(
-                            (webpage: WebpageDataModel[]) => {
-                              if (webpage && webpage.length) {
-                                const page = webpage[0];
-                                if (page.id) {
-                                  let thisPage: WebpageModel = new WebpageModel();
-                                  thisPage.id = page.id;
-                                  thisPage.quizId = page.quiz_id;
-                                  thisPage.surveyId = page.survey_id;
-                                  thisPage.title = page.title;
-                                  this.activeRoutes.push(thisPage);
-                                }
+                        .subscribe(
+                          (webpage: WebpageDataModel[]) => {
+                            if (webpage && webpage.length) {
+                              const page = webpage[0];
+                              if (page.id) {
+                                let thisPage: WebpageModel = new WebpageModel();
+                                thisPage.id = page.id;
+                                thisPage.quizId = page.quiz_id;
+                                thisPage.surveyId = page.survey_id;
+                                thisPage.title = page.title;
+                                this.activeRoutes.push(thisPage);
+                                this.activeRoutes = _.sortBy(this.activeRoutes, ['title']);
                               }
-                            },
-                            error => {
-                              console.error(error);
-                              this.generalError = true;
                             }
-                          );
+                          },
+                          error => {
+                            console.error(error);
+                            this.generalError = true;
+                          }
+                        );
                       }
                     },
                     error => {
@@ -134,16 +150,15 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
                       this.generalError = true;
                     }
                   );
-
               }
-            },
-            error => {
-              console.error(error);
-              this.generalError = true;
             }
-          );
-      }
-    }
+          }
+        },
+        error => {
+          console.error(error);
+          this.generalError = true;
+        }
+      );
   }
 
   getQuizTemplates(): void {

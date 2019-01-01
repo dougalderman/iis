@@ -174,6 +174,31 @@ export class WebpagesController {
     }
   }
 
+  static readAll(req, res) : void {
+    console.log('in WebpagesController--readAll()');
+    const pgSqlPool = new Pool();
+    const query = {
+      text: 'SELECT * FROM Webpages ORDER BY title',
+      values: []
+    };
+    console.log('query: ', query);
+    pgSqlPool.query(query)
+    .then(result => {
+      console.log('result: ', result);
+      if (result && result.rows) {
+        res.send(result.rows);
+      }
+      else {
+        res.send([]);
+      }
+    })
+    .catch(e => {
+      console.error('in error');
+      console.error(e.stack);
+      return res.status(500).send(e);
+    });
+  }
+
   static update(req, res) : void {
     console.log('in WebpagesController--update()');
     console.log('req.body: ', req.body);
