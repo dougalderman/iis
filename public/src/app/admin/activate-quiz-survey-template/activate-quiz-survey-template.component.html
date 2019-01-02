@@ -14,13 +14,13 @@
         </form>
         <div class="form-group extra-margin-bottom">
           <button *ngIf="!quizPreview" type="button" class="btn btn-primary" (click)="previewQuiz()" [disabled]="!quizTemplateSelected">Preview</button>
-          <button *ngIf="quizPreview" type="button" class="btn btn-secondary" (click)="previewQuiz()" [disabled]="!quizTemplateSelected">Clear</button>
+          <button *ngIf="quizPreview" type="button" class="btn btn-secondary" (click)="clearPreviewQuiz()" [disabled]="!quizTemplateSelected">Clear</button>
         </div>
-        <div *ngIf="quizPreview">
+        <div class="extra-margin-bottom" *ngIf="quizPreview">
           <form [formGroup]="previewQuizTemplateForm">
             <div class="form-group">
               <label>Description:</label>
-              <input type="text" id="text" class="form-control" formControlName="description" disabled>
+              <input type="text" id="text" class="form-control" formControlName="description">
             </div>
             <div formArrayName="formQuestions" class="form-group extra-margin-bottom">
               <app-template-quiz-question-disabled *ngFor="let question of formQuestions.controls; let i=index"

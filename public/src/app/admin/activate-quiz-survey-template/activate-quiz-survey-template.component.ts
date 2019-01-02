@@ -16,7 +16,6 @@ import { PreviewQuizTemplateFormModel } from '../../../../../models/forms/previe
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
-import { CheckTemplateNameValidator } from '../../validators/check-template-name.validator';
 
 class QuizTemplate extends QuizTemplateModel {}
 class QuizQuestion extends QuizQuestionModel {}
@@ -35,6 +34,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
   surveyTemplates = []; // modify later
   surveyTemplateSelected: number = 0;
+  surveyPreview: boolean = false;
 
   activeRoutes: WebpageModel[] = [];
 
@@ -42,7 +42,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   selectQuizTemplateForm = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
   selectSurveyTemplateForm = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
   selectWebPageForm = this.activateQuizSurveyTemplateForm.selectWebPageForm;
-  quizTemplateForm = new PreviewQuizTemplateFormModel(this.fb, this.checkTemplateName);
+  quizTemplateForm = new PreviewQuizTemplateFormModel(this.fb);
   previewQuizTemplateForm = this.quizTemplateForm.previewQuizTemplateForm;
 
   saveSuccess: boolean = false;
@@ -54,7 +54,6 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     private quizAdminService: QuizAdminService,
     private webpageAdminService: WebpageAdminService,
     private fb: FormBuilder,
-    private checkTemplateName: CheckTemplateNameValidator
   ) {}
 
   ngOnInit() {
@@ -69,6 +68,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       (val: number) => {
         if (val) {
           this.quizTemplateSelected = val;
+          this.quizPreview = false;
         }
       },
       error => {
@@ -81,6 +81,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       (val: number) => {
         if (val) {
           this.surveyTemplateSelected = val;
+          this.surveyPreview = false;
         }
       },
       error => {
@@ -93,6 +94,8 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       (val: number) => {
         if (val) {
           this.webpageSelectionChanged(val);
+          this.quizPreview = false;
+          this.surveyPreview = false;
         }
       },
       error => {
@@ -255,8 +258,8 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     );
   }
 
-  onDeletedQuestion(index: number): void {
-    this.quizTemplateForm.deleteQuestion(index);
+  clearPreviewQuiz(): void {
+    this.quizPreview = !this.quizPreview;
   }
 
   resetFormQuestions(): void {

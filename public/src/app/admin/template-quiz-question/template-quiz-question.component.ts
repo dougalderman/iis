@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormGroup, AbstractControl } from '@angular/forms'
+import { FormArray, FormGroup } from '@angular/forms'
 
 import { QUIZ_QUESTION_TYPES } from '../../constants/quiz-question-types.constant';
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
