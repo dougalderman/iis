@@ -37,11 +37,14 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   surveyPreview: boolean = false;
 
   activeRoutes: WebpageModel[] = [];
+  webpageSelected: number = 0;
 
   activateQuizSurveyTemplateForm = new ActivateQuizSurveyTemplateFormModel(this.fb);
   selectQuizTemplateForm = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
+  quizOptionsForm =  this.activateQuizSurveyTemplateForm.quizOptionsForm;
   selectSurveyTemplateForm = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
   selectWebPageForm = this.activateQuizSurveyTemplateForm.selectWebPageForm;
+
   quizTemplateForm = new PreviewQuizTemplateFormModel(this.fb);
   previewQuizTemplateForm = this.quizTemplateForm.previewQuizTemplateForm;
 
@@ -94,8 +97,6 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       (val: number) => {
         if (val) {
           this.webpageSelectionChanged(val);
-          this.quizPreview = false;
-          this.surveyPreview = false;
         }
       },
       error => {
@@ -217,6 +218,19 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   }
 
   webpageSelectionChanged(webpageSelected: number): void {
+    const webpage = _.find(this.activeRoutes, ['id', webpageSelected]);
+
+    this.quizTemplateSelected = webpage.quizId;
+    let quizTemplateSelect = this.selectQuizTemplateForm.get('quizTemplateSelect')
+    quizTemplateSelect.setValue(this.quizTemplateSelected);
+
+    this.surveyTemplateSelected = webpage.surveyId;
+    let surveyTemplateSelect = this.selectSurveyTemplateForm.get('surveyTemplateSelect')
+    surveyTemplateSelect.setValue(this.surveyTemplateSelected);
+
+    this.webpageSelected = webpageSelected;
+    this.quizPreview = false;
+    this.surveyPreview = false;
   }
 
   previewQuiz(): void {

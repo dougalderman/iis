@@ -1,4 +1,4 @@
-import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 
 export class ActivateQuizSurveyTemplateFormModel {
   constructor(
@@ -9,11 +9,11 @@ export class ActivateQuizSurveyTemplateFormModel {
     quizTemplateSelect: new FormControl('')
   })
 
-  quizOptions: FormGroup = this.fb.group({
-    randomizeQuestionSequence: false,
-    randomizeAnswerSequence: false,
-    autoSubmit: false,
-    percentGreatJob: 0
+  quizOptionsForm: FormGroup = this.fb.group({
+    randomizeQuestionSequence: [true],
+    randomizeAnswerSequence: [true],
+    autoSubmit: [false],
+    percentGreatJob: [70, [Validators.min(0), Validators.max(100)]]
   })
 
   selectSurveyTemplateForm: FormGroup = this.fb.group({

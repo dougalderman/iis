@@ -11,7 +11,7 @@
   display: flex;
 }
 
-label {
+label.subheading {
   font-size: 1.3rem;
   color: slateblue;
 }
@@ -20,6 +20,15 @@ label {
   padding-bottom: 1rem;
 }
 
-.extra-margin-bottom {
+.one-rem-margin-bottom {
+  margin-bottom: 1rem;
+}
+
+.two-rem-margin-bottom {
+  margin-bottom: 2rem;
+}
+
+.three-rem-margin-bottom {
   margin-bottom: 3rem;
 }
+

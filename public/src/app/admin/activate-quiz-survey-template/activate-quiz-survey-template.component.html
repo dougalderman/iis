@@ -5,24 +5,24 @@
       <div class="quiz-survey-select">
         <form class="select-form" [formGroup]="selectQuizTemplateForm">
           <div class="form-group">
-            <label>Select Quiz Template:</label>
+            <label class="subheading">Select Quiz Template:</label>
             <select id="quiz-template-select" class="form-control" formControlName="quizTemplateSelect">
               <option value="" disabled selected>Select Quiz Template</option>
               <option *ngFor="let quizTempl of quizTemplates" [ngValue]="quizTempl.id">{{quizTempl.name}}</option>
             </select>
           </div>
         </form>
-        <div class="form-group extra-margin-bottom">
+        <div class="form-group three-rem-margin-bottom">
           <button *ngIf="!quizPreview" type="button" class="btn btn-primary" (click)="previewQuiz()" [disabled]="!quizTemplateSelected">Preview</button>
           <button *ngIf="quizPreview" type="button" class="btn btn-secondary" (click)="clearPreviewQuiz()" [disabled]="!quizTemplateSelected">Clear</button>
         </div>
-        <div class="extra-margin-bottom" *ngIf="quizPreview">
+        <div class="form-group three-rem-margin-bottom" *ngIf="quizPreview">
           <form [formGroup]="previewQuizTemplateForm">
             <div class="form-group">
               <label>Description:</label>
-              <input type="text" id="text" class="form-control" formControlName="description">
+              <input type="text" id="description" class="form-control" formControlName="description">
             </div>
-            <div formArrayName="formQuestions" class="form-group extra-margin-bottom">
+            <div formArrayName="formQuestions" class="form-group three-rem-margin-bottom">
               <app-template-quiz-question-disabled *ngFor="let question of formQuestions.controls; let i=index"
                 [quizTemplateForm]="quizTemplateForm"
                 [questionIndex]="i"
@@ -31,23 +31,76 @@
             </div>
           </form>
         </div>
+        <div class="form-group three-rem-margin-bottom">
+          <form [formGroup]="quizOptionsForm">
+            <h3 class="one-rem-margin-bottom">Quiz Options</h3>
+            <div class="form-group two-rem-margin-bottom">
+              <label class="subheading">Randomize Question Sequence:</label>
+              <br>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="randomize-question-sequence-true" class="custom-control-input" formControlName="randomizeQuestionSequence" [value]="true">
+                <label class="custom-control-label" for="randomize-question-sequence-true">True</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="randomize-question-sequence-false" class="custom-control-input" formControlName="randomizeQuestionSequence" [value]="false">
+                <label class="custom-control-label" for="randomize-question-sequence-false">False</label>
+              </div>
+            </div>
+            <div class="form-group two-rem-margin-bottom">
+              <label class="subheading">Randomize Answer Sequence:</label>
+              <br>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="randomize-answer-sequence-true" class="custom-control-input" formControlName="randomizeAnswerSequence" [value]="true">
+                <label class="custom-control-label" for="randomize-answer-sequence-true">True</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="randomize-answer-sequence-false" class="custom-control-input" formControlName="randomizeAnswerSequence" [value]="false">
+                <label class="custom-control-label" for="randomize-answer-sequence-false">False</label>
+              </div>
+            </div>
+            <div class="form-group two-rem-margin-bottom">
+              <label class="subheading">Autosubmit:</label>
+              <br>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="autosubmit-true" class="custom-control-input" formControlName="autoSubmit" [value]="true">
+                <label class="custom-control-label" for="autosubmit-true">True</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" id="autosubmit-false" class="custom-control-input" formControlName="autoSubmit" [value]="false">
+                <label class="custom-control-label" for="autosubmit-false">False</label>
+              </div>
+            </div>
+            <div class="form-group two-rem-margin-bottom">
+              <label class="subheading">Percent Great Job:</label>
+              <input type="number" id="percent-great-job" class="form-control" formControlName="percentGreatJob">
+              <div *ngIf="quizOptionsForm.controls.percentGreatJob.invalid && (quizOptionsForm.controls.percentGreatJob.dirty || quizOptionsForm.controls.percentGreatJob.touched)">
+                <div class="alert alert-warning" *ngIf="quizOptionsForm.controls.percentGreatJob.errors.min">
+                  Min percent great job is 0
+                </div>
+                <div class="alert alert-warning" *ngIf="quizOptionsForm.controls.percentGreatJob.errors.max">
+                  Max percent great job is 100
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
         <form class="select-form" [formGroup]="selectSurveyTemplateForm">
           <div class="form-group">
-            <label>Select Survey Template:</label>
+            <label class="subheading">Select Survey Template:</label>
             <select id="survey-template-select" class="form-control" formControlName="surveyTemplateSelect">
               <option value="" disabled selected>Select Survey Template</option>
               <option *ngFor="let surveyTempl of surveyTemplates" [ngValue]="surveyTempl.id">{{surveyTempl.name}}</option>
             </select>
           </div>
         </form>
-        <div class="form-group extra-margin-bottom">
+        <div class="form-group three-rem-margin-bottom">
           <button type="button" class="btn btn-primary" (click)="previewSurvey()">Preview</button>
         </div>
       </div>
       <div class="webpage-select">
         <form class="select-form" [formGroup]="selectWebPageForm">
           <div class="form-group">
-            <label>Select Web Page:</label>
+            <label class="subheading">Select Web Page:</label>
             <select id="webpage-select" class="form-control" formControlName="webPageSelect">
               <option value="" disabled selected>Select Web Page</option>
               <option *ngFor="let route of activeRoutes" [ngValue]="route.id">{{route.title}}</option>
@@ -56,8 +109,8 @@
         </form>
       </div>
     </div>
-    <div class="form-group extra-margin-bottom">
-      <button type="button" class="btn btn-success" (click)="activate()">Activate</button>
+    <div class="form-group">
+      <button type="button" class="btn btn-success" [disabled]="!quizOptionsForm.valid || !webpageSelected" (click)="activate()">Activate</button>
     </div>
   </div>
 </div>
