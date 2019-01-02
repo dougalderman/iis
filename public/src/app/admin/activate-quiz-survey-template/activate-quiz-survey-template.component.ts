@@ -3,15 +3,23 @@ import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/for
 import * as _ from 'lodash';
 
 import { appRoutes } from '../../app-routing.module';
+
 import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.model';
 import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-template-data.model';
 import { WebpageModel } from  '../../../../../models/webpages/webpage.model';
 import { WebpageDataModel } from  '../../../../../models/webpages/data/webpage-data.model';
+import { QuizQuestionModel } from  '../../../../../models/quizzes/quiz-question.model';
+import { QuizQuestionDataModel } from  '../../../../../models/quizzes/data/quiz-question-data.model';
+
 import { ActivateQuizSurveyTemplateFormModel } from '../../../../../models//forms/activate-quiz-survey-template-form.model';
+import { PreviewQuizTemplateFormModel } from '../../../../../models/forms/preview-quiz-template-form.model';
+
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
+import { CheckTemplateNameValidator } from '../../validators/check-template-name.validator';
 
 class QuizTemplate extends QuizTemplateModel {}
+class QuizQuestion extends QuizQuestionModel {}
 
 @Component({
   selector: 'app-activate-quiz-survey-template',
@@ -22,12 +30,21 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
   quizTemplate: QuizTemplateModel = new QuizTemplate();
   quizTemplates: QuizTemplateModel[];
+  quizPreview: boolean = false;
+  quizTemplateSelected: number = 0;
+
   surveyTemplates = []; // modify later
+  surveyTemplateSelected: number = 0;
+
   activeRoutes: WebpageModel[] = [];
+
   activateQuizSurveyTemplateForm = new ActivateQuizSurveyTemplateFormModel(this.fb);
   selectQuizTemplateForm = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
   selectSurveyTemplateForm = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
   selectWebPageForm = this.activateQuizSurveyTemplateForm.selectWebPageForm;
+  quizTemplateForm = new PreviewQuizTemplateFormModel(this.fb, this.checkTemplateName);
+  previewQuizTemplateForm = this.quizTemplateForm.previewQuizTemplateForm;
+
   saveSuccess: boolean = false;
   saveError: boolean = false;
   generalError: boolean = false;
@@ -37,6 +54,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     private quizAdminService: QuizAdminService,
     private webpageAdminService: WebpageAdminService,
     private fb: FormBuilder,
+    private checkTemplateName: CheckTemplateNameValidator
   ) {}
 
   ngOnInit() {
@@ -47,10 +65,10 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   }
 
   onChanges(): void {
-    /* this.selectQuizTemplateForm.get('quizTemplateSelect').valueChanges.subscribe(
+    this.selectQuizTemplateForm.get('quizTemplateSelect').valueChanges.subscribe(
       (val: number) => {
         if (val) {
-          this.quizTemplateSelectionChanged(val);
+          this.quizTemplateSelected = val;
         }
       },
       error => {
@@ -62,7 +80,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.selectSurveyTemplateForm.get('surveyTemplateSelect').valueChanges.subscribe(
       (val: number) => {
         if (val) {
-          this.surveyTemplateSelectionChanged(val);
+          this.surveyTemplateSelected = val;
         }
       },
       error => {
@@ -74,14 +92,18 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.selectWebPageForm.get('webPageSelect').valueChanges.subscribe(
       (val: number) => {
         if (val) {
-          this.webPageSelectionChanged(val);
+          this.webpageSelectionChanged(val);
         }
       },
       error => {
         console.error(error);
         this.generalError = true;
       }
-    ); */
+    );
+  }
+
+  get formQuestions(): FormArray {
+    return this.previewQuizTemplateForm.get('formQuestions') as FormArray;
   }
 
   getActiveRoutes(): void {
@@ -191,6 +213,57 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       ); */
   }
 
+  webpageSelectionChanged(webpageSelected: number): void {
+  }
 
+  previewQuiz(): void {
+    this.quizPreview = !this.quizPreview;
+    this.quizAdminService.getQuizTemplate(this.quizTemplateSelected)
+      .subscribe(
+        (template: QuizTemplateDataModel[]) => {
+          if (template && template.length) {
+            const selectedTemplate = template[0] as QuizTemplateModel;
+            this.previewQuizTemplateForm.reset();
+            this.resetFormQuestions();
+            this.previewQuizTemplateForm.controls.description.setValue(selectedTemplate.description);
+            this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
+              .subscribe(
+                (questions: QuizQuestionDataModel[]) => {
+                  if (questions && questions.length) {
+                    for (let i = 0; i < questions.length; i++) {
+                      let question = new QuizQuestion();
+                      question.textQuestion = questions[i].text_question;
+                      question.questionType = questions[i].question_type;
+                      question.options = questions[i].options;
+                      question.booleanCorrectAnswer = questions[i].boolean_correct_answer;
+                      question.correctAnswerArray = questions[i].correct_answer_array;
+                      this.quizTemplateForm.addQuestion(question);
+                    }
+                  }
+                },
+                error => {
+                  console.error(error);
+                  this.generalError = true;
+                }
+              );
+          }
+        },
+        error => {
+          console.error(error);
+          this.generalError = true;
+        }
+    );
+  }
 
+  onDeletedQuestion(index: number): void {
+    this.quizTemplateForm.deleteQuestion(index);
+  }
+
+  resetFormQuestions(): void {
+    const len = this.formQuestions.controls.length;
+    for (let i = len - 1; i >= 0; i--) {
+      this.quizTemplateForm.deleteQuestion(i);
+    }
+    this.formQuestions.reset();
+  }
 }

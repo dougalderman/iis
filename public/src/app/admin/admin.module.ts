@@ -9,6 +9,7 @@ import { CreateModifyQuizTemplateComponent } from './create-modify-quiz-template
 import { CreateModifySurveyTemplateComponent } from './create-modify-survey-template/create-modify-survey-template.component';
 import { ActivateQuizSurveyTemplateComponent } from './activate-quiz-survey-template/activate-quiz-survey-template.component';
 import { TemplateQuizQuestionComponent } from './template-quiz-question/template-quiz-question.component';
+import { TemplateQuizQuestionDisabledComponent } from './template-quiz-question-disabled/template-quiz-question-disabled.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { TemplateQuizQuestionComponent } from './template-quiz-question/template
     CreateModifyQuizTemplateComponent,
     CreateModifySurveyTemplateComponent,
     ActivateQuizSurveyTemplateComponent,
-    TemplateQuizQuestionComponent
+    TemplateQuizQuestionComponent,
+    TemplateQuizQuestionDisabledComponent
   ]
 })
 export class AdminModule {}
