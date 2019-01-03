@@ -5,7 +5,9 @@ import { Observable } from 'rxjs';
 import { WebpageModel } from  '../../../../models/webpages/webpage.model';
 import { WebpageDataModel } from  '../../../../models/webpages/data/webpage-data.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class WebpageAdminService {
 
   private webpagesUrl = '/api/admin/webpages';

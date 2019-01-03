@@ -8,6 +8,7 @@
             <label class="subheading">Select Quiz Template:</label>
             <select id="quiz-template-select" class="form-control" formControlName="quizTemplateSelect">
               <option value="" disabled selected>Select Quiz Template</option>
+              <option [ngValue]="null">No Quiz</option>
               <option *ngFor="let quizTempl of quizTemplates" [ngValue]="quizTempl.id">{{quizTempl.name}}</option>
             </select>
           </div>
@@ -31,7 +32,7 @@
             </div>
           </form>
         </div>
-        <div class="form-group three-rem-margin-bottom">
+        <div *ngIf="quizTemplateSelected" class="form-group three-rem-margin-bottom">
           <form [formGroup]="quizOptionsForm">
             <h3 class="one-rem-margin-bottom">Quiz Options</h3>
             <div class="form-group two-rem-margin-bottom">
@@ -47,7 +48,8 @@
               </div>
             </div>
             <div class="form-group two-rem-margin-bottom">
-              <label class="subheading">Randomize Answer Sequence:</label>
+              <label class="subheading" placement="top">Randomize Answer Sequence:</label>
+              <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="Applicable to multiple choice answer options.">
               <br>
               <div class="custom-control custom-radio custom-control-inline">
                 <input type="radio" id="randomize-answer-sequence-true" class="custom-control-input" formControlName="randomizeAnswerSequence" [value]="true">
@@ -60,6 +62,7 @@
             </div>
             <div class="form-group two-rem-margin-bottom">
               <label class="subheading">Autosubmit:</label>
+              <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="True to automatically submit quiz answers without a Submit button. Not applicable for text short answer.">
               <br>
               <div class="custom-control custom-radio custom-control-inline">
                 <input type="radio" id="autosubmit-true" class="custom-control-input" formControlName="autoSubmit" [value]="true">
@@ -72,6 +75,7 @@
             </div>
             <div class="form-group two-rem-margin-bottom">
               <label class="subheading">Percent Great Job:</label>
+              <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="Percent of questions that user needs to answer correctly in order to see the 'Great Job' Giphy.">
               <input type="number" id="percent-great-job" class="form-control" formControlName="percentGreatJob">
               <div *ngIf="quizOptionsForm.controls.percentGreatJob.invalid && (quizOptionsForm.controls.percentGreatJob.dirty || quizOptionsForm.controls.percentGreatJob.touched)">
                 <div class="alert alert-warning" *ngIf="quizOptionsForm.controls.percentGreatJob.errors.min">
@@ -89,12 +93,14 @@
             <label class="subheading">Select Survey Template:</label>
             <select id="survey-template-select" class="form-control" formControlName="surveyTemplateSelect">
               <option value="" disabled selected>Select Survey Template</option>
+              <option [ngValue]="null">No Survey</option>
               <option *ngFor="let surveyTempl of surveyTemplates" [ngValue]="surveyTempl.id">{{surveyTempl.name}}</option>
             </select>
           </div>
         </form>
         <div class="form-group three-rem-margin-bottom">
-          <button type="button" class="btn btn-primary" (click)="previewSurvey()">Preview</button>
+          <button *ngIf="!surveyPreview" type="button" class="btn btn-primary" (click)="previewSurvey()" [disabled]="!surveyTemplateSelected">Preview</button>
+          <button *ngIf="surveyPreview" type="button" class="btn btn-secondary" (click)="clearPreviewSurvey()" [disabled]="!surveyTemplateSelected">Clear</button>
         </div>
       </div>
       <div class="webpage-select">
@@ -110,7 +116,7 @@
       </div>
     </div>
     <div class="form-group">
-      <button type="button" class="btn btn-success" [disabled]="!quizOptionsForm.valid || !webpageSelected" (click)="activate()">Activate</button>
+      <button type="submit" class="btn btn-success" [disabled]="!quizOptionsForm.valid || !webpageSelected" (click)="activate()">Activate</button>
     </div>
   </div>
 </div>

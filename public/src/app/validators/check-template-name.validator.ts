@@ -5,7 +5,9 @@ import { map, catchError } from 'rxjs/operators';
 
 import { QuizAdminService } from '../services/quiz-admin.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class CheckTemplateNameValidator implements AsyncValidator {
   constructor(private quizAdminService: QuizAdminService) {}
 

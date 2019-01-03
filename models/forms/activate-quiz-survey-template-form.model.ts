@@ -13,7 +13,7 @@ export class ActivateQuizSurveyTemplateFormModel {
     randomizeQuestionSequence: [true],
     randomizeAnswerSequence: [true],
     autoSubmit: [false],
-    percentGreatJob: [70, [Validators.min(0), Validators.max(100)]]
+    percentGreatJob: [75, [Validators.min(0), Validators.max(100)]]
   })
 
   selectSurveyTemplateForm: FormGroup = this.fb.group({

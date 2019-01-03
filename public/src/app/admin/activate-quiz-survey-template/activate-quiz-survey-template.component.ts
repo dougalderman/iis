@@ -276,6 +276,14 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.quizPreview = !this.quizPreview;
   }
 
+  previewSurvey(): void {
+
+  }
+
+  clearPreviewSurvey(): void {
+
+  }
+
   resetFormQuestions(): void {
     const len = this.formQuestions.controls.length;
     for (let i = len - 1; i >= 0; i--) {

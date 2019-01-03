@@ -7,7 +7,9 @@ import { QuizQuestionModel } from  '../../../../models/quizzes/quiz-question.mod
 import { QuizTemplateDataModel } from  '../../../../models/quizzes/data/quiz-template-data.model';
 import { QuizQuestionDataModel } from  '../../../../models/quizzes/data/quiz-question-data.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class QuizAdminService {
 
   private quizTemplatesUrl = '/api/admin/quiz_templates';

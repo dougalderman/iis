@@ -40,9 +40,9 @@
         <button type="submit" class="btn btn-success" [disabled]="!createModifyQuizTemplateForm.valid">Save Template</button>
       </div>
       <div *ngIf="name.value" class="form-inline">
-        <button type="button" class="btn btn-warning" (click)="clearTemplate()">Clear</button>
+        <button type="button" class="btn btn-warning" (click)="clearTemplate()" placement="right" ngbTooltip="Clear screen without deleting template data from the database.">Clear</button>
         &nbsp;&nbsp;
-        <button type="button" class="btn btn-danger" *ngIf="template.id" (click)="deleteTemplate()">Delete</button>
+        <button type="button" class="btn btn-danger" *ngIf="template.id" (click)="deleteTemplate()" placement="top" ngbTooltip="Delete template from the database.">Delete</button>
       </div>
       <div class="form-group">
         <div *ngIf="saveSuccess" class="alert alert-success">Template successfully saved</div>
