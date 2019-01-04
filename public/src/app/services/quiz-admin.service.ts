@@ -2,15 +2,21 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { QuizModel } from  '../../../../models/quizzes/quiz.model';
+import { QuizDataModel } from  '../../../../models/quizzes/data/quiz-data.model';
 import { QuizTemplateModel } from  '../../../../models/quizzes/quiz-template.model';
 import { QuizQuestionModel } from  '../../../../models/quizzes/quiz-question.model';
 import { QuizTemplateDataModel } from  '../../../../models/quizzes/data/quiz-template-data.model';
 import { QuizQuestionDataModel } from  '../../../../models/quizzes/data/quiz-question-data.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class QuizAdminService {
+
+  private quizUrl = '/api/admin/quizzes'
+  private quizByIdUrl = '/api/admin/quizzes/id/';
+  private isQuizTitleTakenUrl = '/api/admin/quizzes/title_taken/';
 
   private quizTemplatesUrl = '/api/admin/quiz_templates';
   private quizTemplateByIdUrl = '/api/admin/quiz_templates/id/';
@@ -23,6 +29,24 @@ export class QuizAdminService {
   constructor(
     private http: HttpClient
   ) {}
+
+  getQuiz(quizId: number): Observable<QuizDataModel[]> {
+    if (quizId) {
+      return this.http.get<QuizDataModel[]>(this.quizByIdUrl + quizId);
+    }
+  }
+
+  isQuizTitleTaken(quizTitle: string): Observable<boolean> {
+    if (quizTitle) {
+      return this.http.get<boolean>(this.isQuizTitleTakenUrl + quizTitle);
+    }
+  }
+
+  saveNewQuiz(quizData: QuizModel) {
+    if (quizData) {
+      return this.http.post(this.quizUrl, quizData);
+    }
+  }
 
   getAllQuizTemplates(): Observable<QuizTemplateDataModel[]> {
     return this.http.get<QuizTemplateDataModel[]>(this.quizTemplatesUrl);

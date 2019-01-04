@@ -1,3 +1,5 @@
+import { QuizQuestionOptionModel } from '../quiz-question.model';
+
 export class QuizQuestionDataModel {
   id: number;
   quiz_id: number;
@@ -5,7 +7,7 @@ export class QuizQuestionDataModel {
   text_question: string;
   picture_question: string;
   question_type: string;
-  options: QuizQuestionOptionDataModel[];
+  options: QuizQuestionOptionModel[];
   boolean_correct_answer: boolean;
   correct_answer: string;
   correct_answer_array: string[];
@@ -21,9 +23,4 @@ export class QuizQuestionDataModel {
   real_end_correct_answer: number;
 
   constructor() {}
-}
-
-export class QuizQuestionOptionDataModel {
-  optionCorrectAnswer: boolean;
-  option: string
 }

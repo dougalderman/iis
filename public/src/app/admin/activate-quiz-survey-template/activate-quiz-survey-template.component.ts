@@ -4,6 +4,8 @@ import * as _ from 'lodash';
 
 import { appRoutes } from '../../app-routing.module';
 
+import { QuizModel } from  '../../../../../models/quizzes/quiz.model';
+import { QuizDataModel } from  '../../../../../models/quizzes/data/quiz-data.model';
 import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.model';
 import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-template-data.model';
 import { WebpageModel } from  '../../../../../models/webpages/webpage.model';
@@ -16,6 +18,7 @@ import { PreviewQuizTemplateFormModel } from '../../../../../models/forms/previe
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
+import { CheckQuizTitleValidator } from '../../validators/check-quiz-title.validator';
 
 class QuizTemplate extends QuizTemplateModel {}
 class QuizQuestion extends QuizQuestionModel {}
@@ -39,11 +42,12 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   activeRoutes: WebpageModel[] = [];
   webpageSelected: number = 0;
 
-  activateQuizSurveyTemplateForm = new ActivateQuizSurveyTemplateFormModel(this.fb);
+  activateQuizSurveyTemplateForm = new ActivateQuizSurveyTemplateFormModel(this.fb, this.checkQuizTitleValidator);
   selectQuizTemplateForm = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
+  quizForm =  this.activateQuizSurveyTemplateForm.quizForm;
   quizOptionsForm =  this.activateQuizSurveyTemplateForm.quizOptionsForm;
   selectSurveyTemplateForm = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
-  selectWebPageForm = this.activateQuizSurveyTemplateForm.selectWebPageForm;
+  selectWebpageForm = this.activateQuizSurveyTemplateForm.selectWebpageForm;
 
   quizTemplateForm = new PreviewQuizTemplateFormModel(this.fb);
   previewQuizTemplateForm = this.quizTemplateForm.previewQuizTemplateForm;
@@ -57,6 +61,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     private quizAdminService: QuizAdminService,
     private webpageAdminService: WebpageAdminService,
     private fb: FormBuilder,
+    private checkQuizTitleValidator: CheckQuizTitleValidator
   ) {}
 
   ngOnInit() {
@@ -70,6 +75,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.selectQuizTemplateForm.get('quizTemplateSelect').valueChanges.subscribe(
       (val: number) => {
         if (val) {
+          this.clearStatusFlags();
           this.quizTemplateSelected = val;
           this.quizPreview = false;
         }
@@ -83,6 +89,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.selectSurveyTemplateForm.get('surveyTemplateSelect').valueChanges.subscribe(
       (val: number) => {
         if (val) {
+          this.clearStatusFlags();
           this.surveyTemplateSelected = val;
           this.surveyPreview = false;
         }
@@ -93,7 +100,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       }
     );
 
-    this.selectWebPageForm.get('webPageSelect').valueChanges.subscribe(
+    this.selectWebpageForm.get('webpageSelect').valueChanges.subscribe(
       (val: number) => {
         if (val) {
           this.webpageSelectionChanged(val);
@@ -218,15 +225,40 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   }
 
   webpageSelectionChanged(webpageSelected: number): void {
-    const webpage = _.find(this.activeRoutes, ['id', webpageSelected]);
+    this.clearStatusFlags();
+    const webpage: WebpageModel = _.find(this.activeRoutes, ['id', webpageSelected]);
 
-    this.quizTemplateSelected = webpage.quizId;
-    let quizTemplateSelect = this.selectQuizTemplateForm.get('quizTemplateSelect')
-    quizTemplateSelect.setValue(this.quizTemplateSelected);
+    const quizId = webpage.quizId;
+    if (quizId) {
+      this.quizAdminService.getQuiz(quizId)
+        .subscribe(
+          (quizzes: QuizDataModel[]) => {
+            if (quizzes && quizzes.length) {
+              const quiz = quizzes[0];
 
-    this.surveyTemplateSelected = webpage.surveyId;
-    let surveyTemplateSelect = this.selectSurveyTemplateForm.get('surveyTemplateSelect')
-    surveyTemplateSelect.setValue(this.surveyTemplateSelected);
+              let title = this.quizForm.get('title')
+              title.setValue(quiz.title);
+              let description = this.quizForm.get('description')
+              description.setValue(quiz.description);
+
+              let randomizeQuestionSequence = this.quizOptionsForm.get('randomizeQuestionSequence');
+              randomizeQuestionSequence.setValue(quiz.config.randomizeQuestionSequence);
+              let randomizeAnswerSequence = this.quizOptionsForm.get('randomizeAnswerSequence');
+              randomizeAnswerSequence.setValue(quiz.config.randomizeAnswerSequence);
+              let autoSubmit = this.quizOptionsForm.get('autoSubmit');
+              autoSubmit.setValue(quiz.config.autoSubmit);
+              let percentGreatJob = this.quizOptionsForm.get('percentGreatJob');
+              percentGreatJob.setValue(quiz.config.percentGreatJob);
+
+            }
+          },
+          error => {
+            console.error(error);
+            this.generalError = true;
+          }
+        );
+    }
+    const surveyId = webpage.surveyId;
 
     this.webpageSelected = webpageSelected;
     this.quizPreview = false;
@@ -290,5 +322,37 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       this.quizTemplateForm.deleteQuestion(i);
     }
     this.formQuestions.reset();
+  }
+
+  activate(): void {
+    this.clearStatusFlags();
+    const webpageSelect = this.selectWebpageForm.get('webpageSelect').value;
+
+    if (webpageSelect) {
+      let webpage: WebpageModel = new WebpageModel();
+      webpage.id = webpageSelect;
+      /* webpage.quizId = this.selectQuizTemplateForm.get('quizTemplateSelect').value
+      webpage.surveyId = this.selectSurveyTemplateForm.get('surveyTemplateSelect').value
+
+      this.webpageAdminService.saveExistingWebpage(this.webpageSelected, webpage)
+        .subscribe(
+          (result: any) => {
+            if (result) {
+              this.saveSuccess = true;
+            }
+          },
+          error => {
+            console.error(error);
+            this.saveError = true;
+          }
+        ); */
+    }
+  }
+
+  clearStatusFlags() {
+    this.saveSuccess = false;
+    this.saveError = false;
+    this.generalError = false;
+    this.errorMessage = '';
   }
 }

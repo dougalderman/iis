@@ -26,7 +26,6 @@ export class PreviewQuizTemplateFormModel  {
   ])
 
   previewQuizTemplateForm: FormGroup = this.fb.group({
-    description: [{value: '', disabled: true}],
     formQuestions: this.questions
   });
 

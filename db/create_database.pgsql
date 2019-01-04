@@ -26,8 +26,8 @@ CREATE TYPE quiz_question_type AS ENUM (
 DROP TABLE IF EXISTS Quizzes CASCADE;
 CREATE TABLE Quizzes (
   id serial PRIMARY KEY,
-  brief_name text,
   title text NOT NULL UNIQUE,
+  description text,
   config jsonb
 );
 

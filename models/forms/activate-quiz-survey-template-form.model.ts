@@ -1,12 +1,25 @@
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 
+import { requiredTrimWhitespaceValidator } from '../../public/src/app/validators/required-trim-whitespace.validator';
+import { CheckQuizTitleValidator } from '../../public/src/app/validators/check-quiz-title.validator';
+
 export class ActivateQuizSurveyTemplateFormModel {
   constructor(
     private fb: FormBuilder,
+    private checkQuizTitle: CheckQuizTitleValidator
   ) {}
 
   selectQuizTemplateForm: FormGroup = this.fb.group({
     quizTemplateSelect: new FormControl('')
+  })
+
+  quizForm: FormGroup = this.fb.group({
+    title: ['', {
+      validators: requiredTrimWhitespaceValidator(),
+      asyncValidators: this.checkQuizTitle.validate.bind(this.checkQuizTitle),
+      updateOn: 'blur'
+    }],
+    description: ['']
   })
 
   quizOptionsForm: FormGroup = this.fb.group({
@@ -20,7 +33,7 @@ export class ActivateQuizSurveyTemplateFormModel {
     surveyTemplateSelect: new FormControl('')
   })
 
-  selectWebPageForm: FormGroup = this.fb.group({
-    webPageSelect: new FormControl('')
+  selectWebpageForm: FormGroup = this.fb.group({
+    webpageSelect: new FormControl('')
   })
 }

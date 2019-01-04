@@ -6,7 +6,7 @@ import { WebpageModel } from  '../../../../models/webpages/webpage.model';
 import { WebpageDataModel } from  '../../../../models/webpages/data/webpage-data.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class WebpageAdminService {
 

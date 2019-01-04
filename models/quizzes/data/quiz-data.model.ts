@@ -1,8 +1,10 @@
+import { QuizConfigModel } from '../quiz.model';
+
 export class QuizDataModel {
   id: number;
-  brief_name: string;
   title: string;
-  config: object;
+  description: string;
+  config: QuizConfigModel;
 
   constructor() {}
 }

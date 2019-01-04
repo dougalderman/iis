@@ -5,7 +5,7 @@ import { ConfirmModalComponent } from '../components/bootstrap-components/confir
 
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ModalService {
 

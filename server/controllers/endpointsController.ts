@@ -17,8 +17,8 @@ export class EndpointsController {
     // Quizzes
     app.post('/api/admin/quizzes', QuizController.create) // Writes new quiz.
     app.get('/api/admin/quizzes/id/:id', QuizController.readById) // Reads quiz by id.
-    app.get('/api/admin/quizzes/brief_name/:briefName', QuizController.readByBriefName) // Reads quiz by name.
     app.get('/api/admin/quizzes/title/:title', QuizController.readByTitle) // Reads quiz by title.
+    app.get('/api/admin/quizzes/title_taken/:title', QuizController.isTitleTaken) // Reads quiz by title.
     app.get('/api/admin/quizzes', QuizController.readAll) // Reads all quizzes.
     app.put('/api/admin/quizzes/:id', QuizController.update) // Updates quiz.
     app.delete('/api/admin/quizzes/:id', QuizController.delete) // Deletes quiz.
