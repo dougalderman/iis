@@ -1,4 +1,5 @@
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
+import * as _ from 'lodash';
 
 import { requiredTrimWhitespaceValidator } from '../../public/src/app/validators/required-trim-whitespace.validator';
 import { CheckQuizTitleValidator } from '../../public/src/app/validators/check-quiz-title.validator';
@@ -22,12 +23,14 @@ export class ActivateQuizSurveyTemplateFormModel {
     description: ['']
   })
 
-  quizOptionsForm: FormGroup = this.fb.group({
+  defaultQuizConfigurationForm: FormGroup = this.fb.group({
     randomizeQuestionSequence: [true],
     randomizeAnswerSequence: [true],
     autoSubmit: [false],
     percentGreatJob: [75, [Validators.min(0), Validators.max(100)]]
   })
+
+  quizConfigurationForm: FormGroup = _.cloneDeep(this.defaultQuizConfigurationForm);
 
   selectSurveyTemplateForm: FormGroup = this.fb.group({
     surveyTemplateSelect: new FormControl('')

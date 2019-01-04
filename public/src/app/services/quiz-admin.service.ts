@@ -16,6 +16,7 @@ export class QuizAdminService {
 
   private quizUrl = '/api/admin/quizzes'
   private quizByIdUrl = '/api/admin/quizzes/id/';
+  private quizByTitleUrl = '/api/admin/quizzes/title/';
   private isQuizTitleTakenUrl = '/api/admin/quizzes/title_taken/';
 
   private quizTemplatesUrl = '/api/admin/quiz_templates';
@@ -36,15 +37,27 @@ export class QuizAdminService {
     }
   }
 
+  getQuizByTitle(title: string): Observable<QuizDataModel[]> {
+    if (title) {
+      return this.http.get<QuizDataModel[]>(this.quizByTitleUrl + encodeURIComponent(title));
+    }
+  }
+
   isQuizTitleTaken(quizTitle: string): Observable<boolean> {
     if (quizTitle) {
-      return this.http.get<boolean>(this.isQuizTitleTakenUrl + quizTitle);
+      return this.http.get<boolean>(this.isQuizTitleTakenUrl + encodeURIComponent(quizTitle));
     }
   }
 
   saveNewQuiz(quizData: QuizModel) {
     if (quizData) {
       return this.http.post(this.quizUrl, quizData);
+    }
+  }
+
+  saveExistingQuiz(quizId: number, quizData: QuizModel) {
+    if (quizData) {
+      return this.http.put(this.quizUrl + '/' + quizId, quizData);
     }
   }
 
@@ -60,13 +73,13 @@ export class QuizAdminService {
 
   getQuizTemplateByName(templateName: string): Observable<QuizTemplateDataModel[]> {
     if (templateName) {
-      return this.http.get<QuizTemplateDataModel[]>(this.quizTemplateByNameUrl + templateName);
+      return this.http.get<QuizTemplateDataModel[]>(this.quizTemplateByNameUrl + encodeURIComponent(templateName));
     }
   }
 
   isQuizTemplateNameTaken(templateName: string): Observable<boolean> {
     if (templateName) {
-      return this.http.get<boolean>(this.isQuizTemplateNameTakenUrl + templateName);
+      return this.http.get<boolean>(this.isQuizTemplateNameTakenUrl + encodeURIComponent(templateName));
     }
   }
 

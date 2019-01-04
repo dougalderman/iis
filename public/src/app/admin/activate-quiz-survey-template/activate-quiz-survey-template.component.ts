@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 import { appRoutes } from '../../app-routing.module';
 
-import { QuizModel } from  '../../../../../models/quizzes/quiz.model';
+import { QuizModel, QuizConfigModel } from  '../../../../../models/quizzes/quiz.model';
 import { QuizDataModel } from  '../../../../../models/quizzes/data/quiz-data.model';
 import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.model';
 import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-template-data.model';
@@ -20,9 +20,6 @@ import { QuizAdminService } from '../../services/quiz-admin.service';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
 import { CheckQuizTitleValidator } from '../../validators/check-quiz-title.validator';
 
-class QuizTemplate extends QuizTemplateModel {}
-class QuizQuestion extends QuizQuestionModel {}
-
 @Component({
   selector: 'app-activate-quiz-survey-template',
   templateUrl: './activate-quiz-survey-template.component.html',
@@ -30,7 +27,10 @@ class QuizQuestion extends QuizQuestionModel {}
 })
 export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
-  quizTemplate: QuizTemplateModel = new QuizTemplate();
+  quiz: QuizModel = new QuizModel();
+  quizId: number = 0;
+
+  quizTemplate: QuizTemplateModel = new QuizTemplateModel();
   quizTemplates: QuizTemplateModel[];
   quizPreview: boolean = false;
   quizTemplateSelected: number = 0;
@@ -41,11 +41,13 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
   activeRoutes: WebpageModel[] = [];
   webpageSelected: number = 0;
+  webpage: WebpageModel = new WebpageModel();
 
   activateQuizSurveyTemplateForm = new ActivateQuizSurveyTemplateFormModel(this.fb, this.checkQuizTitleValidator);
   selectQuizTemplateForm = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
   quizForm =  this.activateQuizSurveyTemplateForm.quizForm;
-  quizOptionsForm =  this.activateQuizSurveyTemplateForm.quizOptionsForm;
+  defaultQuizConfigurationForm =  this.activateQuizSurveyTemplateForm.defaultQuizConfigurationForm;
+  quizConfigurationForm =  this.activateQuizSurveyTemplateForm.quizConfigurationForm;
   selectSurveyTemplateForm = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
   selectWebpageForm = this.activateQuizSurveyTemplateForm.selectWebpageForm;
 
@@ -72,12 +74,22 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   }
 
   onChanges(): void {
+    this.selectWebpageForm.get('webpageSelect').valueChanges.subscribe(
+      (val: number) => {
+        if (val) {
+          this.webpageSelectionChanged(val);
+        }
+      },
+      error => {
+        console.error(error);
+        this.generalError = true;
+      }
+    );
+
     this.selectQuizTemplateForm.get('quizTemplateSelect').valueChanges.subscribe(
       (val: number) => {
         if (val) {
-          this.clearStatusFlags();
-          this.quizTemplateSelected = val;
-          this.quizPreview = false;
+          this.quizTemplateSelectionChanged(val);
         }
       },
       error => {
@@ -92,18 +104,6 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
           this.clearStatusFlags();
           this.surveyTemplateSelected = val;
           this.surveyPreview = false;
-        }
-      },
-      error => {
-        console.error(error);
-        this.generalError = true;
-      }
-    );
-
-    this.selectWebpageForm.get('webpageSelect').valueChanges.subscribe(
-      (val: number) => {
-        if (val) {
-          this.webpageSelectionChanged(val);
         }
       },
       error => {
@@ -227,28 +227,30 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   webpageSelectionChanged(webpageSelected: number): void {
     this.clearStatusFlags();
     const webpage: WebpageModel = _.find(this.activeRoutes, ['id', webpageSelected]);
+    this.quizId = webpage.quizId;
 
-    const quizId = webpage.quizId;
-    if (quizId) {
-      this.quizAdminService.getQuiz(quizId)
+    if (this.quizId) {
+      this.quizAdminService.getQuiz(this.quizId)
         .subscribe(
           (quizzes: QuizDataModel[]) => {
             if (quizzes && quizzes.length) {
-              const quiz = quizzes[0];
+              this.quiz = quizzes[0];
 
+              this.quizForm.reset();
               let title = this.quizForm.get('title')
-              title.setValue(quiz.title);
+              title.setValue(this.quiz.title);
               let description = this.quizForm.get('description')
-              description.setValue(quiz.description);
+              description.setValue(this.quiz.description);
 
-              let randomizeQuestionSequence = this.quizOptionsForm.get('randomizeQuestionSequence');
-              randomizeQuestionSequence.setValue(quiz.config.randomizeQuestionSequence);
-              let randomizeAnswerSequence = this.quizOptionsForm.get('randomizeAnswerSequence');
-              randomizeAnswerSequence.setValue(quiz.config.randomizeAnswerSequence);
-              let autoSubmit = this.quizOptionsForm.get('autoSubmit');
-              autoSubmit.setValue(quiz.config.autoSubmit);
-              let percentGreatJob = this.quizOptionsForm.get('percentGreatJob');
-              percentGreatJob.setValue(quiz.config.percentGreatJob);
+              this.quizConfigurationForm.reset();
+              let randomizeQuestionSequence = this.quizConfigurationForm.get('randomizeQuestionSequence');
+              randomizeQuestionSequence.setValue(this.quiz.config.randomizeQuestionSequence);
+              let randomizeAnswerSequence = this.quizConfigurationForm.get('randomizeAnswerSequence');
+              randomizeAnswerSequence.setValue(this.quiz.config.randomizeAnswerSequence);
+              let autoSubmit = this.quizConfigurationForm.get('autoSubmit');
+              autoSubmit.setValue(this.quiz.config.autoSubmit);
+              let percentGreatJob = this.quizConfigurationForm.get('percentGreatJob');
+              percentGreatJob.setValue(this.quiz.config.percentGreatJob);
 
             }
           },
@@ -259,49 +261,71 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
         );
     }
     const surveyId = webpage.surveyId;
+    // TODO: Code to read survey
 
     this.webpageSelected = webpageSelected;
+    this.webpage = webpage;
     this.quizPreview = false;
     this.surveyPreview = false;
   }
 
-  previewQuiz(): void {
-    this.quizPreview = !this.quizPreview;
-    this.quizAdminService.getQuizTemplate(this.quizTemplateSelected)
+  quizTemplateSelectionChanged(quizTemplateSelected: number): void {
+    this.clearStatusFlags();
+    this.quizId = 0;
+    this.quiz = new QuizModel();
+
+    this.quizAdminService.getQuizTemplate(quizTemplateSelected)
       .subscribe(
         (template: QuizTemplateDataModel[]) => {
           if (template && template.length) {
-            const selectedTemplate = template[0] as QuizTemplateModel;
-            this.previewQuizTemplateForm.reset();
-            this.resetFormQuestions();
-            this.previewQuizTemplateForm.controls.description.setValue(selectedTemplate.description);
-            this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
-              .subscribe(
-                (questions: QuizQuestionDataModel[]) => {
-                  if (questions && questions.length) {
-                    for (let i = 0; i < questions.length; i++) {
-                      let question = new QuizQuestion();
-                      question.textQuestion = questions[i].text_question;
-                      question.questionType = questions[i].question_type;
-                      question.options = questions[i].options;
-                      question.booleanCorrectAnswer = questions[i].boolean_correct_answer;
-                      question.correctAnswerArray = questions[i].correct_answer_array;
-                      this.quizTemplateForm.addQuestion(question);
-                    }
-                  }
-                },
-                error => {
-                  console.error(error);
-                  this.generalError = true;
-                }
-              );
+            this.quizTemplate = template[0] as QuizTemplateModel;
+
+            this.quizForm.reset();
+            let title = this.quizForm.get('title')
+            title.setValue(this.quizTemplate.name);
+            let description = this.quizForm.get('description')
+            description.setValue(this.quizTemplate.description);
+
+            this.quizConfigurationForm.reset();
+            this.quizConfigurationForm = _.cloneDeep(this.defaultQuizConfigurationForm);
           }
         },
         error => {
           console.error(error);
           this.generalError = true;
         }
-    );
+      );
+
+    this.quizTemplateSelected = quizTemplateSelected;
+    this.quizPreview = false;
+  }
+
+  previewQuiz(): void {
+    this.quizPreview = !this.quizPreview;
+    this.previewQuizTemplateForm.reset();
+    this.resetFormQuestions();
+
+    // TODO: Add conditional for either this.quizTemplateSelected or quizId
+    this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
+      .subscribe(
+        (questions: QuizQuestionDataModel[]) => {
+          if (questions && questions.length) {
+            for (let i = 0; i < questions.length; i++) {
+              let question = new QuizQuestionModel();
+              question.textQuestion = questions[i].text_question;
+              question.questionType = questions[i].question_type;
+              question.options = questions[i].options;
+              question.booleanCorrectAnswer = questions[i].boolean_correct_answer;
+              question.correctAnswerArray = questions[i].correct_answer_array;
+              this.quizTemplateForm.addQuestion(question);
+            }
+          }
+        },
+        error => {
+          console.error(error);
+          this.generalError = true;
+        }
+      );
   }
 
   clearPreviewQuiz(): void {
@@ -326,27 +350,94 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
   activate(): void {
     this.clearStatusFlags();
-    const webpageSelect = this.selectWebpageForm.get('webpageSelect').value;
 
-    if (webpageSelect) {
-      let webpage: WebpageModel = new WebpageModel();
-      webpage.id = webpageSelect;
-      /* webpage.quizId = this.selectQuizTemplateForm.get('quizTemplateSelect').value
-      webpage.surveyId = this.selectSurveyTemplateForm.get('surveyTemplateSelect').value
+    if (this.webpageSelected) {
+      if (this.quizId) {
+        // Save existing quiz changes
+        this.quiz = this.updateQuizDataFromForm(this.quiz);
 
-      this.webpageAdminService.saveExistingWebpage(this.webpageSelected, webpage)
-        .subscribe(
-          (result: any) => {
-            if (result) {
-              this.saveSuccess = true;
+        this.quizAdminService.saveExistingQuiz(this.quizId, this.quiz)
+          .subscribe(
+            (result: any) => {
+              if (result) {
+                this.saveSuccess = true;
+                this.clearForms();
+              }
+            },
+            error => {
+              console.error(error);
+              this.saveError = true;
             }
-          },
-          error => {
-            console.error(error);
-            this.saveError = true;
-          }
-        ); */
+          );
+      }
+      else {
+        // Save new quiz
+        if (this.quizTemplateSelected) {
+          let quiz: QuizModel = new QuizModel();
+          quiz = this.updateQuizDataFromForm(quiz);
+          this.webpage.quizId = null;
+
+          this.quizAdminService.saveNewQuiz(quiz)
+            .subscribe(
+              (result: any) => {
+                if (result) {
+                  this.quizAdminService.getQuizByTitle(quiz.title)
+                    .subscribe(
+                      (quizzes: QuizDataModel[]) => {
+                        if (quizzes && quizzes.length) {
+                          const thisQuiz: QuizDataModel = quizzes[0];
+                          const thisQuizId: number = thisQuiz.id;
+                          this.webpage.quizId = thisQuizId;
+                          // TODO: Add quizID field to all quiz questions from template.
+
+                          this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+                            .subscribe(
+                              (result: any) => {
+                                if (result) {
+                                  this.saveSuccess = true;
+                                  this.clearForms();
+                                }
+                              },
+                              error => {
+                                console.error(error);
+                                this.saveError = true;
+                              }
+                            );
+                        }
+                      },
+                      error => {
+                        console.error(error);
+                        this.saveError = true;
+                      }
+                    );
+                }
+              },
+              error => {
+                console.error(error);
+                this.saveError = true;
+              }
+            );
+        }
+      }
     }
+  }
+
+  updateQuizDataFromForm(quiz: QuizDataModel): QuizDataModel {
+    quiz.title = this.quizForm.get('title').value;
+    if (quiz.title) {
+      quiz.title = quiz.title.trim();
+    }
+    quiz.description = this.quizForm.get('description').value;
+    if (quiz.description) {
+      quiz.description = quiz.description.trim();
+    }
+    quiz.config = new QuizConfigModel();
+    quiz.config.randomizeQuestionSequence = this.quizConfigurationForm.get('randomizeQuestionSequence').value;
+    quiz.config.randomizeAnswerSequence = this.quizConfigurationForm.get('randomizeAnswerSequence').value;
+    quiz.config.autoSubmit = this.quizConfigurationForm.get('autoSubmit').value;
+    quiz.config.percentGreatJob = this.quizConfigurationForm.get('percentGreatJob').value;
+
+    return quiz;
   }
 
   clearStatusFlags() {
@@ -354,5 +445,14 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.saveError = false;
     this.generalError = false;
     this.errorMessage = '';
+  }
+
+  clearForms() {
+    this.quizForm.reset();
+    this.quizConfigurationForm.reset();
+    this.quizConfigurationForm = _.cloneDeep(this.defaultQuizConfigurationForm);
+    this.selectWebpageForm.reset();
+    this.selectQuizTemplateForm.reset();
+    this.selectSurveyTemplateForm.reset();
   }
 }
