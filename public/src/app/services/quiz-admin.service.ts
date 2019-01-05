@@ -25,7 +25,9 @@ export class QuizAdminService {
   private isQuizTemplateNameTakenUrl = '/api/admin/quiz_templates/name_taken/';
 
   private quizQuestionsUrl = '/api/admin/quiz_questions'
+  private quizQuestionsUpdateQuizIdUrl = '/api/admin/quiz_questions/quiz_id/'
   private questionsForQuizTemplateUrl = '/api/admin/quiz_questions/template_id/';
+  private questionsForQuizUrl = '/api/admin/quiz_questions/quiz_id/';
 
   constructor(
     private http: HttpClient
@@ -89,6 +91,12 @@ export class QuizAdminService {
     }
   }
 
+  getQuestionsForQuiz(quizId: number): Observable<QuizQuestionDataModel[]> {
+    if (quizId) {
+      return this.http.get<QuizQuestionDataModel[]>(this.questionsForQuizUrl + quizId);
+    }
+  }
+
   saveNewQuizTemplate(templateData: QuizTemplateModel) {
     if (templateData) {
       return this.http.post(this.quizTemplatesUrl, templateData);
@@ -110,6 +118,12 @@ export class QuizAdminService {
   saveNewQuizQuestion(questionData: QuizQuestionModel) {
     if (questionData) {
       return this.http.post(this.quizQuestionsUrl, questionData);
+    }
+  }
+
+  saveExistingQuizQuestionQuizId(questionId: number, questionData: QuizQuestionModel) {
+    if (questionData) {
+      return this.http.put(this.quizQuestionsUpdateQuizIdUrl + questionId, questionData);
     }
   }
 

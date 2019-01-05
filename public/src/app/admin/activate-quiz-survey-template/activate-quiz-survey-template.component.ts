@@ -305,8 +305,30 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.previewQuizTemplateForm.reset();
     this.resetFormQuestions();
 
-    // TODO: Add conditional for either this.quizTemplateSelected or quizId
-    this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
+    if (this.quizTemplateSelected) {
+      this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
+        .subscribe(
+          (questions: QuizQuestionDataModel[]) => {
+            if (questions && questions.length) {
+              for (let i = 0; i < questions.length; i++) {
+                let question = new QuizQuestionModel();
+                question.textQuestion = questions[i].text_question;
+                question.questionType = questions[i].question_type;
+                question.options = questions[i].options;
+                question.booleanCorrectAnswer = questions[i].boolean_correct_answer;
+                question.correctAnswerArray = questions[i].correct_answer_array;
+                this.quizTemplateForm.addQuestion(question);
+              }
+            }
+          },
+          error => {
+            console.error(error);
+            this.generalError = true;
+          }
+        );
+    }
+    else if (this.quizId) {
+      this.quizAdminService.getQuestionsForQuiz(this.quizId)
       .subscribe(
         (questions: QuizQuestionDataModel[]) => {
           if (questions && questions.length) {
@@ -326,6 +348,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
           this.generalError = true;
         }
       );
+    }
   }
 
   clearPreviewQuiz(): void {
@@ -388,14 +411,46 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
                           const thisQuiz: QuizDataModel = quizzes[0];
                           const thisQuizId: number = thisQuiz.id;
                           this.webpage.quizId = thisQuizId;
-                          // TODO: Add quizID field to all quiz questions from template.
-
                           this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
                             .subscribe(
                               (result: any) => {
                                 if (result) {
-                                  this.saveSuccess = true;
-                                  this.clearForms();
+                                  this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
+                                    .subscribe(
+                                      (questions: QuizQuestionDataModel[]) => {
+                                        if (questions && questions.length) {
+                                          let questionSavedCount = 0;
+
+                                          for (let i = 0; i < questions.length; i++) {
+                                            const questionId = questions[i].id
+                                            let question: any = {};
+                                            question.quizId = thisQuizId;
+                                            this.quizAdminService.saveExistingQuizQuestionQuizId(questionId, question)
+                                              .subscribe(
+                                                (result: any) => {
+                                                  if (result) {
+                                                    questionSavedCount++;
+                                                    if (questionSavedCount === questions.length) {
+                                                      this.saveSuccess = true;
+                                                      this.quizTemplateSelected = 0;
+                                                      this.surveyTemplateSelected = 0;
+                                                      this.clearForms();
+                                                    }
+                                                  }
+                                                },
+                                                error => {
+                                                  console.error(error);
+                                                  this.saveError = true;
+                                                }
+                                              );
+                                          }
+                                        }
+                                      },
+                                      error => {
+                                        console.error(error);
+                                        this.saveError = true;
+                                      }
+                                    );
                                 }
                               },
                               error => {
