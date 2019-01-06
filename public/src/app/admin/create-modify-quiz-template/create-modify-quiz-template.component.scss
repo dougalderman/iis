@@ -1,3 +1,5 @@
+@import '../../../assets/scss/variables';
+
 .template-container {
   width: 30%;
 }
@@ -14,4 +16,8 @@ h2 {
 
 .extra-margin-bottom {
   margin-bottom: 3rem;
+}
+
+select.quiz-template-background {
+  background: $select-menu-purple;
 }

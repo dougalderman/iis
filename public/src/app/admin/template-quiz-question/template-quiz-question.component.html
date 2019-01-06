@@ -1,7 +1,7 @@
 <form class="quiz-question" [formGroup]="question">
   <div class="form-group">
     <label>Question Type:</label>
-    <select class="form-control" formControlName="typeSelect">
+    <select class="form-control question-type-background" formControlName="typeSelect">
       <option value="" disabled>Select Question Type</option>
       <option *ngFor="let questionType of questionTypes" [ngValue]="questionType.name">{{questionType.description}}</option>
     </select>

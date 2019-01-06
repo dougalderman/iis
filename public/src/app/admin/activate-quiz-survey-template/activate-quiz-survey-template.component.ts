@@ -20,6 +20,9 @@ import { QuizAdminService } from '../../services/quiz-admin.service';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
 import { CheckQuizTitleValidator } from '../../validators/check-quiz-title.validator';
 
+const NO_QUIZ = -10;
+const KEEP_SAME_QUIZ = -20;
+
 @Component({
   selector: 'app-activate-quiz-survey-template',
   templateUrl: './activate-quiz-survey-template.component.html',
@@ -29,6 +32,9 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
   quiz: QuizModel = new QuizModel();
   quizId: number = 0;
+
+  noQuiz: number = NO_QUIZ;
+  keepSameQuiz: number = KEEP_SAME_QUIZ;
 
   quizTemplate: QuizTemplateModel = new QuizTemplateModel();
   quizTemplates: QuizTemplateModel[];
@@ -227,7 +233,17 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   webpageSelectionChanged(webpageSelected: number): void {
     this.clearStatusFlags();
     const webpage: WebpageModel = _.find(this.activeRoutes, ['id', webpageSelected]);
+    this.webpage = webpage;
+    this.webpageSelected = webpageSelected;
+
     this.quizId = webpage.quizId;
+    this.quizTemplateSelected = this.noQuiz;
+    this.quizPreview = false;
+    this.quizForm.reset();
+    this.quizConfigurationForm.reset();
+    this.quizPreview = false;
+
+    this.surveyPreview = false;
 
     if (this.quizId) {
       this.quizAdminService.getQuiz(this.quizId)
@@ -236,13 +252,11 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
             if (quizzes && quizzes.length) {
               this.quiz = quizzes[0];
 
-              this.quizForm.reset();
               let title = this.quizForm.get('title')
               title.setValue(this.quiz.title);
               let description = this.quizForm.get('description')
               description.setValue(this.quiz.description);
 
-              this.quizConfigurationForm.reset();
               let randomizeQuestionSequence = this.quizConfigurationForm.get('randomizeQuestionSequence');
               randomizeQuestionSequence.setValue(this.quiz.config.randomizeQuestionSequence);
               let randomizeAnswerSequence = this.quizConfigurationForm.get('randomizeAnswerSequence');
@@ -252,6 +266,10 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
               let percentGreatJob = this.quizConfigurationForm.get('percentGreatJob');
               percentGreatJob.setValue(this.quiz.config.percentGreatJob);
 
+              // Default to keep the same quiz if quiz is associated with webpage.
+              this.quizTemplateSelected = this.keepSameQuiz;
+              const quizTemplateSelect = this.selectQuizTemplateForm.get('quizTemplateSelect')
+              quizTemplateSelect.setValue(this.quizTemplateSelected);
             }
           },
           error => {
@@ -262,42 +280,38 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     }
     const surveyId = webpage.surveyId;
     // TODO: Code to read survey
-
-    this.webpageSelected = webpageSelected;
-    this.webpage = webpage;
-    this.quizPreview = false;
-    this.surveyPreview = false;
   }
 
   quizTemplateSelectionChanged(quizTemplateSelected: number): void {
     this.clearStatusFlags();
+    this.quizForm.reset();
+    this.quizConfigurationForm.reset();
     this.quizId = 0;
     this.quiz = new QuizModel();
-
-    this.quizAdminService.getQuizTemplate(quizTemplateSelected)
-      .subscribe(
-        (template: QuizTemplateDataModel[]) => {
-          if (template && template.length) {
-            this.quizTemplate = template[0] as QuizTemplateModel;
-
-            this.quizForm.reset();
-            let title = this.quizForm.get('title')
-            title.setValue(this.quizTemplate.name);
-            let description = this.quizForm.get('description')
-            description.setValue(this.quizTemplate.description);
-
-            this.quizConfigurationForm.reset();
-            this.quizConfigurationForm = _.cloneDeep(this.defaultQuizConfigurationForm);
-          }
-        },
-        error => {
-          console.error(error);
-          this.generalError = true;
-        }
-      );
-
     this.quizTemplateSelected = quizTemplateSelected;
     this.quizPreview = false;
+
+    if (quizTemplateSelected > 0) {
+      this.quizAdminService.getQuizTemplate(quizTemplateSelected)
+        .subscribe(
+          (template: QuizTemplateDataModel[]) => {
+            if (template && template.length) {
+              this.quizTemplate = template[0] as QuizTemplateModel;
+
+              let title = this.quizForm.get('title')
+              title.setValue(this.quizTemplate.name);
+              let description = this.quizForm.get('description')
+              description.setValue(this.quizTemplate.description);
+
+              this.quizConfigurationForm = _.cloneDeep(this.defaultQuizConfigurationForm);
+            }
+          },
+          error => {
+            console.error(error);
+            this.generalError = true;
+          }
+        );
+    }
   }
 
   previewQuiz(): void {
@@ -305,7 +319,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.previewQuizTemplateForm.reset();
     this.resetFormQuestions();
 
-    if (this.quizTemplateSelected) {
+    if (this.quizTemplateSelected > 0) {
       this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
         .subscribe(
           (questions: QuizQuestionDataModel[]) => {
@@ -327,7 +341,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
           }
         );
     }
-    else if (this.quizId) {
+    else if (this.quizId && this.quizTemplateSelected !== this.noQuiz) {
       this.quizAdminService.getQuestionsForQuiz(this.quizId)
       .subscribe(
         (questions: QuizQuestionDataModel[]) => {
@@ -375,7 +389,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.clearStatusFlags();
 
     if (this.webpageSelected) {
-      if (this.quizId) {
+      if (this.quizId && this.quizTemplateSelected !== this.noQuiz) {
         // Save existing quiz changes
         this.quiz = this.updateQuizDataFromForm(this.quiz);
 
@@ -395,7 +409,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       }
       else {
         // Save new quiz
-        if (this.quizTemplateSelected) {
+        if (this.quizTemplateSelected > 0) {
           let quiz: QuizModel = new QuizModel();
           quiz = this.updateQuizDataFromForm(quiz);
           this.webpage.quizId = null;

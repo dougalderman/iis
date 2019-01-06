@@ -6,7 +6,7 @@
         <form class="select-form" [formGroup]="selectWebpageForm">
           <div class="form-group">
             <label class="subheading">First Step: Select Web Page:</label>
-            <select id="webpage-select" class="form-control" formControlName="webpageSelect">
+            <select id="webpage-select" class="form-control webpage-select-background" formControlName="webpageSelect">
               <option value="" disabled selected>Select Web Page</option>
               <option *ngFor="let route of activeRoutes" [ngValue]="route.id">{{route.title}}</option>
             </select>
@@ -26,15 +26,16 @@
         <form class="select-form" [formGroup]="selectQuizTemplateForm">
           <div class="form-group">
             <label class="subheading">Second Step: Select Quiz Template:</label>
-            <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="right" ngbTooltip="Select quiz template to apply to the web page. Select 'No Quiz' to not have a quiz. Don't select anything if a quiz is already associated with the web page, and you want to keep the same quiz.">
-            <select id="quiz-template-select" class="form-control" formControlName="quizTemplateSelect">
+            <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="right" ngbTooltip="Select quiz template to apply to the web page. Select 'No Quiz' to not have a quiz. Select 'Keep the Same Quiz' if a quiz is already associated with the web page, and you want to keep the same quiz.">
+            <select id="quiz-template-select" class="form-control quiz-template-select-background" formControlName="quizTemplateSelect">
               <option value="" disabled selected>Select Quiz Template</option>
-              <option [ngValue]="null">No Quiz</option>
+              <option [ngValue]="noQuiz">No Quiz</option>
+              <option [ngValue]="keepSameQuiz">Keep the Same Quiz</option>
               <option *ngFor="let quizTempl of quizTemplates" [ngValue]="quizTempl.id">{{quizTempl.name}}</option>
             </select>
           </div>
         </form>
-        <div *ngIf="quizTemplateSelected || quizId" class="form-group three-rem-margin-bottom">
+        <div *ngIf="quizTemplateSelected > 0 || quizId" class="form-group three-rem-margin-bottom">
           <form [formGroup]="quizForm">
             <div class="form-group  three-rem-margin-bottom">
               <div class="form-group">
@@ -55,7 +56,7 @@
             </div>
           </form>
         </div>
-        <div *ngIf="quizTemplateSelected || quizId" class="form-group three-rem-margin-bottom">
+        <div *ngIf="quizTemplateSelected > 0 || quizId" class="form-group three-rem-margin-bottom">
           <form [formGroup]="quizConfigurationForm">
             <h3 class="one-rem-margin-bottom">Quiz Settings</h3>
             <div class="form-group two-rem-margin-bottom">
@@ -112,8 +113,8 @@
           </form>
         </div>
         <div class="form-group three-rem-margin-bottom">
-          <button *ngIf="!quizPreview" type="button" class="btn btn-primary" (click)="previewQuiz()" [disabled]="!quizTemplateSelected && !quizId">Preview</button>
-          <button *ngIf="quizPreview" type="button" class="btn btn-secondary" (click)="clearPreviewQuiz()" [disabled]="!quizTemplateSelected && !quizId">Clear</button>
+          <button *ngIf="!quizPreview" type="button" class="btn btn-primary" (click)="previewQuiz()" [disabled]="!quizTemplateSelected > 0 && !quizId">Preview</button>
+          <button *ngIf="quizPreview" type="button" class="btn btn-secondary" (click)="clearPreviewQuiz()" [disabled]="!quizTemplateSelected > 0 && !quizId">Clear</button>
         </div>
         <div class="form-group three-rem-margin-bottom" *ngIf="quizPreview">
           <form [formGroup]="previewQuizTemplateForm">
@@ -129,7 +130,7 @@
         <form class="select-form" [formGroup]="selectSurveyTemplateForm">
           <div class="form-group">
             <label class="subheading">Third Step: Select Survey Template:</label>
-            <select id="survey-template-select" class="form-control" formControlName="surveyTemplateSelect">
+            <select id="survey-template-select" class="form-control survey-template-select-background" formControlName="surveyTemplateSelect">
               <option value="" disabled selected>Select Survey Template</option>
               <option [ngValue]="null">No Survey</option>
               <option *ngFor="let surveyTempl of surveyTemplates" [ngValue]="surveyTempl.id">{{surveyTempl.name}}</option>

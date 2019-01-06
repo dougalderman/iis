@@ -1,3 +1,5 @@
+@import '../../../assets/scss/variables';
+
 .delete_icon {
   margin-left: 0.3rem;
 }
@@ -36,4 +38,8 @@ div.multiple-choice-option-radio {
 
 form.quiz-question {
   margin-bottom: 2.5rem;
+}
+
+select.question-type-background {
+  background: $select-menu-yellow;
 }

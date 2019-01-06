@@ -1,3 +1,5 @@
+@import '../../../assets/scss/variables';
+
 .quiz-survey-select {
   width: 50%;
   margin-left: 2rem;
@@ -14,7 +16,7 @@
 
 label.subheading {
   font-size: 1.3rem;
-  color: slateblue;
+  color: $label-subheading-slateblue;
 }
 
 .select-form {
@@ -37,3 +39,14 @@ label.subheading {
   padding-left: .3rem;
 }
 
+.webpage-select-background {
+  background: $select-menu-purple;
+}
+
+.quiz-template-select-background {
+  background: $select-menu-yellow;
+}
+
+.survey-template-select-background {
+  background: $select-menu-green;
+}

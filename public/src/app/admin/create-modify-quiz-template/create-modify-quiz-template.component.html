@@ -3,7 +3,7 @@
     <h2>Create / Modify Quiz Template</h2>
     <form [formGroup]="selectTemplateForm">
       <div class="form-group">
-        <select id="template-select" class="form-control" formControlName="templateSelect">
+        <select id="template-select" class="form-control quiz-template-background" formControlName="templateSelect">
           <option value="" disabled selected>Select Template</option>
           <option *ngFor="let templ of templates" [ngValue]="templ.id">{{templ.name}}</option>
         </select>
