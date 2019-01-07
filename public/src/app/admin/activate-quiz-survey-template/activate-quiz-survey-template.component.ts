@@ -252,19 +252,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
             if (quizzes && quizzes.length) {
               this.quiz = quizzes[0];
 
-              let title = this.quizForm.get('title')
-              title.setValue(this.quiz.title);
-              let description = this.quizForm.get('description')
-              description.setValue(this.quiz.description);
-
-              let randomizeQuestionSequence = this.quizConfigurationForm.get('randomizeQuestionSequence');
-              randomizeQuestionSequence.setValue(this.quiz.config.randomizeQuestionSequence);
-              let randomizeAnswerSequence = this.quizConfigurationForm.get('randomizeAnswerSequence');
-              randomizeAnswerSequence.setValue(this.quiz.config.randomizeAnswerSequence);
-              let autoSubmit = this.quizConfigurationForm.get('autoSubmit');
-              autoSubmit.setValue(this.quiz.config.autoSubmit);
-              let percentGreatJob = this.quizConfigurationForm.get('percentGreatJob');
-              percentGreatJob.setValue(this.quiz.config.percentGreatJob);
+              this.setQuizFormValues(this.quiz);
 
               // Default to keep the same quiz if quiz is associated with webpage.
               this.quizTemplateSelected = this.keepSameQuiz;
@@ -278,6 +266,13 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
           }
         );
     }
+    else {
+       // Set to no Quiz.
+       this.quizTemplateSelected = this.noQuiz;
+       const quizTemplateSelect = this.selectQuizTemplateForm.get('quizTemplateSelect')
+       quizTemplateSelect.setValue(this.quizTemplateSelected);
+    }
+
     const surveyId = webpage.surveyId;
     // TODO: Code to read survey
   }
@@ -286,8 +281,6 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.clearStatusFlags();
     this.quizForm.reset();
     this.quizConfigurationForm.reset();
-    this.quizId = 0;
-    this.quiz = new QuizModel();
     this.quizTemplateSelected = quizTemplateSelected;
     this.quizPreview = false;
 
@@ -296,6 +289,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
         .subscribe(
           (template: QuizTemplateDataModel[]) => {
             if (template && template.length) {
+
               this.quizTemplate = template[0] as QuizTemplateModel;
 
               let title = this.quizForm.get('title')
@@ -311,6 +305,13 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
             this.generalError = true;
           }
         );
+    }
+    else if (quizTemplateSelected === this.keepSameQuiz) {
+      this.setQuizFormValues(this.quiz);
+    }
+    else if (quizTemplateSelected === this.noQuiz) {
+      this.quizId = 0;
+      this.quiz = new QuizModel();
     }
   }
 
@@ -407,6 +408,23 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
             }
           );
       }
+      else if (this.quizTemplateSelected === this.noQuiz) {
+        // Save Webpage with null quiz id
+        this.webpage.quizId = null;
+        this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+          .subscribe(
+            (result: any) => {
+              if (result) {
+                this.saveSuccess = true;
+                this.clearForms();
+              }
+            },
+            error => {
+              console.error(error);
+              this.saveError = true;
+            }
+          );
+      }
       else {
         // Save new quiz
         if (this.quizTemplateSelected > 0) {
@@ -446,8 +464,6 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
                                                     questionSavedCount++;
                                                     if (questionSavedCount === questions.length) {
                                                       this.saveSuccess = true;
-                                                      this.quizTemplateSelected = 0;
-                                                      this.surveyTemplateSelected = 0;
                                                       this.clearForms();
                                                     }
                                                   }
@@ -517,11 +533,31 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   }
 
   clearForms() {
+    this.quizId = 0;
+    this.quizTemplateSelected = 0;
+    this.quizPreview = false;
+    this.surveyTemplateSelected = 0;
     this.quizForm.reset();
     this.quizConfigurationForm.reset();
     this.quizConfigurationForm = _.cloneDeep(this.defaultQuizConfigurationForm);
     this.selectWebpageForm.reset();
     this.selectQuizTemplateForm.reset();
     this.selectSurveyTemplateForm.reset();
+  }
+
+  setQuizFormValues(quiz: QuizModel) {
+    let title = this.quizForm.get('title')
+    title.setValue(quiz.title);
+    let description = this.quizForm.get('description')
+    description.setValue(quiz.description);
+
+    let randomizeQuestionSequence = this.quizConfigurationForm.get('randomizeQuestionSequence');
+    randomizeQuestionSequence.setValue(quiz.config.randomizeQuestionSequence);
+    let randomizeAnswerSequence = this.quizConfigurationForm.get('randomizeAnswerSequence');
+    randomizeAnswerSequence.setValue(quiz.config.randomizeAnswerSequence);
+    let autoSubmit = this.quizConfigurationForm.get('autoSubmit');
+    autoSubmit.setValue(quiz.config.autoSubmit);
+    let percentGreatJob = this.quizConfigurationForm.get('percentGreatJob');
+    percentGreatJob.setValue(quiz.config.percentGreatJob);
   }
 }

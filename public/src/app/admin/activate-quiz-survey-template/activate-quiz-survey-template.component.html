@@ -13,11 +13,11 @@
           </div>
         </form>
         <div class="form-group">
-            <button type="submit" class="btn btn-success" [disabled]="!quizForm.valid || !quizConfigurationForm.valid || !webpageSelected" (click)="activate()">Activate</button>
+            <button type="submit" class="btn btn-success" [disabled]="((!quizForm.valid || !quizConfigurationForm.valid) && (quizTemplateSelected !== noQuiz)) || !webpageSelected" (click)="activate()">Activate</button>
           </div>
           <div class="form-group">
-            <div *ngIf="saveSuccess" class="alert alert-success">Quiz / Survey Template successfully activated</div>
-            <div *ngIf="saveError" class="alert alert-danger">Error activating Quiz / Survey Template</div>
+            <div *ngIf="saveSuccess" class="alert alert-success">Changes saved successfully.</div>
+            <div *ngIf="saveError" class="alert alert-danger">Error saving changes.</div>
             <div *ngIf="generalError" class="alert alert-danger">An error occurred. Please try again.</div>
             <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
           </div>
@@ -30,7 +30,7 @@
             <select id="quiz-template-select" class="form-control quiz-template-select-background" formControlName="quizTemplateSelect">
               <option value="" disabled selected>Select Quiz Template</option>
               <option [ngValue]="noQuiz">No Quiz</option>
-              <option [ngValue]="keepSameQuiz">Keep the Same Quiz</option>
+              <option *ngIf="quizId" [ngValue]="keepSameQuiz">Keep the Same Quiz</option>
               <option *ngFor="let quizTempl of quizTemplates" [ngValue]="quizTempl.id">{{quizTempl.name}}</option>
             </select>
           </div>
@@ -44,9 +44,7 @@
                 <input type="text" id="quiz-title" class="form-control" formControlName="title">
                 <div *ngIf="quizForm.controls.title.invalid && (quizForm.controls.title.dirty || quizForm.controls.title.touched)">
                   <div *ngIf="quizForm.controls.title.errors.requiredTrimWhitespace" class="alert alert-warning">Quiz title required</div>
-                  <div *ngIf="quizForm.controls.title.errors.quizTitleTaken" class="alert alert-warning">
-                    Quiz title is already being used.
-                  </div>
+                  <div *ngIf="quizForm.controls.title.errors.quizTitleTaken" class="alert alert-warning">Quiz title is already being used.</div>
                 </div>
               </div>
               <div class="form-group">
@@ -113,8 +111,8 @@
           </form>
         </div>
         <div class="form-group three-rem-margin-bottom">
-          <button *ngIf="!quizPreview" type="button" class="btn btn-primary" (click)="previewQuiz()" [disabled]="!quizTemplateSelected > 0 && !quizId">Preview</button>
-          <button *ngIf="quizPreview" type="button" class="btn btn-secondary" (click)="clearPreviewQuiz()" [disabled]="!quizTemplateSelected > 0 && !quizId">Clear</button>
+          <button *ngIf="!quizPreview" type="button" class="btn btn-primary" (click)="previewQuiz()" [disabled]="!(quizTemplateSelected > 0) && !quizId">Preview</button>
+          <button *ngIf="quizPreview" type="button" class="btn btn-secondary" (click)="clearPreviewQuiz()" [disabled]="!(quizTemplateSelected > 0) && !quizId">Clear</button>
         </div>
         <div class="form-group three-rem-margin-bottom" *ngIf="quizPreview">
           <form [formGroup]="previewQuizTemplateForm">
