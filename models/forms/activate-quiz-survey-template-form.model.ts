@@ -2,12 +2,12 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { requiredTrimWhitespaceValidator } from '../../public/src/app/validators/required-trim-whitespace.validator';
-import { CheckQuizTitleValidator } from '../../public/src/app/validators/check-quiz-title.validator';
+import { CheckQuizUniqueNameValidator } from '../../public/src/app/validators/check-quiz-unique-name.validator';
 
 export class ActivateQuizSurveyTemplateFormModel {
   constructor(
     private fb: FormBuilder,
-    private checkQuizTitle: CheckQuizTitleValidator
+    private checkQuizUniqueName: CheckQuizUniqueNameValidator
   ) {}
 
   selectQuizTemplateForm: FormGroup = this.fb.group({
@@ -15,17 +15,16 @@ export class ActivateQuizSurveyTemplateFormModel {
   })
 
   quizForm: FormGroup = this.fb.group({
-    title: ['', {
+    uniqueName: ['', {
       validators: requiredTrimWhitespaceValidator(),
-      asyncValidators: this.checkQuizTitle.validate.bind(this.checkQuizTitle),
+      asyncValidators: this.checkQuizUniqueName.validate.bind(this.checkQuizUniqueName),
       updateOn: 'blur'
     }],
+    title: [''],
     description: ['']
   })
 
   defaultQuizConfigurationForm: FormGroup = this.fb.group({
-    randomizeQuestionSequence: [true],
-    randomizeAnswerSequence: [true],
     autoSubmit: [false],
     percentGreatJob: [75, [Validators.min(0), Validators.max(100)]]
   })

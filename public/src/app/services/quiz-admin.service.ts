@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { QuizModel } from  '../../../../models/quizzes/quiz.model';
 import { QuizDataModel } from  '../../../../models/quizzes/data/quiz-data.model';
@@ -16,8 +16,9 @@ export class QuizAdminService {
 
   private quizUrl = '/api/admin/quizzes'
   private quizByIdUrl = '/api/admin/quizzes/id/';
-  private quizByTitleUrl = '/api/admin/quizzes/title/';
-  private isQuizTitleTakenUrl = '/api/admin/quizzes/title_taken/';
+  private quizByUniqueNameUrl = '/api/admin/quizzes/unique_name/';
+  private quizUniqueNameOriginal = '';
+  private isQuizUniqueNameTakenUrl = '/api/admin/quizzes/unique_name_taken/';
 
   private quizTemplatesUrl = '/api/admin/quiz_templates';
   private quizTemplateByIdUrl = '/api/admin/quiz_templates/id/';
@@ -29,6 +30,7 @@ export class QuizAdminService {
   private questionsForQuizTemplateUrl = '/api/admin/quiz_questions/template_id/';
   private questionsForQuizUrl = '/api/admin/quiz_questions/quiz_id/';
 
+
   constructor(
     private http: HttpClient
   ) {}
@@ -39,15 +41,24 @@ export class QuizAdminService {
     }
   }
 
-  getQuizByTitle(title: string): Observable<QuizDataModel[]> {
-    if (title) {
-      return this.http.get<QuizDataModel[]>(this.quizByTitleUrl + encodeURIComponent(title));
+  getQuizByUniqueName(uniqueName: string): Observable<QuizDataModel[]> {
+    if (uniqueName) {
+      return this.http.get<QuizDataModel[]>(this.quizByUniqueNameUrl + encodeURIComponent(uniqueName));
     }
   }
 
-  isQuizTitleTaken(quizTitle: string): Observable<boolean> {
-    if (quizTitle) {
-      return this.http.get<boolean>(this.isQuizTitleTakenUrl + encodeURIComponent(quizTitle));
+  setQuizUniqueNameOriginal(uniqueName: string): void {
+    this.quizUniqueNameOriginal = uniqueName;
+  }
+
+  isQuizUniqueNameTaken(uniqueName: string): Observable<boolean> {
+    if (uniqueName) {
+      if (uniqueName === this.quizUniqueNameOriginal) {
+        return of(false);
+      }
+      else {
+        return this.http.get<boolean>(this.isQuizUniqueNameTakenUrl + encodeURIComponent(uniqueName));
+      }
     }
   }
 

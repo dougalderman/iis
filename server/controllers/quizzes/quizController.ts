@@ -3,9 +3,10 @@ import { Pool } from 'pg';
 
 class Quiz extends QuizModel {
 
-  constructor(reqTitle: string, reqDescription: string, reqConfig: QuizConfigModel) {
+  constructor(reqUniqueName: string, reqTitle: string, reqDescription: string, reqConfig: QuizConfigModel) {
     super();
 
+    this.uniqueName = reqUniqueName;
     this.title = reqTitle;
     this.description = reqDescription;
     this.config = reqConfig;
@@ -19,10 +20,10 @@ export class QuizController {
     console.log('req.body: ', req.body);
     if (req.body) {
       const pgSqlPool = new Pool();
-      const quiz = new Quiz(req.body.title, req.body.description, req.body.config);
+      const quiz = new Quiz(req.body.uniqueName, req.body.title, req.body.description, req.body.config);
       const query = {
-        text: 'INSERT INTO Quizzes(title, description, config) VALUES($1, $2, $3)',
-        values: [quiz.title, quiz.description, quiz.config]
+        text: 'INSERT INTO Quizzes(unique_name, title, description, config) VALUES($1, $2, $3, $4)',
+        values: [quiz.uniqueName, quiz.title, quiz.description, quiz.config]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
@@ -78,15 +79,15 @@ export class QuizController {
     }
   }
 
-  static readByTitle(req, res) : void {
-    console.log('in QuizController--readByTitle()');
+  static readByUniqueName(req, res) : void {
+    console.log('in QuizController--readByUniqueName()');
     console.log('req.params: ', req.params);
-    if (req.params && req.params.title) {
+    if (req.params && req.params.uniqueName) {
       const pgSqlPool = new Pool();
-      const title = req.params.title;
+      const uniqueName = req.params.uniqueName;
       const query = {
-        text: 'SELECT * FROM Quizzes WHERE title = $1 ORDER BY title',
-        values: [title]
+        text: 'SELECT * FROM Quizzes WHERE unique_name = $1 ORDER BY unique_name',
+        values: [uniqueName]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
@@ -110,15 +111,15 @@ export class QuizController {
     }
   }
 
-  static isTitleTaken(req, res) : void {
-    console.log('in QuizController--isTitleTaken()');
+  static isUniqueNameTaken(req, res) : void {
+    console.log('in QuizController--isUniqueNameTaken()');
     console.log('req.params: ', req.params);
-    if (req.params && req.params.title) {
+    if (req.params && req.params.uniqueName) {
       const pgSqlPool = new Pool();
-      const title = req.params.title;
+      const uniqueName = req.params.uniqueName;
       const query = {
-        text: 'SELECT * FROM Quizzes WHERE title = $1 ORDER BY title',
-        values: [title]
+        text: 'SELECT * FROM Quizzes WHERE unique_name = $1 ORDER BY unique_name',
+        values: [uniqueName]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
@@ -174,11 +175,11 @@ export class QuizController {
     console.log('req.params: ', req.params);
     if (req.body && req.params && req.params.id) {
       const pgSqlPool = new Pool();
-      const quiz = new Quiz(req.body.title, req.body.description, req.body.config);
+      const quiz = new Quiz(req.body.uniqueName, req.body.title, req.body.description, req.body.config);
       const id = req.params.id;
       const query = {
-        text: 'UPDATE Quizzes SET title = $1, description = $2, config = $3 WHERE id = $4',
-        values: [quiz.title, quiz.description, quiz.config, id]
+        text: 'UPDATE Quizzes SET unique_name = $1, title = $2, description = $3, config = $4 WHERE id = $5',
+        values: [quiz.uniqueName, quiz.title, quiz.description, quiz.config, id]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)

@@ -39,13 +39,18 @@
           <form [formGroup]="quizForm">
             <div class="form-group  three-rem-margin-bottom">
               <div class="form-group">
+                <label>Unique Name:</label>
+                <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="Enter a quiz unique name that will identify the quiz in the database.">
+                <input type="text" id="quiz-unique-name" class="form-control" formControlName="uniqueName">
+                <div *ngIf="quizForm.controls.uniqueName.invalid && (quizForm.controls.uniqueName.dirty || quizForm.controls.uniqueName.touched)">
+                  <div *ngIf="quizForm.controls.uniqueName.errors.requiredTrimWhitespace" class="alert alert-warning">Quiz unique name required</div>
+                  <div *ngIf="quizForm.controls.uniqueName.errors.quizUniqueNameTaken" class="alert alert-warning">Quiz unique name is already being used.</div>
+                </div>
+              </div>
+              <div class="form-group">
                 <label>Title:</label>
                 <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="This will be visible to the user taking the quiz.">
                 <input type="text" id="quiz-title" class="form-control" formControlName="title">
-                <div *ngIf="quizForm.controls.title.invalid && (quizForm.controls.title.dirty || quizForm.controls.title.touched)">
-                  <div *ngIf="quizForm.controls.title.errors.requiredTrimWhitespace" class="alert alert-warning">Quiz title required</div>
-                  <div *ngIf="quizForm.controls.title.errors.quizTitleTaken" class="alert alert-warning">Quiz title is already being used.</div>
-                </div>
               </div>
               <div class="form-group">
                 <label>Description:</label>
@@ -57,31 +62,6 @@
         <div *ngIf="quizTemplateSelected > 0 || quizId" class="form-group three-rem-margin-bottom">
           <form [formGroup]="quizConfigurationForm">
             <h3 class="one-rem-margin-bottom">Quiz Settings</h3>
-            <div class="form-group two-rem-margin-bottom">
-              <label class="subheading">Randomize Question Sequence:</label>
-              <br>
-              <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="randomize-question-sequence-true" class="custom-control-input" formControlName="randomizeQuestionSequence" [value]="true">
-                <label class="custom-control-label" for="randomize-question-sequence-true">True</label>
-              </div>
-              <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="randomize-question-sequence-false" class="custom-control-input" formControlName="randomizeQuestionSequence" [value]="false">
-                <label class="custom-control-label" for="randomize-question-sequence-false">False</label>
-              </div>
-            </div>
-            <div class="form-group two-rem-margin-bottom">
-              <label class="subheading" placement="top">Randomize Answer Sequence:</label>
-              <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="Applicable to multiple choice answer options.">
-              <br>
-              <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="randomize-answer-sequence-true" class="custom-control-input" formControlName="randomizeAnswerSequence" [value]="true">
-                <label class="custom-control-label" for="randomize-answer-sequence-true">True</label>
-              </div>
-              <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="randomize-answer-sequence-false" class="custom-control-input" formControlName="randomizeAnswerSequence" [value]="false">
-                <label class="custom-control-label" for="randomize-answer-sequence-false">False</label>
-              </div>
-            </div>
             <div class="form-group two-rem-margin-bottom">
               <label class="subheading">Autosubmit:</label>
               <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="True to automatically submit quiz answers without a Submit button. Not applicable for text short answer.">

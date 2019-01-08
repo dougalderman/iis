@@ -8,14 +8,14 @@ import { QuizAdminService } from '../services/quiz-admin.service';
 @Injectable({
   providedIn: 'root'
 })
-export class CheckQuizTitleValidator implements AsyncValidator {
+export class CheckQuizUniqueNameValidator implements AsyncValidator {
   constructor(private quizAdminService: QuizAdminService) {}
 
   validate(ctrl: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
     if ((ctrl.dirty || ctrl.touched) && ctrl.value && ctrl.value.trim()) {
-      return this.quizAdminService.isQuizTitleTaken(ctrl.value.trim()).pipe(
+      return this.quizAdminService.isQuizUniqueNameTaken(ctrl.value.trim()).pipe(
         map((isTaken: boolean) => {
-          return isTaken ? { quizTitleTaken: true } : null;
+          return isTaken ? { quizUniqueNameTaken: true } : null;
         }),
         catchError(err => {
           console.error(err);

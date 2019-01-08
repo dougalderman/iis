@@ -1,5 +1,6 @@
 export class QuizModel {
   id: number;
+  uniqueName: string;
   title: string;
   description: string;
   config: QuizConfigModel;
@@ -8,8 +9,6 @@ export class QuizModel {
 }
 
 export class QuizConfigModel {
-  randomizeQuestionSequence: boolean;
-  randomizeAnswerSequence: boolean;
   autoSubmit: boolean;
   percentGreatJob: number;
 }
