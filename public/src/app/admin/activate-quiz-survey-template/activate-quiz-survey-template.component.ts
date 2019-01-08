@@ -37,7 +37,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   keepSameQuiz: number = KEEP_SAME_QUIZ;
 
   quizTemplate: QuizTemplateModel = new QuizTemplateModel();
-  quizTemplates: QuizTemplateModel[];
+  quizTemplates: QuizTemplateModel[] = [];
   quizPreview: boolean = false;
   quizTemplateSelected: number = 0;
 
@@ -124,6 +124,8 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   }
 
   getActiveRoutes(): void {
+    this.activeRoutes = [];
+
     this.webpageAdminService.getAllWebpages()
       .subscribe(
         (webpages: WebpageDataModel[]) => {
@@ -131,12 +133,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
             for (let page of webpages) {
               if (_.find(appRoutes, ['data.title', page.title])) {
                 // if page title from db is an active route
-                let route: WebpageModel = new WebpageModel();
-                route.id = page.id;
-                route.quizId = page.quiz_id;
-                route.surveyId = page.survey_id;
-                route.title = page.title;
-                this.activeRoutes.push(route);
+                this.activeRoutes.push(new WebpageModel(page));
               }
               else {
                 // remove page from db
@@ -167,12 +164,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
                             if (webpage && webpage.length) {
                               const page = webpage[0];
                               if (page.id) {
-                                let thisPage: WebpageModel = new WebpageModel();
-                                thisPage.id = page.id;
-                                thisPage.quizId = page.quiz_id;
-                                thisPage.surveyId = page.survey_id;
-                                thisPage.title = page.title;
-                                this.activeRoutes.push(thisPage);
+                                this.activeRoutes.push(new WebpageModel(page));
                                 this.activeRoutes = _.sortBy(this.activeRoutes, ['title']);
                               }
                             }
@@ -201,11 +193,15 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   }
 
   getQuizTemplates(): void {
+    this.quizTemplates = [];
+
     this.quizAdminService.getAllQuizTemplates()
       .subscribe(
         (templates: QuizTemplateDataModel[]) => {
-          if (templates) {
-            this.quizTemplates = templates;
+          if (templates && templates.length) {
+            for (let template of templates) {
+              this.quizTemplates.push(new QuizTemplateModel(template));
+            }
           }
         },
         error => {
@@ -250,13 +246,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
         .subscribe(
           (quizzes: QuizDataModel[]) => {
             if (quizzes && quizzes.length) {
-              this.quiz = new QuizModel();
-              this.quiz.id = quizzes[0].id;
-              this.quiz.uniqueName = quizzes[0].unique_name;
-              this.quiz.title = quizzes[0].title;
-              this.quiz.description = quizzes[0].description;
-              this.quiz.config = quizzes[0].config;
-
+              this.quiz = new QuizModel(quizzes[0]);
               this.setQuizFormValues(this.quiz);
 
               // Default to keep the same quiz if quiz is associated with webpage.
@@ -297,7 +287,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
               this.quizId = 0;
               this.quiz = new QuizModel();
 
-              this.quizTemplate = template[0] as QuizTemplateModel;
+              this.quizTemplate = new QuizTemplateModel(template[0]);
 
               let uniqueName = this.quizForm.get('uniqueName')
               uniqueName.setValue(this.quizTemplate.name);
@@ -334,12 +324,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
           (questions: QuizQuestionDataModel[]) => {
             if (questions && questions.length) {
               for (let i = 0; i < questions.length; i++) {
-                let question = new QuizQuestionModel();
-                question.textQuestion = questions[i].text_question;
-                question.questionType = questions[i].question_type;
-                question.options = questions[i].options;
-                question.booleanCorrectAnswer = questions[i].boolean_correct_answer;
-                question.correctAnswerArray = questions[i].correct_answer_array;
+                let question = new QuizQuestionModel(questions[i]);
                 this.quizTemplateForm.addQuestion(question);
               }
             }
@@ -356,12 +341,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
         (questions: QuizQuestionDataModel[]) => {
           if (questions && questions.length) {
             for (let i = 0; i < questions.length; i++) {
-              let question = new QuizQuestionModel();
-              question.textQuestion = questions[i].text_question;
-              question.questionType = questions[i].question_type;
-              question.options = questions[i].options;
-              question.booleanCorrectAnswer = questions[i].boolean_correct_answer;
-              question.correctAnswerArray = questions[i].correct_answer_array;
+              let question = new QuizQuestionModel(questions[i]);
               this.quizTemplateForm.addQuestion(question);
             }
           }
@@ -487,9 +467,10 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
                                             }
                                             else {
                                               // question is associated with a quiz
-                                              let question = new QuizQuestionModel;
-                                                // TODO move data over from old question.
+                                              let question = new QuizQuestionModel(questions[i]);
+                                                question.id = null;
                                                 question.quizId = thisQuizId;
+                                                question.templateId = null;
                                                 this.quizAdminService.saveNewQuizQuestion(question)
                                                   .subscribe(
                                                     (result: any) => {

@@ -15,7 +15,7 @@ export class TemplateQuizQuestionComponent implements OnInit {
   @Input() questionIndex: number;
   @Output() deletedQuestion = new EventEmitter<number>();
 
-  alphaIdArray = [];
+  alphaIdArray: string[] = [];
   questionTypes: any[] = QUIZ_QUESTION_TYPES;
   createModifyQuizTemplateForm: FormGroup
   questions: FormArray

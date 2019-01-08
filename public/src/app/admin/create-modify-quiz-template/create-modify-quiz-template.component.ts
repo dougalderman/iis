@@ -13,9 +13,6 @@ import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';
 import { CheckTemplateNameValidator } from '../../validators/check-template-name.validator';
 
-class Template extends QuizTemplateModel {}
-class Question extends QuizQuestionModel {}
-
 @Component({
   selector: 'app-create-modify-quiz-template',
   templateUrl: './create-modify-quiz-template.component.html',
@@ -23,9 +20,9 @@ class Question extends QuizQuestionModel {}
 })
 export class CreateModifyQuizTemplateComponent implements OnInit {
 
-  template: QuizTemplateModel = new Template();
-  templates: QuizTemplateModel[];
-  question: QuizQuestionModel = new Question();
+  template: QuizTemplateModel = new QuizTemplateModel();
+  templates: QuizTemplateModel[] = [];
+  question: QuizQuestionModel = new QuizQuestionModel();
   questionTypeChangedSubscription: Subscription[] = [];
   saveSuccess: boolean = false;
   deleteSuccess: boolean = false;
@@ -34,7 +31,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   generalError: boolean = false;
   templateSelectionProcessing: boolean = false;
   errorMessage: string = '';
-  alphaIdArray = [];
 
   quizTemplateForm = new CreateModifyQuizTemplateFormModel(this.fb, this.checkTemplateName);
   selectTemplateForm = this.quizTemplateForm.selectTemplateForm;
@@ -116,11 +112,15 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   getTemplates(): void {
+    this.templates = [];
+
     this.quizAdminService.getAllQuizTemplates()
       .subscribe(
         (templates: QuizTemplateDataModel[]) => {
-          if (templates) {
-            this.templates = templates;
+          if (templates && templates.length) {
+            for (let template of templates) {
+              this.templates.push(new QuizTemplateModel(template));
+            }
           }
         },
         error => {
@@ -138,7 +138,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
         .subscribe(
           (template: QuizTemplateDataModel[]) => {
             if (template && template.length) {
-              this.template = template[0] as QuizTemplateModel;
+              this.template = new QuizTemplateModel(template[0]);
               this.createModifyQuizTemplateForm.reset();
               this.resetFormQuestions();
               this.createModifyQuizTemplateForm.controls.name.setValue(this.template.name);
@@ -148,13 +148,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
                   (questions: QuizQuestionDataModel[]) => {
                     if (questions && questions.length) {
                       for (let i = 0; i < questions.length; i++) {
-                        let question = new Question();
-                        question.textQuestion = questions[i].text_question;
-                        question.questionType = questions[i].question_type;
-                        question.options = questions[i].options;
-                        question.booleanCorrectAnswer = questions[i].boolean_correct_answer;
-                        question.correctAnswerArray = questions[i].correct_answer_array;
-                        this.addQuestion(question);
+                        this.addQuestion(new QuizQuestionModel(questions[i]));
                       }
                     }
                     this.templateSelectionProcessing = false;
@@ -334,7 +328,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     let questions = this.formQuestions.value;
     let questionSavedCount = 0;
     for (let i = 0; i < questions.length; i++) {
-      this.question = new Question()
+      this.question = new QuizQuestionModel()
       this.question.templateId = templateId;
       this.question.textQuestion = questions[i].text;
       if (this.question.textQuestion) {
@@ -405,6 +399,6 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     this.createModifyQuizTemplateForm.reset();
     this.resetFormQuestions();
     this.selectTemplateForm.reset();
-    this.template = new Template();
+    this.template = new QuizTemplateModel();
   }
 }
