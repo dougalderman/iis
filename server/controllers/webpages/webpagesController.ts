@@ -1,29 +1,28 @@
-import { QuizModel, QuizConfigModel } from  '../../../models/quizzes/quiz.model';
+import { WebpageModel } from  '../../../models/webpages/webpage.model';
 import { Pool } from 'pg';
 
-class Quiz extends QuizModel {
+class Webpage extends WebpageModel {
 
-  constructor(reqUniqueName: string, reqTitle: string, reqDescription: string, reqConfig: QuizConfigModel) {
+  constructor(reqQuizId: number, reqSurveyId: number, reqTitle: string) {
     super();
 
-    this.uniqueName = reqUniqueName;
+    this.quizId = reqQuizId;
+    this.surveyId = reqSurveyId;
     this.title = reqTitle;
-    this.description = reqDescription;
-    this.config = reqConfig;
   };
 }
 
-export class QuizController {
+export class WebpagesController {
 
   static create(req, res) : void {
-    console.log('in QuizController--create()');
+    console.log('in WebpagesController--create()');
     console.log('req.body: ', req.body);
     if (req.body) {
       const pgSqlPool = new Pool();
-      const quiz = new Quiz(req.body.uniqueName, req.body.title, req.body.description, req.body.config);
+      const webpage = new Webpage(req.body.quizId, req.body.surveyId, req.body.title);
       const query = {
-        text: 'INSERT INTO Quizzes(unique_name, title, description, config) VALUES($1, $2, $3, $4)',
-        values: [quiz.uniqueName, quiz.title, quiz.description, quiz.config]
+        text: 'INSERT INTO Webpages(quiz_id, survey_id, title) VALUES($1, $2, $3)',
+        values: [webpage.quizId, webpage.surveyId, webpage.title]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
@@ -48,13 +47,13 @@ export class QuizController {
   }
 
   static readById(req, res) : void {
-    console.log('in QuizController--readById()');
+    console.log('in WebpagesController--readById()');
     console.log('req.params: ', req.params);
     if (req.params && req.params.id) {
       const pgSqlPool = new Pool();
       const id = req.params.id;
       const query = {
-        text: 'SELECT * FROM Quizzes WHERE id = $1',
+        text: 'SELECT * FROM Webpages WHERE id = $1',
         values: [id]
       };
       console.log('query: ', query);
@@ -79,15 +78,15 @@ export class QuizController {
     }
   }
 
-  static readByUniqueName(req, res) : void {
-    console.log('in QuizController--readByUniqueName()');
+  static readByQuizId(req, res) : void {
+    console.log('in WebpagesController--readByQuizId()');
     console.log('req.params: ', req.params);
-    if (req.params && req.params.uniqueName) {
+    if (req.params && req.params.quizId) {
       const pgSqlPool = new Pool();
-      const uniqueName = req.params.uniqueName;
+      const quizId = req.params.quizId;
       const query = {
-        text: 'SELECT * FROM Quizzes WHERE unique_name = $1 ORDER BY unique_name',
-        values: [uniqueName]
+        text: 'SELECT * FROM Webpages WHERE quiz_id = $1 ORDER BY quiz_id',
+        values: [quizId]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
@@ -111,25 +110,25 @@ export class QuizController {
     }
   }
 
-  static isUniqueNameTaken(req, res) : void {
-    console.log('in QuizController--isUniqueNameTaken()');
+  static readBySurveyId(req, res) : void {
+    console.log('in WebpagesController--readBySurveyId()');
     console.log('req.params: ', req.params);
-    if (req.params && req.params.uniqueName) {
+    if (req.params && req.params.surveyId) {
       const pgSqlPool = new Pool();
-      const uniqueName = req.params.uniqueName;
+      const surveyId = req.params.surveyId;
       const query = {
-        text: 'SELECT * FROM Quizzes WHERE unique_name = $1 ORDER BY unique_name',
-        values: [uniqueName]
+        text: 'SELECT * FROM Webpages WHERE survey_id = $1 ORDER BY survey_id',
+        values: [surveyId]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result && result.rows && result.rows.length) {
-          res.send(true);
+        if (result && result.rows) {
+          res.send(result.rows);
         }
         else {
-          res.send(false);
+          res.send([]);
         }
       })
       .catch(e => {
@@ -143,12 +142,43 @@ export class QuizController {
     }
   }
 
+  static readByTitle(req, res) : void {
+    console.log('in WebpagesController--readByTitle()');
+    console.log('req.params: ', req.params);
+    if (req.params && req.params.title) {
+      const pgSqlPool = new Pool();
+      const title = req.params.title;
+      const query = {
+        text: 'SELECT * FROM Webpages WHERE title ILIKE $1 ORDER BY title',
+        values: [title]
+      };
+      console.log('query: ', query);
+      pgSqlPool.query(query)
+      .then(result => {
+        console.log('result: ', result);
+        if (result && result.rows) {
+          res.send(result.rows);
+        }
+        else {
+          res.send([]);
+        }
+      })
+      .catch(e => {
+        console.error('in error');
+        console.error(e.stack);
+        return res.status(500).send(e);
+      });
+    }
+    else {
+      return res.status(500).send('invalid request');
+    }
+  }
 
   static readAll(req, res) : void {
-    console.log('in QuizController--readAll()');
+    console.log('in WebpagesController--readAll()');
     const pgSqlPool = new Pool();
     const query = {
-      text: 'SELECT * FROM Quizzes ORDER BY title',
+      text: 'SELECT * FROM Webpages ORDER BY title',
       values: []
     };
     console.log('query: ', query);
@@ -170,16 +200,16 @@ export class QuizController {
   }
 
   static update(req, res) : void {
-    console.log('in QuizController--update()');
+    console.log('in WebpagesController--update()');
     console.log('req.body: ', req.body);
     console.log('req.params: ', req.params);
     if (req.body && req.params && req.params.id) {
       const pgSqlPool = new Pool();
-      const quiz = new Quiz(req.body.uniqueName, req.body.title, req.body.description, req.body.config);
+      const webpage = new Webpage(req.body.quizId, req.body.surveyId, req.body.title);
       const id = req.params.id;
       const query = {
-        text: 'UPDATE Quizzes SET unique_name = $1, title = $2, description = $3, config = $4 WHERE id = $5',
-        values: [quiz.uniqueName, quiz.title, quiz.description, quiz.config, id]
+        text: 'UPDATE Webpages SET quiz_id = $1, survey_id = $2, title = $3 WHERE id = $4',
+        values: [webpage.quizId, webpage.surveyId, webpage.title, id]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
@@ -204,13 +234,13 @@ export class QuizController {
   }
 
   static delete(req, res) : void {
-    console.log('in QuizController--delete()');
+    console.log('in WebpagesController--delete()');
     console.log('req.params: ', req.params);
     if (req.params && req.params.id) {
       const pgSqlPool = new Pool();
       const id = req.params.id;
       const query = {
-        text: 'DELETE FROM Quizzes WHERE id = $1',
+        text: 'DELETE FROM Webpages WHERE id = $1',
         values: [id]
       };
       console.log('query: ', query);
@@ -235,3 +265,5 @@ export class QuizController {
     }
   }
 }
+
+

@@ -298,6 +298,43 @@ export class QuizQuestionsController {
     }
   }
 
+  static updateQuizId(req, res) : void {
+    console.log('in QuizQuestionsController--updateQuizId()');
+    console.log('req.body: ', req.body);
+    console.log('req.params: ', req.params);
+    if (req.body && req.params && req.params.id) {
+      const pgSqlPool = new Pool();
+      const id = req.params.id;
+      const quizId = req.body.quizId;
+      const query = {
+        text: 'UPDATE QuizQuestions SET quiz_id = $1 WHERE id = $2',
+        values: [
+          quizId,
+          id
+        ]
+      };
+      console.log('query: ', query);
+      pgSqlPool.query(query)
+      .then(result => {
+        console.log('result: ', result);
+        if (result) {
+          res.send(result);
+        }
+        else {
+          res.send([]);
+        }
+      })
+      .catch(e => {
+        console.error('in error');
+        console.error(e.stack);
+        return res.status(500).send(e);
+      });
+    }
+    else {
+      return res.status(500).send('invalid request');
+    }
+  }
+
   static deleteById(req, res) : void {
     console.log('in QuizQuestionsController--deleteById()');
     console.log('req.params: ', req.params);

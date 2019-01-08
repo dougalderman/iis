@@ -8,4 +8,4 @@ import '../assets/scss/styles.scss';
 })
 export class AppComponent {
   title = 'app';
-}
+}        

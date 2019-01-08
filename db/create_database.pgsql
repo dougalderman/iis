@@ -26,8 +26,9 @@ CREATE TYPE quiz_question_type AS ENUM (
 DROP TABLE IF EXISTS Quizzes CASCADE;
 CREATE TABLE Quizzes (
   id serial PRIMARY KEY,
-  brief_name text,
-  title text NOT NULL UNIQUE,
+  unique_name text NOT NULL UNIQUE,
+  title text,
+  description text,
   config jsonb
 );
 
@@ -171,6 +172,17 @@ CREATE TABLE SurveyAnswers (
   real_end_answer real,
   time_to_answer interval
 );
+
+
+--Webpages
+DROP TABLE IF EXISTS Webpages CASCADE;
+CREATE TABLE Webpages (
+  id serial PRIMARY KEY,
+  quiz_id int REFERENCES Quizzes,
+  survey_id int REFERENCES Surveys,
+  title text NOT NULL UNIQUE
+);
+
 
 --Admin Users
 DROP TABLE IF EXISTS AdminUsers CASCADE;

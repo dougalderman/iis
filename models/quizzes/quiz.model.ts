@@ -1,8 +1,24 @@
+import { QuizDataModel } from './data/quiz-data.model';
+
 export class QuizModel {
   id: number;
-  briefName: string;
+  uniqueName: string;
   title: string;
-  config: object;
+  description: string;
+  config: QuizConfigModel;
 
-  constructor() {}
+  constructor(data?: QuizDataModel) {
+    if (data) {
+      this.id = data.id;
+      this.uniqueName = data.unique_name;
+      this.description = data.description;
+      this.title = data.title;
+      this.config = data.config;
+    }
+  }
+}
+
+export class QuizConfigModel {
+  autoSubmit: boolean;
+  percentGreatJob: number;
 }

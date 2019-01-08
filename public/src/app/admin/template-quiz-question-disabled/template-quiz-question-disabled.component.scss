@@ -1,20 +1,10 @@
-@import '../../../assets/scss/variables';
-
-.delete_icon {
-  margin-left: 0.3rem;
-}
-
-.delete_icon:hover {
-  cursor: pointer;
-}
-
-.double-wide {
-  width: 200%;
-}
-
 input[type='text']  {
   width: 90%;
   margin-right: .5rem;
+}
+
+.wider {
+  width: 125%;
 }
 
 span.multiple-choice-option-id {
@@ -38,8 +28,4 @@ div.multiple-choice-option-radio {
 
 form.quiz-question {
   margin-bottom: 2.5rem;
-}
-
-select.question-type-background {
-  background: $select-menu-yellow;
 }

@@ -3,7 +3,7 @@
     <h2>Create / Modify Quiz Template</h2>
     <form [formGroup]="selectTemplateForm">
       <div class="form-group">
-        <select id="template-select" class="form-control" formControlName="templateSelect">
+        <select id="template-select" class="form-control quiz-template-background" formControlName="templateSelect">
           <option value="" disabled selected>Select Template</option>
           <option *ngFor="let templ of templates" [ngValue]="templ.id">{{templ.name}}</option>
         </select>
@@ -23,7 +23,7 @@
         </div>
         <div class="form-group">
           <label>Description:</label>
-          <input type="text" id="text" class="form-control" formControlName="description">
+          <input type="text" id="description" class="form-control" formControlName="description">
         </div>
       </div>
       <div formArrayName="formQuestions" class="form-group extra-margin-bottom">
@@ -40,9 +40,9 @@
         <button type="submit" class="btn btn-success" [disabled]="!createModifyQuizTemplateForm.valid">Save Template</button>
       </div>
       <div *ngIf="name.value" class="form-inline">
-        <button type="button" class="btn btn-warning" (click)="clearTemplate()">Clear</button>
+        <button type="button" class="btn btn-warning" (click)="clearTemplate()" placement="right" ngbTooltip="Clear screen without deleting template data from the database.">Clear</button>
         &nbsp;&nbsp;
-        <button type="button" class="btn btn-danger" *ngIf="template.id" (click)="deleteTemplate()">Delete</button>
+        <button type="button" class="btn btn-danger" *ngIf="template.id" (click)="deleteTemplate()" placement="top" ngbTooltip="Delete template from the database.">Delete</button>
       </div>
       <div class="form-group">
         <div *ngIf="saveSuccess" class="alert alert-success">Template successfully saved</div>

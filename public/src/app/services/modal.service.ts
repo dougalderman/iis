@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
-import { ConfirmModalComponent } from '../bootstrap-components/confirm-modal/confirm-modal.component';
+import { ConfirmModalComponent } from '../components/bootstrap-components/confirm-modal/confirm-modal.component';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ModalService {
 
   constructor(
