@@ -11,6 +11,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { ConfirmModalComponent } from './components/bootstrap-components/confirm-modal/confirm-modal.component';
 import { SamplePageOneComponent } from './components/sample-page-one/sample-page-one.component';
 import { SamplePageTwoComponent } from './components/sample-page-two/sample-page-two.component';
+import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
+import { TakeSurveyComponent } from './components/take-survey/take-survey.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { SamplePageTwoComponent } from './components/sample-page-two/sample-page
     PageNotFoundComponent,
     ConfirmModalComponent,
     SamplePageOneComponent,
-    SamplePageTwoComponent
+    SamplePageTwoComponent,
+    TakeQuizComponent,
+    TakeSurveyComponent
   ],
   imports: [
     BrowserModule,
