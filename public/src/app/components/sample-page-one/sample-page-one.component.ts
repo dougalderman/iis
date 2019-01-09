@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { WebpageDataModel } from '../../../../../models/webpages/data/webpage-data.model';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
+import { TakeQuizService } from '../../services/take-quiz.service';
+import { TakeSurveyService } from '../../services/take-survey.service';
 
 @Component({
   selector: 'app-sample-page-one',
@@ -16,7 +18,9 @@ export class SamplePageOneComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private webpageAdminService: WebpageAdminService
+    private webpageAdminService: WebpageAdminService,
+    private takeQuizService: TakeQuizService,
+    private takeSurveyService: TakeSurveyService
   ) {}
 
   ngOnInit() {
@@ -30,9 +34,15 @@ export class SamplePageOneComponent implements OnInit {
                 .subscribe(
                   (pages: WebpageDataModel[]) => {
                     if (pages && pages.length) {
-                      const page = pages[0];
+                      const page: WebpageDataModel = pages[0];
                       this.quizId = page.quiz_id;
+                      if (this.quizId) {
+                        this.takeQuizService.setQuizId(this.quizId);
+                      }
                       this.surveyId = page.survey_id;
+                      if (this.surveyId) {
+                        this.takeSurveyService.setSurveyId(this.surveyId);
+                      }
                     }
                   },
                   error => {
