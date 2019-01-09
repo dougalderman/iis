@@ -12,8 +12,8 @@ export const appRoutes: Routes = [
   { path: 'fibro-article', component: FibroArticleComponent, data: {title: 'Fibromyalgia - Wikipedia'} },
   { path: 'sample-page-one', component: SamplePageOneComponent, data: {title: 'Sample Page One'} } ,
   { path: 'sample-page-two', component: SamplePageTwoComponent, data: {title: 'Sample Page Two'} },
-  { path: 'take-quiz', component: TakeQuizComponent } ,
-  { path: 'take-survey', component: TakeSurveyComponent },
+  { path: 'take-quiz/:quizId', component: TakeQuizComponent } ,
+  { path: 'take-survey/:surveyId', component: TakeSurveyComponent },
   { path: '', redirectTo: '/fibro-article', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
