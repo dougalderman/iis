@@ -19,9 +19,7 @@ import { PreviewQuizTemplateFormModel } from '../../../../../models/forms/previe
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
 import { CheckQuizUniqueNameValidator } from '../../validators/check-quiz-unique-name.validator';
-
-const NO_QUIZ = -10;
-const KEEP_SAME_QUIZ = -20;
+import { NO_QUIZ, KEEP_SAME_QUIZ } from '../../constants/activate-quiz-survey.constants';
 
 @Component({
   selector: 'app-activate-quiz-survey-template',
