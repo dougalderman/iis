@@ -13,6 +13,10 @@ import { SamplePageOneComponent } from './components/sample-page-one/sample-page
 import { SamplePageTwoComponent } from './components/sample-page-two/sample-page-two.component';
 import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { TakeSurveyComponent } from './components/take-survey/take-survey.component';
+import { QuizTextQuestionBooleanComponent } from './components/take-quiz/quiz-text-question-boolean/quiz-text-question-boolean.component';
+import { QuizTextQuestionShortAnswerComponent } from './components/take-quiz/quiz-text-question-short-answer/quiz-text-question-short-answer.component';
+import { QuizTextQuestionMultipleChoiceComponent } from './components/take-quiz/quiz-text-question-multiple-choice/quiz-text-question-multiple-choice.component';
+import { QuizResultsComponent } from './components/take-quiz/quiz-results/quiz-results.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +27,11 @@ import { TakeSurveyComponent } from './components/take-survey/take-survey.compon
     SamplePageOneComponent,
     SamplePageTwoComponent,
     TakeQuizComponent,
-    TakeSurveyComponent
+    TakeSurveyComponent,
+    QuizTextQuestionBooleanComponent,
+    QuizTextQuestionShortAnswerComponent,
+    QuizTextQuestionMultipleChoiceComponent,
+    QuizResultsComponent
   ],
   imports: [
     BrowserModule,

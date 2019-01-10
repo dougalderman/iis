@@ -1,3 +1,11 @@
-<p>
-  take-quiz works!
-</p>
+<div class="takeQuizHeader">
+  <div class="topLeft">{{title}}</div>
+  <div class="topRight">Question {{currentQuestion}} of {{numQuestions}}</div>
+</div>
+
+<div class="takeQuizBody">
+  <app-quiz-text-question-boolean *ngIf="questionType==='textQuestionBoolean'"></app-quiz-text-question-boolean>
+  <app-quiz-text-question-multiple-choice *ngIf="questionType==='textQuestionMultipleChoice'"></app-quiz-text-question-multiple-choice>
+  <app-quiz-text-question-short-answer *ngIf="questionType==='textQuestionShortAnswer'"></app-quiz-text-question-short-answer>
+  <app-quiz-results *ngIf="displayQuizResults"></app-quiz-results>
+</div>
