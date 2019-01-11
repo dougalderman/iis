@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -13,10 +14,7 @@ import { SamplePageOneComponent } from './components/sample-page-one/sample-page
 import { SamplePageTwoComponent } from './components/sample-page-two/sample-page-two.component';
 import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { TakeSurveyComponent } from './components/take-survey/take-survey.component';
-import { QuizTextQuestionBooleanComponent } from './components/take-quiz/quiz-text-question-boolean/quiz-text-question-boolean.component';
-import { QuizTextQuestionShortAnswerComponent } from './components/take-quiz/quiz-text-question-short-answer/quiz-text-question-short-answer.component';
-import { QuizTextQuestionMultipleChoiceComponent } from './components/take-quiz/quiz-text-question-multiple-choice/quiz-text-question-multiple-choice.component';
-import { QuizResultsComponent } from './components/take-quiz/quiz-results/quiz-results.component';
+import { TakeQuizQuestionComponent } from './components/take-quiz-question/take-quiz-question.component';
 
 @NgModule({
   declarations: [
@@ -28,15 +26,13 @@ import { QuizResultsComponent } from './components/take-quiz/quiz-results/quiz-r
     SamplePageTwoComponent,
     TakeQuizComponent,
     TakeSurveyComponent,
-    QuizTextQuestionBooleanComponent,
-    QuizTextQuestionShortAnswerComponent,
-    QuizTextQuestionMultipleChoiceComponent,
-    QuizResultsComponent
+    TakeQuizQuestionComponent
   ],
   imports: [
     BrowserModule,
     AdminModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     HttpClientModule,
     NgbModalModule
   ],

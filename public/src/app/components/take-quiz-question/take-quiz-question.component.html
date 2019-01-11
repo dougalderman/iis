@@ -1,0 +1,53 @@
+<form class="quiz-question" [formGroup]="question">
+  <div class="form-group">
+    <div>
+      <label>Question:</label>
+      <input type="text" class="form-control" formControlName="text" required>
+    </div>
+  </div>
+  <div formGroupName="answer">
+    <div *ngIf="question.controls.typeSelect.value==='textQuestionMultipleChoice'">
+      <label>Multiple Choice Options:</label>
+      <div formArrayName="options" class="form-group">
+        <div class="form-group">
+          <div *ngFor="let option of question.controls.answer.controls.options.controls; let i=index">
+            <div [formGroupName]="i" class="double-wide flex-display">
+              <span class="multiple-choice-option-id">{{alphaIdArray[i]}}:</span>
+              <div class="custom-control custom-radio multiple-choice-option-radio">
+                <input type="radio" id="{{'option' + questionIndex.toString() + i.toString()}}" class="custom-control-input" name="optionSelect" formControlName="optionSelect" [value]="true">
+                <label class="custom-control-label" for="{{'option' + questionIndex.toString() + i.toString()}}">Select Answer</label>
+              </div>
+              <span class="multiple-choice-option">Option:</span>
+              <input type="text"  class="form-control" formControlName="option" required>
+            </div>
+          </div>
+          <div *ngIf="question.controls.answer.controls.options.length > 1 && question.controls.answer.controls.options.errors && question.controls.answer.controls.options.errors.noOptionsSelected" class="alert alert-warning">Please select an option</div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="question.controls.typeSelect.value==='textQuestionShortAnswer'" class="form-group">
+      <div class="form-group">
+        <label>Answer</label>
+        <input type="text" class="form-control" formControlName="correctAnswer" required>
+      </div>
+    </div>
+    <div *ngIf="question.controls.typeSelect.value==='textQuestionBoolean'" class="form-group">
+      <label>Answer:</label>
+      <br>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="{{'booleanTrueAnswer' + questionIndex}}" class="custom-control-input" name="booleanAnswer" formControlName="booleanAnswer" [value]="true">
+        <label class="custom-control-label" for="{{'booleanTrueAnswer' + questionIndex}}">True</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="{{'booleanFalseAnswer' + questionIndex}}" class="custom-control-input" name="booleanAnswer" formControlName="booleanAnswer" [value]="false">
+        <label class="custom-control-label" for="{{'booleanFalseAnswer' + questionIndex}}">False</label>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary" (click)="getNextQuestion()">Next</button>
+  </div>
+  <div class="form-group">
+    <button type="button" class="btn btn-primary" (click)="submit()">Submit</button>
+  </div>
+</form>

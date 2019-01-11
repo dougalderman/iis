@@ -87,8 +87,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   subscribeToQuestionTypeChanges(): void {
     if (this.formQuestions && this.formQuestions.controls) {
       for (let i = 0; i < this.formQuestions.controls.length; i++) {
-        let formQuestionsControls: FormGroup = this.formQuestions.controls[i] as FormGroup;
-        this.questionTypeChangedSubscription[i] = formQuestionsControls.controls.typeSelect.valueChanges.subscribe(
+        let formQuestionControls: FormGroup = this.formQuestions.controls[i] as FormGroup;
+        this.questionTypeChangedSubscription[i] = formQuestionControls.controls.typeSelect.valueChanges.subscribe(
           (val: string) => {
             if (val) {
               this.questionTypeChanged(val, i);
