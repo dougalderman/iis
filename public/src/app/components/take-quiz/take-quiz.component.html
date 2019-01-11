@@ -1,15 +1,18 @@
-<div class="takeQuizHeader">
-  <div class="topLeft">{{title}}</div>
-  <div class="topRight" *ngIf="questionsAnsweredCount < questionsCount">Question {{currentQuestion}} of {{numQuestions}}</div>
-</div>
+<div class="container">
+  <div class="takeQuizHeader flex-display">
+    <div class="topLeft">{{title}}</div>
+    <div class="topRight" *ngIf="questionsAnsweredCount < questionsCount">Question {{questionsAnsweredCount + 1}} of {{questionsCount}}</div>
+  </div>
 
-<div class="takeQuizBody" *ngIf="questionsAnsweredCount < questionsCount">
-  <app-take-quiz-question
-    [takeQuizForm]="takeQuizForm"
-    [questionIndex]="questionsAnsweredCount"
-    (nextQuestion)="getNextQuestion($event)">
-  </app-take-quiz-question>
-</div>
+  <div class="takeQuizBody" *ngIf="questionsAnsweredCount < questionsCount">
+    <app-take-quiz-question
+      [takeQuizForm]="takeQuizForm"
+      [questionIndex]="questionsAnsweredCount"
+      (nextQuestion)="getNextQuestion($event)">
+    </app-take-quiz-question>
+  </div>
 
-<div class="takeQuizResults" *ngIf="questionsAnsweredCount === questionsCount">
+  <div class="takeQuizResults" *ngIf="questionsAnsweredCount === questionsCount">
+    Results Page
+  </div>
 </div>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AsyncValidator, ValidationErrors, AbstractControl } from '@angular/forms'
+import { AsyncValidator, ValidationErrors, AbstractControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 

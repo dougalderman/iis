@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import  { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
 
 import { QuizDataModel } from '../../../../../models/quizzes/data/quiz-data.model';
@@ -30,44 +31,49 @@ export class TakeQuizComponent implements OnInit {
   constructor(
     private takeQuizService: TakeQuizService,
     private quizAdminService: QuizAdminService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.quizId = this.takeQuizService.getQuizId();
     if (this.quizId) {
       this.takeQuizService.resetQuizId();
-    }
-
-    this.quizAdminService.getQuiz(this.quizId)
-      .subscribe(
-        (quiz: QuizDataModel[]) => {
-          if (quiz && quiz.length) {
-            this.quiz = quiz[0];
-            this.title = this.quiz.title;
-            this.quizAdminService.getQuestionsForQuiz(this.quizId)
-              .subscribe(
-                (questions: QuizQuestionDataModel[]) => {
-                  if (questions && questions.length) {
-                    this.questionsCount = questions.length;
-                    for (let i = 0; i < questions.length; i++) {
-                      let question = new QuizQuestionModel(questions[i]);
-                      this.takeQuizFormModel.addQuestion(question);
+      this.quizAdminService.getQuiz(this.quizId)
+        .subscribe(
+          (quiz: QuizDataModel[]) => {
+            if (quiz && quiz.length) {
+              this.quiz = quiz[0];
+              this.title = this.quiz.title;
+              this.quizAdminService.getQuestionsForQuiz(this.quizId)
+                .subscribe(
+                  (questions: QuizQuestionDataModel[]) => {
+                    if (questions && questions.length) {
+                      this.resetFormQuestions();
+                      this.questionsCount = questions.length;
+                      for (let i = 0; i < questions.length; i++) {
+                        let question = new QuizQuestionModel(questions[i]);
+                        this.takeQuizFormModel.addQuestion(question);
+                      }
                     }
+                  },
+                  error => {
+                    console.error(error);
+                    this.generalError = true;
                   }
-                },
-                error => {
-                  console.error(error);
-                  this.generalError = true;
-                }
-              );
+                );
+            }
+          },
+          error => {
+            console.error(error);
+            this.generalError = true;
           }
-        },
-        error => {
-          console.error(error);
-          this.generalError = true;
-        }
-      );
+        );
+    }
+    else {
+      // No quiz to display. Redirect to home page
+      this.router.navigateByUrl('/');
+    }
   }
 
   get formQuestions(): FormArray {
@@ -80,6 +86,14 @@ export class TakeQuizComponent implements OnInit {
 
   getNextQuestion(): void {
     this.questionsAnsweredCount++;
+  }
+
+  resetFormQuestions(): void {
+    const len = this.formQuestions.controls.length;
+    for (let i = len - 1; i >= 0; i--) {
+      this.takeQuizFormModel.deleteQuestion(i);
+    }
+    this.formQuestions.reset();
   }
 
 }

@@ -1,4 +1,4 @@
-import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
+import { FormBuilder, FormArray, FormGroup } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { QuizQuestionModel } from  '../quizzes/quiz-question.model';
@@ -13,16 +13,16 @@ export class TakeQuizFormModel {
   answer: FormGroup = this.fb.group({
     options: this.fb.array([],
       {
-        validators: noOptionsSelectedValidator,
+        validators: noOptionsSelectedValidator
       }
     ),
     booleanAnswer: [false],
-    textAnswer: ['', , requiredTrimWhitespaceValidator()]
+    textAnswer: ['', requiredTrimWhitespaceValidator()]
   })
 
   question: FormGroup = this.fb.group({
-    text: [''],
-    type: [''],
+    text: [{value: '', disabled: true}],
+    type: [{value: '', disabled: true}],
     answer: _.cloneDeep(this.answer)
   })
 
@@ -42,10 +42,16 @@ export class TakeQuizFormModel {
   addQuestion(question?: QuizQuestionModel) {
     if (question) {
       this.formQuestions.push(this.fb.group({
-        text: [question.textQuestion],
-        type: [question.questionType],
+        text: [{value: question.textQuestion, disabled: true}],
+        type: [{value: question.questionType, disabled: true}],
         answer: this.getAnswer(question.questionType, question)
       }));
+    }
+  }
+
+  deleteQuestion(index: number) {
+    if (typeof index === 'number') {
+      this.formQuestions.removeAt(index)
     }
   }
 
@@ -59,8 +65,8 @@ export class TakeQuizFormModel {
           if (question.options && question.options.length) {
             for (let i = 0; i < question.options.length; i++) {
               options.push(this.fb.group({
-                optionSelect: [''],
-                option: [question.options[i].option]
+                optionSelect: [false],
+                option: [{value: question.options[i].option, disabled: true}]
               }));
             }
           }

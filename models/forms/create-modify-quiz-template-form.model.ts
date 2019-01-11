@@ -21,7 +21,7 @@ export class CreateModifyQuizTemplateFormModel {
   answer: FormGroup = this.fb.group({
     options: this.fb.array([],
       {
-        validators: optionsCorrectAnswerRequiredValidator,
+        validators: optionsCorrectAnswerRequiredValidator
       }
     ),
     booleanCorrectAnswer: [false],
