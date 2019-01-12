@@ -63,19 +63,6 @@
           <form [formGroup]="quizConfigurationForm">
             <h3 class="one-rem-margin-bottom">Quiz Settings</h3>
             <div class="form-group two-rem-margin-bottom">
-              <label class="subheading">Autosubmit:</label>
-              <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="True to automatically submit quiz answers without a Submit button. Not applicable for text short answer.">
-              <br>
-              <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="autosubmit-true" class="custom-control-input" formControlName="autoSubmit" [value]="true">
-                <label class="custom-control-label" for="autosubmit-true">True</label>
-              </div>
-              <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="autosubmit-false" class="custom-control-input" formControlName="autoSubmit" [value]="false">
-                <label class="custom-control-label" for="autosubmit-false">False</label>
-              </div>
-            </div>
-            <div class="form-group two-rem-margin-bottom">
               <label class="subheading">Percent Great Job:</label>
               <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="Percent of questions that user needs to answer correctly in order to see the 'Great Job' Giphy.">
               <input type="number" id="percent-great-job" class="form-control" formControlName="percentGreatJob">

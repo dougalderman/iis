@@ -66,8 +66,11 @@ DROP TABLE IF EXISTS QuizResults CASCADE;
 CREATE TABLE QuizResults (
   id serial PRIMARY KEY,
   quiz_id int REFERENCES Quizzes NOT NULL,
+  questions_answered int NOT NULL,
+  questions_answered_correctly int NOT NULL,
+  percent_answered_correctly real NOT NULL,
   date_taken date NOT NULL,
-  quiz_duration interval
+  quiz_duration interval NOT NULL
 );
 
 DROP TABLE IF EXISTS QuizAnswers CASCADE;

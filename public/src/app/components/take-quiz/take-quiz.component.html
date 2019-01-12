@@ -8,6 +8,11 @@
     <app-take-quiz-question
       [takeQuizForm]="takeQuizForm"
       [questionIndex]="questionsAnsweredCount"
+      [answerFeedbackGiven]="answerFeedbackGiven"
+      [answeredCorrectly]="answeredCorrectly"
+      [correctAnswer]="correctAnswer"
+      [correctAnswerArray]="correctAnswerArray"
+      (submit)="submitAnswer($event)"
       (nextQuestion)="getNextQuestion($event)">
     </app-take-quiz-question>
   </div>

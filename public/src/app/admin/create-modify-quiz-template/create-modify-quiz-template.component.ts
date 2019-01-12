@@ -33,8 +33,8 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   errorMessage: string = '';
 
   quizTemplateForm = new CreateModifyQuizTemplateFormModel(this.fb, this.checkTemplateName);
-  selectTemplateForm = this.quizTemplateForm.selectTemplateForm;
-  createModifyQuizTemplateForm = this.quizTemplateForm.createModifyQuizTemplateForm;
+  selectTemplateForm: FormGroup = this.quizTemplateForm.selectTemplateForm;
+  createModifyQuizTemplateForm: FormGroup = this.quizTemplateForm.createModifyQuizTemplateForm;
 
   constructor(
     private quizAdminService: QuizAdminService,

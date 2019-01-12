@@ -19,6 +19,5 @@ export class QuizModel {
 }
 
 export class QuizConfigModel {
-  autoSubmit: boolean;
   percentGreatJob: number;
 }

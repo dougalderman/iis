@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import  { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
+import * as _ from 'lodash';
 
 import { QuizDataModel } from '../../../../../models/quizzes/data/quiz-data.model';
 import { TakeQuizFormModel } from '../../../../../models/forms/take-quiz-form.model';
 import { QuizQuestionDataModel } from '../../../../../models/quizzes/data/quiz-question-data.model';
 import { QuizQuestionModel } from '../../../../../models/quizzes/quiz-question.model';
+import { QuizAnswerModel } from '../../../../../models/quizzes/quiz-answer.model';
+import { QuizResultModel } from '../../../../../models/quizzes/quiz-result.model';
+
 import { TakeQuizService } from '../../services/take-quiz.service';
 import { QuizAdminService } from '../../services/quiz-admin.service';
 
@@ -20,11 +24,21 @@ export class TakeQuizComponent implements OnInit {
   quizId: number = 0;
   title: string;
   displayQuizResults: boolean = false;
+  questions: QuizQuestionModel[] = [];
   questionsAnsweredCount: number = 0;
   questionsCount: number = 0;
+  quizAnswers: QuizAnswerModel[] = [];
 
   takeQuizFormModel = new TakeQuizFormModel(this.fb);
-  takeQuizForm = this.takeQuizFormModel.takeQuizForm;
+  takeQuizForm: FormGroup = this.takeQuizFormModel.takeQuizForm;
+
+  dateQuizStart: Date;
+  dateQuestionStart: Date;
+
+  answerFeedbackGiven: boolean = false;
+  answeredCorrectly: boolean = false;
+  correctAnswer: string = '';
+  correctAnswerArray: string[] = [];
 
   generalError = false;
 
@@ -51,10 +65,17 @@ export class TakeQuizComponent implements OnInit {
                     if (questions && questions.length) {
                       this.resetFormQuestions();
                       this.questionsCount = questions.length;
+                      this.takeQuizService.randomizeArray(questions);
                       for (let i = 0; i < questions.length; i++) {
                         let question = new QuizQuestionModel(questions[i]);
+                        if (question.questionType === 'textQuestionMultipleChoice') {
+                          question.options = this.takeQuizService.randomizeArray(question.options);
+                        }
                         this.takeQuizFormModel.addQuestion(question);
+                        this.questions.push(question);
                       }
+                      this.dateQuizStart = new Date();
+                      this.dateQuestionStart = new Date();
                     }
                   },
                   error => {
@@ -80,11 +101,62 @@ export class TakeQuizComponent implements OnInit {
     return this.takeQuizForm.get('formQuestions') as FormArray;
   }
 
-  submit(): void {
-    // TODO compare submitted answer to correct answer. Give feedback.
+  submitAnswer(): void {
+    this.resetAnswerVariables();
+    const formQuestion: FormGroup = this.formQuestions.controls[this.questionsAnsweredCount] as FormGroup;
+    const answer: FormGroup = formQuestion.controls.answer as FormGroup;
+    const question: QuizQuestionModel = this.questions[this.questionsAnsweredCount];
+    const dateQuestionEnd: Date = new Date();
+
+    let quizAnswer = new QuizAnswerModel();
+    quizAnswer.quizId = this.quizId;
+    quizAnswer.questionId = question.id;
+
+    switch (question.questionType) {
+      case 'textQuestionMultipleChoice':
+        const correctOptionIndex = _.findIndex(question.options, ['optionCorrectAnswer', true]);
+        const userSelectedOptionIndex = _.findIndex(answer.controls.options.value, ['optionCorrectAnswer', true])
+        if (correctOptionIndex === userSelectedOptionIndex) {
+          this.answeredCorrectly = true;
+        }
+        else {
+          this.correctAnswer = question.options[correctOptionIndex].option;
+        }
+        quizAnswer.textAnswer = answer.controls.options[userSelectedOptionIndex].option;
+        break;
+
+      case 'textQuestionShortAnswer':
+        let lowerCaseArray: string[] = [];
+        for (let correctAnswer of question.correctAnswerArray) {
+          lowerCaseArray.push(correctAnswer.toLowerCase());
+        }
+        if (_.find(lowerCaseArray, answer.controls.textAnswer.value.toLowerCase())) {
+          this.answeredCorrectly = true;
+        }
+        else {
+          this.correctAnswerArray = question.correctAnswerArray;
+        }
+        quizAnswer.textAnswer = answer.controls.textAnswer.value;
+        break;
+
+      case 'textQuestionBoolean':
+        if (question.booleanCorrectAnswer === answer.controls.booleanAnswer.value) {
+          this.answeredCorrectly = true;
+        }
+        quizAnswer.booleanAnswer = answer.controls.booleanAnswer.value
+      break;
+    }
+
+    quizAnswer.answeredCorrectly = this.answeredCorrectly;
+    quizAnswer.timeToAnswer = (dateQuestionEnd.getTime() - this.dateQuestionStart.getTime()).toString() + ' milliseconds';
+    this.quizAnswers.push(quizAnswer);
+
+    this.answerFeedbackGiven = true;
+    this.dateQuestionStart = new Date();
   }
 
   getNextQuestion(): void {
+    this.resetAnswerVariables();
     this.questionsAnsweredCount++;
   }
 
@@ -96,4 +168,10 @@ export class TakeQuizComponent implements OnInit {
     this.formQuestions.reset();
   }
 
+  resetAnswerVariables(): void {
+    this.answerFeedbackGiven = false;
+    this.answeredCorrectly = false;
+    this.correctAnswer = '';
+    this.correctAnswerArray = [];
+  }
 }

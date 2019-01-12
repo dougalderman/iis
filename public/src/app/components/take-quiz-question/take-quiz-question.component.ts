@@ -12,6 +12,12 @@ export class TakeQuizQuestionComponent implements OnInit {
 
   @Input() takeQuizForm: FormGroup;
   @Input() questionIndex: number;
+  @Input() answerFeedbackGiven: boolean;
+  @Input() answeredCorrectly: boolean;
+  @Input() correctAnswer: string;
+  @Input() correctAnswerArray: string[];
+
+  @Output() submit = new EventEmitter();
   @Output() nextQuestion = new EventEmitter();
 
   alphaIdArray: string[] = [];
@@ -32,5 +38,9 @@ export class TakeQuizQuestionComponent implements OnInit {
 
   getNextQuestion(): void {
     this.nextQuestion.emit();
+  }
+
+  submitAnswer(): void {
+    this.submit.emit();
   }
 }

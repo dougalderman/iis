@@ -48,15 +48,15 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   webpage: WebpageModel = new WebpageModel();
 
   activateQuizSurveyTemplateForm = new ActivateQuizSurveyTemplateFormModel(this.fb, this.checkQuizUniqueNameValidator);
-  selectQuizTemplateForm = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
-  quizForm =  this.activateQuizSurveyTemplateForm.quizForm;
-  defaultQuizConfigurationForm =  this.activateQuizSurveyTemplateForm.defaultQuizConfigurationForm;
-  quizConfigurationForm =  this.activateQuizSurveyTemplateForm.quizConfigurationForm;
-  selectSurveyTemplateForm = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
-  selectWebpageForm = this.activateQuizSurveyTemplateForm.selectWebpageForm;
+  selectQuizTemplateForm: FormGroup = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
+  quizForm: FormGroup =  this.activateQuizSurveyTemplateForm.quizForm;
+  defaultQuizConfigurationForm: FormGroup =  this.activateQuizSurveyTemplateForm.defaultQuizConfigurationForm;
+  quizConfigurationForm: FormGroup =  this.activateQuizSurveyTemplateForm.quizConfigurationForm;
+  selectSurveyTemplateForm: FormGroup = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
+  selectWebpageForm: FormGroup = this.activateQuizSurveyTemplateForm.selectWebpageForm;
 
   quizTemplateForm = new PreviewQuizTemplateFormModel(this.fb);
-  previewQuizTemplateForm = this.quizTemplateForm.previewQuizTemplateForm;
+  previewQuizTemplateForm: FormGroup = this.quizTemplateForm.previewQuizTemplateForm;
 
   saveSuccess: boolean = false;
   saveError: boolean = false;
@@ -534,7 +534,6 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       quiz.description = quiz.description.trim();
     }
     quiz.config = new QuizConfigModel();
-    quiz.config.autoSubmit = this.quizConfigurationForm.get('autoSubmit').value;
     quiz.config.percentGreatJob = this.quizConfigurationForm.get('percentGreatJob').value;
 
     return quiz;
@@ -569,8 +568,6 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     let description = this.quizForm.get('description')
     description.setValue(quiz.description);
 
-    let autoSubmit = this.quizConfigurationForm.get('autoSubmit');
-    autoSubmit.setValue(quiz.config.autoSubmit);
     let percentGreatJob = this.quizConfigurationForm.get('percentGreatJob');
     percentGreatJob.setValue(quiz.config.percentGreatJob);
   }
