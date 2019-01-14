@@ -4,7 +4,7 @@
       {{question.controls.text.value}}
     </div>
   </div>
-  <div class="three-rem-margin-bottom" formGroupName="answer">
+  <div class="two-rem-margin-bottom" formGroupName="answer">
     <div *ngIf="question.controls.type.value === 'textQuestionMultipleChoice'">
       <label>Multiple Choice Options:</label>
       <div formArrayName="options" class="form-group">
@@ -18,7 +18,6 @@
               </div>
             </div>
           </div>
-          <div *ngIf="question.controls.answer.controls.options.length > 1 && question.controls.answer.controls.options.errors && question.controls.answer.controls.options.errors.noOptionsSelected" class="alert alert-warning">Please select an option</div>
         </div>
       </div>
     </div>

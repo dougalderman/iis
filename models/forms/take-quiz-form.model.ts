@@ -56,10 +56,21 @@ export class TakeQuizFormModel {
   }
 
   getAnswer(questionType: string, question?: QuizQuestionModel): FormGroup {
-    let answer: FormGroup = _.cloneDeep(this.answer);
+    let answer: FormGroup;
 
     switch (questionType) {
       case 'textQuestionMultipleChoice':
+
+        answer = this.fb.group({
+          options: this.fb.array([],
+            {
+              validators: noOptionsSelectedValidator
+            }
+          ),
+          booleanAnswer: [{value: false, disabled: true}],
+          textAnswer: [{value: '', disabled: true}]
+        })
+
         if (question) {
           let options = answer.controls.options as FormArray;
           if (question.options && question.options.length) {
@@ -71,6 +82,23 @@ export class TakeQuizFormModel {
             }
           }
         }
+
+        break;
+
+      case 'textQuestionShortAnswer':
+        answer = this.fb.group({
+          options: this.fb.array([]),
+          booleanAnswer: [{value: false, disabled: true}],
+          textAnswer: ['', requiredTrimWhitespaceValidator()]
+        })
+        break;
+
+      case 'textQuestionBoolean':
+        answer = this.fb.group({
+          options: this.fb.array([]),
+          booleanAnswer: ['', Validators.required],
+          textAnswer: [{value: '', disabled: true}]
+        })
         break;
     }
 
