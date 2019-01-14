@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 
 import { QuizAnswerModel } from  '../../../../models/quizzes/quiz-answer.model';
 import { QuizResultModel } from '../../../../models/quizzes/quiz-result.model';
+import { QuizResultDataModel } from '../../../../models/quizzes/data/quiz-result-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class TakeQuizService {
   private quizId: number = 0;
   private quizAnswersUrl = '/api/quiz_answers';
   private quizResultsUrl = '/api/quiz_results';
+  private quizResultsReadByQuizIdUrl = '/api/quiz_results/quiz_id'
 
   constructor(
     private http: HttpClient
@@ -53,7 +55,13 @@ export class TakeQuizService {
     }
   }
 
-  saveNewQuizResult(resultData: QuizAnswerModel): Observable<any> {
+  getQuizResultByQuizId(quizId: number): Observable<QuizResultDataModel> {
+    if (quizId) {
+      return this.http.get<QuizResultDataModel>(this.quizResultsReadByQuizIdUrl + '/' + quizId);
+    }
+  }
+
+  saveNewQuizResult(resultData: QuizResultModel): Observable<any> {
     if (resultData) {
       return this.http.post(this.quizResultsUrl, resultData);
     }

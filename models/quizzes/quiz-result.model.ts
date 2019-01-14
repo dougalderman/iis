@@ -6,7 +6,7 @@ export class QuizResultModel {
   questionsAnswered: number;
   questionsAnsweredCorrectly: number;
   percentAnsweredCorrectly: number;
-  dateTaken: Date;
+  datetimeQuizCompleted: string;
   quizDuration: string;
 
   constructor(data?: QuizResultDataModel) {
@@ -16,7 +16,7 @@ export class QuizResultModel {
       this.questionsAnswered = data.questions_answered;
       this.questionsAnsweredCorrectly = data.questions_answered_correctly;
       this.percentAnsweredCorrectly = data.percent_answered_correctly;
-      this.dateTaken = data.date_taken;
+      this.datetimeQuizCompleted = data.datetime_quiz_completed;
       this.quizDuration = data.quiz_duration;
     }
   }

@@ -6,7 +6,7 @@ class Answer extends QuizAnswerModel {
   constructor(
     reqQuizId: number,
     reqQuestionId: number,
-    reqResultsId: number,
+    reqResultId: number,
     reqTextAnswer: string,
     reqBooleanAnswer: boolean,
     reqDateAnswer: Date,
@@ -26,7 +26,7 @@ class Answer extends QuizAnswerModel {
 
     this.quizId = reqQuizId;
     this.questionId = reqQuestionId;
-    this.resultsId = reqResultsId;
+    this.resultId = reqResultId;
     this.textAnswer = reqTextAnswer;
     this.booleanAnswer = reqBooleanAnswer;
     this.dateAnswer = reqDateAnswer;
@@ -54,7 +54,7 @@ export class QuizAnswersController {
       const answer = new Answer(
         req.body.quizId,
         req.body.questionId,
-        req.body.resultsId,
+        req.body.resultId,
         req.body.textAnswer,
         req.body.booleanAnswer,
         req.body.dateAnswer,
@@ -71,7 +71,7 @@ export class QuizAnswersController {
         req.body.timeToAnswer
       );
       const query = {
-        text: 'INSERT INTO QuizAnswers(quiz_id, question_id, results_id, text_answer, ' +
+        text: 'INSERT INTO QuizAnswers(quiz_id, question_id, result_id, text_answer, ' +
           'boolean_answer, date_answer, date_start_answer, date_end_answer, location_answers, ' +
           'integer_answer, integer_start_answer, integer_end_answer, real_answer, real_start_answer, ' +
           'real_end_answer, answered_correctly, time_to_answer) VALUES($1, $2, $3, ' +
@@ -79,7 +79,7 @@ export class QuizAnswersController {
         values: [
           answer.quizId,
           answer.questionId,
-          answer.resultsId,
+          answer.resultId,
           answer.textAnswer,
           answer.booleanAnswer,
           answer.dateAnswer,
@@ -214,15 +214,15 @@ export class QuizAnswersController {
     }
   }
 
-  static readByResultsId(req, res) : void {
-    console.log('in QuizAnswersController--readByResultsId()');
+  static readByResultId(req, res) : void {
+    console.log('in QuizAnswersController--readByResultId()');
     console.log('req.params: ', req.params);
-    if (req.params && req.params.resultsId) {
+    if (req.params && req.params.resultId) {
       const pgSqlPool = new Pool();
-      const resultsId = req.params.resultsId;
+      const resultId = req.params.resultId;
       const query = {
-        text: 'SELECT * FROM QuizAnswers WHERE results_id = $1 ORDER BY id',
-        values: [resultsId]
+        text: 'SELECT * FROM QuizAnswers WHERE result_id = $1 ORDER BY id',
+        values: [resultId]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
@@ -255,7 +255,7 @@ export class QuizAnswersController {
       const answer = new Answer(
         req.body.quizId,
         req.body.questionId,
-        req.body.resultsId,
+        req.body.resultId,
         req.body.textAnswer,
         req.body.booleanAnswer,
         req.body.dateAnswer,
@@ -273,7 +273,7 @@ export class QuizAnswersController {
       );
       const id = req.params.id;
       const query = {
-        text: 'UPDATE QuizAnswers SET quiz_id = $1, question_id = $2, results_id = $3, ' +
+        text: 'UPDATE QuizAnswers SET quiz_id = $1, question_id = $2, result_id = $3, ' +
         'text_answer = $4, boolean_answer = $5, date_answer = $6, date_start_answer = $7, ' +
         'date_end_answer = $8, location_answers = $9, integer_answer = $10, integer_start_answer = $11, ' +
         'integer_end_answer = $12, real_answer = $13, real_start_answer = $14, real_end_answer = $15, ' +
@@ -281,7 +281,7 @@ export class QuizAnswersController {
         values: [
           answer.quizId,
           answer.questionId,
-          answer.resultsId,
+          answer.resultId,
           answer.textAnswer,
           answer.booleanAnswer,
           answer.dateAnswer,

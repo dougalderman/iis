@@ -9,6 +9,7 @@ import { QuizQuestionDataModel } from '../../../../../models/quizzes/data/quiz-q
 import { QuizQuestionModel } from '../../../../../models/quizzes/quiz-question.model';
 import { QuizAnswerModel } from '../../../../../models/quizzes/quiz-answer.model';
 import { QuizResultModel } from '../../../../../models/quizzes/quiz-result.model';
+import { QuizResultDataModel } from '../../../../../models/quizzes/data/quiz-result-data.model';
 
 import { TakeQuizService } from '../../services/take-quiz.service';
 import { QuizAdminService } from '../../services/quiz-admin.service';
@@ -26,6 +27,7 @@ export class TakeQuizComponent implements OnInit {
   displayQuizResults: boolean = false;
   questions: QuizQuestionModel[] = [];
   questionsAnsweredCount: number = 0;
+  questionsCorrectlyAnsweredCount: number = 0;
   questionsCount: number = 0;
   quizAnswers: QuizAnswerModel[] = [];
 
@@ -119,6 +121,7 @@ export class TakeQuizComponent implements OnInit {
 
         if (correctOptionIndex === userSelectedOptionIndex) {
           this.answeredCorrectly = true;
+          this.questionsCorrectlyAnsweredCount++;
         }
         else {
           this.correctAnswer = question.options[correctOptionIndex].option;
@@ -138,6 +141,7 @@ export class TakeQuizComponent implements OnInit {
 
         if (_.find(lowerCaseArray, val => val === answer.controls.textAnswer.value.toLowerCase())) {
           this.answeredCorrectly = true;
+          this.questionsCorrectlyAnsweredCount++;
         }
         else {
           this.correctAnswerArray = question.correctAnswerArray;
@@ -149,6 +153,7 @@ export class TakeQuizComponent implements OnInit {
       case 'textQuestionBoolean':
         if (question.booleanCorrectAnswer === answer.controls.booleanAnswer.value) {
           this.answeredCorrectly = true;
+          this.questionsCorrectlyAnsweredCount++;
         }
 
         quizAnswer.booleanAnswer = answer.controls.booleanAnswer.value
@@ -166,6 +171,9 @@ export class TakeQuizComponent implements OnInit {
   getNextQuestion(): void {
     this.resetAnswerVariables();
     this.questionsAnsweredCount++;
+    if (this.questionsAnsweredCount === this.questionsCount) {
+      this.endOfQuizProcessing();
+    }
   }
 
   resetFormQuestions(): void {
@@ -181,5 +189,36 @@ export class TakeQuizComponent implements OnInit {
     this.answeredCorrectly = false;
     this.correctAnswer = '';
     this.correctAnswerArray = [];
+  }
+
+  endOfQuizProcessing(): void {
+    let quizResult = new QuizResultModel();
+    quizResult.quizId = this.quizId;
+    quizResult.questionsAnswered = this.questionsAnsweredCount;
+    quizResult.questionsAnsweredCorrectly = this.questionsCorrectlyAnsweredCount;
+    if (quizResult.questionsAnswered) {
+      quizResult.percentAnsweredCorrectly = quizResult.questionsAnsweredCorrectly / quizResult.questionsAnswered;
+    }
+    else {
+      quizResult.percentAnsweredCorrectly = 0;
+    }
+    quizResult.datetimeQuizCompleted = 'now';
+    quizResult.quizDuration =  ((new Date).getTime() - this.dateQuizStart.getTime()).toString() + ' milliseconds';
+    this.takeQuizService.saveNewQuizResult(quizResult)
+      .subscribe(
+        (result: any) => {
+          if (result) {
+            this.takeQuizService.getQuizResultByQuizId(this.quizId)
+              .subscribe(
+                (quizResult: QuizResultDataModel) => {
+                  if (quizResult) {
+                    for (let answer of this.quizAnswers) {
+                      answer.resultId = quizResult.id;
+                    }
+
+                  }
+                }
+              )
+
   }
 }

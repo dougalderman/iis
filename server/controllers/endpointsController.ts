@@ -50,7 +50,7 @@ export class EndpointsController {
     app.get('/api/admin/quiz_answers/id/:id', QuizAnswersController.readById) // Reads answer by id.
     app.get('/api/admin/quiz_answers/quiz_id/:quizId', QuizAnswersController.readByQuizId) // Reads answers by quiz id.
     app.get('/api/admin/quiz_answers/question_id/:questionId', QuizAnswersController.readByQuestionId) // Reads answer by question id.
-    app.get('/api/admin/quiz_answers/results_id/:resultsId', QuizAnswersController.readByResultsId) // Reads answers by results id.
+    app.get('/api/admin/quiz_answers/result_id/:resultId', QuizAnswersController.readByResultId) // Reads answers by result id.
     app.put('/api/quiz_answers/:id', QuizAnswersController.update) // Updates quiz answer.
     app.delete('/api/admin/quiz_answers/:id', QuizAnswersController.delete) // Deletes quiz answer.
 

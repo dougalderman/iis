@@ -3,11 +3,11 @@ import { Pool } from 'pg';
 
 class Results extends QuizResultModel {
 
-  constructor(reqQuizId: number, reqDateTaken: Date, reqQuizDuration: string) {
+  constructor(reqQuizId: number, reqDatetimeQuizCompleted: string, reqQuizDuration: string) {
     super();
 
     this.quizId = reqQuizId;
-    this.dateTaken = reqDateTaken;
+    this.datetimeQuizCompleted = reqDatetimeQuizCompleted;
     this.quizDuration = reqQuizDuration;
   };
 }
@@ -21,8 +21,8 @@ export class QuizResultsController {
       const pgSqlPool = new Pool();
       const results = new Results(req.body.quizId, req.body.dateTaken, req.body.quizDuration);
       const query = {
-        text: 'INSERT INTO QuizResults(quiz_id, date_taken, quiz_duration) VALUES($1, $2, $3)',
-        values: [results.quizId, results.dateTaken, results.quizDuration]
+        text: 'INSERT INTO QuizResults(quiz_id, datetime_quiz_completed, quiz_duration) VALUES($1, $2, $3)',
+        values: [results.quizId, results.datetimeQuizCompleted, results.quizDuration]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
@@ -86,7 +86,7 @@ export class QuizResultsController {
       const startDate = req.params.startDate;
       const endDate = req.params.endDate;
       const query = {
-        text: 'SELECT * FROM QuizResults WHERE date_taken >= $1 AND date_taken <= $2 ORDER BY date_taken DESC',
+        text: 'SELECT * FROM QuizResults WHERE datetime_quiz_completed >= $1 AND datetime_quiz_completed <= $2 ORDER BY datetime_quiz_completed DESC',
         values: [startDate, endDate]
       };
       console.log('query: ', query);
@@ -115,7 +115,7 @@ export class QuizResultsController {
     console.log('in QuizResultsController--readAll()');
     const pgSqlPool = new Pool();
     const query = {
-      text: 'SELECT * FROM QuizResults ORDER BY date_taken DESC',
+      text: 'SELECT * FROM QuizResults ORDER BY datetime_quiz_completed DESC',
       values: []
     };
     console.log('query: ', query);

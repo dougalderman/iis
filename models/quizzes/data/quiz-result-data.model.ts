@@ -4,7 +4,7 @@ export class QuizResultDataModel {
   questions_answered: number;
   questions_answered_correctly: number;
   percent_answered_correctly: number;
-  date_taken: Date;
+  datetime_quiz_completed: string;
   quiz_duration: string;
 
   constructor() {}
