@@ -1,4 +1,4 @@
-import { FormBuilder, FormArray, FormGroup } from '@angular/forms'
+import { FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { QuizQuestionModel } from  '../quizzes/quiz-question.model';
@@ -16,7 +16,7 @@ export class TakeQuizFormModel {
         validators: noOptionsSelectedValidator
       }
     ),
-    booleanAnswer: [false],
+    booleanAnswer: ['', Validators.required],
     textAnswer: ['', requiredTrimWhitespaceValidator()]
   })
 

@@ -4,7 +4,7 @@
       {{question.controls.text.value}}
     </div>
   </div>
-  <div class="extra-margin-bottom" formGroupName="answer">
+  <div class="three-rem-margin-bottom" formGroupName="answer">
     <div *ngIf="question.controls.type.value === 'textQuestionMultipleChoice'">
       <label>Multiple Choice Options:</label>
       <div formArrayName="options" class="form-group">
@@ -41,27 +41,31 @@
       </div>
     </div>
   </div>
-  <div class="flex-display">
+  <div class="flex-display two-rem-margin-bottom">
     <div class="form-group" *ngIf="!answerFeedbackGiven">
       <div class="form-group">
         <button type="submit" class="btn btn-primary" (click)="submitAnswer()" [disabled]="!question.valid">Submit</button>
       </div>
     </div>
     <div class="form-group" *ngIf="answerFeedbackGiven">
-      <div *ngIf="answeredCorrectly" class="correct-answer">
-        You got it right!! Great Job!!
-      </div>
-      <div *ngIf="!answeredCorrectly && question.controls.type.value === 'textQuestionMultipleChoice'" class="wrong-answer">
-        Sorry, the correct answer is {{correctAnswer}}
-      </div>
-      <div *ngIf="!answeredCorrectly && question.controls.type.value === 'textQuestionBoolean'" class="wrong-answer">
-          Sorry, the correct answer is {{!question.controls.answer.controls.booleanAnswer.value}}
+      <div class="form-group two-rem-margin-bottom">
+        <div *ngIf="answeredCorrectly" class="correct-answer">
+          You got it right!! Great Job!!
         </div>
-      <div *ngIf="!answeredCorrectly && question.controls.type.value === 'textQuestionShortAnswer'" class="wrong-answer">
-          Sorry, the correct answers are:
+        <div *ngIf="!answeredCorrectly && question.controls.type.value === 'textQuestionMultipleChoice'" class="wrong-answer">
+          Sorry, the correct answer is {{correctAnswer}}
+        </div>
+        <div *ngIf="!answeredCorrectly && question.controls.type.value === 'textQuestionBoolean'" class="wrong-answer">
+            Sorry, the correct answer is {{!question.controls.answer.controls.booleanAnswer.value}}
+          </div>
+        <div *ngIf="!answeredCorrectly && question.controls.type.value === 'textQuestionShortAnswer'" class="wrong-answer">
+          <span *ngIf="correctAnswerArray.length === 1">Sorry, the correct answer is:</span>
+          <span *ngIf="correctAnswerArray.length > 1">Sorry, the correct answers are:</span>
+          <br><br>
           <div *ngFor="let answer of correctAnswerArray">
             {{answer}}
           </div>
+        </div>
       </div>
       <div class="form-group">
         <button type="button" class="btn btn-success" (click)="getNextQuestion()">Next</button>

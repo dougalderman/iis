@@ -115,27 +115,34 @@ export class TakeQuizComponent implements OnInit {
     switch (question.questionType) {
       case 'textQuestionMultipleChoice':
         const correctOptionIndex = _.findIndex(question.options, ['optionCorrectAnswer', true]);
-        const userSelectedOptionIndex = _.findIndex(answer.controls.options.value, ['optionCorrectAnswer', true])
+        const userSelectedOptionIndex = _.findIndex(answer.controls.options.value, ['optionSelect', true])
+
         if (correctOptionIndex === userSelectedOptionIndex) {
           this.answeredCorrectly = true;
         }
         else {
           this.correctAnswer = question.options[correctOptionIndex].option;
         }
-        quizAnswer.textAnswer = answer.controls.options[userSelectedOptionIndex].option;
+
+        const options: FormArray = answer.controls.options as FormArray;
+        const option: FormGroup = options.controls[userSelectedOptionIndex] as FormGroup;
+        quizAnswer.textAnswer = option.controls.option.value;
         break;
 
       case 'textQuestionShortAnswer':
         let lowerCaseArray: string[] = [];
+
         for (let correctAnswer of question.correctAnswerArray) {
           lowerCaseArray.push(correctAnswer.toLowerCase());
         }
-        if (_.find(lowerCaseArray, answer.controls.textAnswer.value.toLowerCase())) {
+
+        if (_.find(lowerCaseArray, val => val === answer.controls.textAnswer.value.toLowerCase())) {
           this.answeredCorrectly = true;
         }
         else {
           this.correctAnswerArray = question.correctAnswerArray;
         }
+
         quizAnswer.textAnswer = answer.controls.textAnswer.value;
         break;
 
@@ -143,8 +150,9 @@ export class TakeQuizComponent implements OnInit {
         if (question.booleanCorrectAnswer === answer.controls.booleanAnswer.value) {
           this.answeredCorrectly = true;
         }
+
         quizAnswer.booleanAnswer = answer.controls.booleanAnswer.value
-      break;
+        break;
     }
 
     quizAnswer.answeredCorrectly = this.answeredCorrectly;
