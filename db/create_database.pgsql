@@ -68,8 +68,7 @@ CREATE TABLE QuizResults (
   quiz_id int REFERENCES Quizzes NOT NULL,
   questions_answered int NOT NULL,
   questions_answered_correctly int NOT NULL,
-  percent_answered_correctly real NOT NULL,
-  datetime_quiz_completed timestamp NOT NULL,
+  datetime_quiz_completed timestamp with time zone NOT NULL,
   quiz_duration interval NOT NULL
 );
 

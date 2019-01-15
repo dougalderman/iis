@@ -55,9 +55,9 @@ export class TakeQuizService {
     }
   }
 
-  getQuizResultByQuizId(quizId: number): Observable<QuizResultDataModel> {
+  getQuizResultByQuizId(quizId: number): Observable<QuizResultDataModel[]> {
     if (quizId) {
-      return this.http.get<QuizResultDataModel>(this.quizResultsReadByQuizIdUrl + '/' + quizId);
+      return this.http.get<QuizResultDataModel[]>(this.quizResultsReadByQuizIdUrl + '/' + quizId);
     }
   }
 

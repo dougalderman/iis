@@ -21,15 +21,15 @@ export class WebpagesController {
       const pgSqlPool = new Pool();
       const webpage = new Webpage(req.body.quizId, req.body.surveyId, req.body.title);
       const query = {
-        text: 'INSERT INTO Webpages(quiz_id, survey_id, title) VALUES($1, $2, $3)',
+        text: 'INSERT INTO Webpages(quiz_id, survey_id, title) VALUES($1, $2, $3) RETURNING *',
         values: [webpage.quizId, webpage.surveyId, webpage.title]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
         }
         else {
           res.send([]);

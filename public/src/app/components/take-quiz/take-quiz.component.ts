@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import  { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
+import { FormBuilder, FormArray, FormGroup } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { QuizDataModel } from '../../../../../models/quizzes/data/quiz-data.model';
@@ -9,7 +9,6 @@ import { QuizQuestionDataModel } from '../../../../../models/quizzes/data/quiz-q
 import { QuizQuestionModel } from '../../../../../models/quizzes/quiz-question.model';
 import { QuizAnswerModel } from '../../../../../models/quizzes/quiz-answer.model';
 import { QuizResultModel } from '../../../../../models/quizzes/quiz-result.model';
-import { QuizResultDataModel } from '../../../../../models/quizzes/data/quiz-result-data.model';
 
 import { TakeQuizService } from '../../services/take-quiz.service';
 import { QuizAdminService } from '../../services/quiz-admin.service';
@@ -28,6 +27,7 @@ export class TakeQuizComponent implements OnInit {
   questions: QuizQuestionModel[] = [];
   questionsAnsweredCount: number = 0;
   questionsCorrectlyAnsweredCount: number = 0;
+  percentCorrectlyAnswered: number = 0;
   questionsCount: number = 0;
   quizAnswers: QuizAnswerModel[] = [];
 
@@ -197,28 +197,35 @@ export class TakeQuizComponent implements OnInit {
     quizResult.questionsAnswered = this.questionsAnsweredCount;
     quizResult.questionsAnsweredCorrectly = this.questionsCorrectlyAnsweredCount;
     if (quizResult.questionsAnswered) {
-      quizResult.percentAnsweredCorrectly = quizResult.questionsAnsweredCorrectly / quizResult.questionsAnswered;
-    }
-    else {
-      quizResult.percentAnsweredCorrectly = 0;
+      this.percentCorrectlyAnswered = quizResult.questionsAnsweredCorrectly / quizResult.questionsAnswered;
     }
     quizResult.datetimeQuizCompleted = 'now';
     quizResult.quizDuration =  ((new Date).getTime() - this.dateQuizStart.getTime()).toString() + ' milliseconds';
     this.takeQuizService.saveNewQuizResult(quizResult)
       .subscribe(
-        (result: any) => {
-          if (result) {
-            this.takeQuizService.getQuizResultByQuizId(this.quizId)
-              .subscribe(
-                (quizResult: QuizResultDataModel) => {
-                  if (quizResult) {
-                    for (let answer of this.quizAnswers) {
-                      answer.resultId = quizResult.id;
+        (results: any) => {
+          if (results && results.length) {
+            const resultsId = results[0].id;
+            if (resultsId) {
+              for (let answer of this.quizAnswers) {
+                answer.resultId = resultsId;
+                this.takeQuizService.saveNewQuizAnswer(answer)
+                  .subscribe(
+                    (res: any) => {
+                    },
+                    error => {
+                      console.error(error);
+                      this.generalError = true;
                     }
-
-                  }
-                }
-              )
-
+                  );
+              }
+            }
+          }
+        },
+        error => {
+          console.error(error);
+          this.generalError = true;
+        }
+      );
   }
 }

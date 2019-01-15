@@ -3,10 +3,18 @@ import { Pool } from 'pg';
 
 class Results extends QuizResultModel {
 
-  constructor(reqQuizId: number, reqDatetimeQuizCompleted: string, reqQuizDuration: string) {
+  constructor(
+    reqQuizId: number,
+    reqQuestionsAnswered: number,
+    reqQuestionsAnsweredCorrectly: number,
+    reqDatetimeQuizCompleted: string,
+    reqQuizDuration: string
+  ) {
     super();
 
     this.quizId = reqQuizId;
+    this.questionsAnswered = reqQuestionsAnswered;
+    this.questionsAnsweredCorrectly = reqQuestionsAnsweredCorrectly;
     this.datetimeQuizCompleted = reqDatetimeQuizCompleted;
     this.quizDuration = reqQuizDuration;
   };
@@ -19,17 +27,30 @@ export class QuizResultsController {
     console.log('req.body: ', req.body);
     if (req.body) {
       const pgSqlPool = new Pool();
-      const results = new Results(req.body.quizId, req.body.dateTaken, req.body.quizDuration);
+      const results = new Results(
+        req.body.quizId,
+        req.body.questionsAnswered,
+        req.body.questionsAnsweredCorrectly,
+        req.body.datetimeQuizCompleted,
+        req.body.quizDuration
+      );
       const query = {
-        text: 'INSERT INTO QuizResults(quiz_id, datetime_quiz_completed, quiz_duration) VALUES($1, $2, $3)',
-        values: [results.quizId, results.datetimeQuizCompleted, results.quizDuration]
+        text: 'INSERT INTO QuizResults(quiz_id, questions_answered, questions_answered_correctly, ' +
+        'datetime_quiz_completed, quiz_duration) VALUES($1, $2, $3, $4, $5) RETURNING *',
+        values: [
+          results.quizId,
+          results.questionsAnswered,
+          results.questionsAnsweredCorrectly,
+          results.datetimeQuizCompleted,
+          results.quizDuration
+        ]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
         }
         else {
           res.send([]);
@@ -53,7 +74,7 @@ export class QuizResultsController {
       const pgSqlPool = new Pool();
       const quizId = req.params.quizId;
       const query = {
-        text: 'SELECT * FROM QuizResults WHERE quiz_id = $1',
+        text: 'SELECT * FROM QuizResults WHERE quiz_id = $1 ORDER BY id DESC',
         values: [quizId]
       };
       console.log('query: ', query);
@@ -86,7 +107,8 @@ export class QuizResultsController {
       const startDate = req.params.startDate;
       const endDate = req.params.endDate;
       const query = {
-        text: 'SELECT * FROM QuizResults WHERE datetime_quiz_completed >= $1 AND datetime_quiz_completed <= $2 ORDER BY datetime_quiz_completed DESC',
+        text: 'SELECT * FROM QuizResults WHERE datetime_quiz_completed >= $1 AND datetime_quiz_completed <= $2 ' +
+        'ORDER BY datetime_quiz_completed DESC',
         values: [startDate, endDate]
       };
       console.log('query: ', query);

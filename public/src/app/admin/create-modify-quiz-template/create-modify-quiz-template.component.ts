@@ -256,27 +256,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       this.template.id = null;
       this.quizAdminService.saveNewQuizTemplate(this.template)
         .subscribe(
-          (result: any) => {
-            if (result) {
-              this.quizAdminService.getQuizTemplateByName(this.template.name)
-                .subscribe(
-                  (template: QuizTemplateDataModel[]) => {
-                    if (template && template.length) {
-                      const templateId = template[0].id;
-                      if (templateId) {
-                        this.saveAllTemplateQuestions(templateId)
-                      }
-                    }
-                    else {
-                      console.error('Error retrieving quiz template');
-                      this.saveError = true;
-                    }
-                  },
-                  error => {
-                    console.error(error);
-                    this.saveError = true;
-                  }
-                );
+          (results: any) => {
+            if (results && results.length) {
+              const templateId = results[0].id;
+              if (templateId) {
+                this.saveAllTemplateQuestions(templateId)
+              }
             }
           },
           error => {

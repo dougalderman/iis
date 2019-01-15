@@ -32,7 +32,7 @@ export class EndpointsController {
     app.delete('/api/admin/quiz_templates/:id', QuizTemplatesController.delete) // Deletes template.
     // Quiz Results
     app.post('/api/quiz_results', QuizResultsController.create) // Writes new results.
-    app.get('/api/admin/quiz_results/quiz_id/:quizId', QuizResultsController.readByQuizId) // Reads results by quiz id.
+    app.get('/api/quiz_results/quiz_id/:quizId', QuizResultsController.readByQuizId) // Reads results by quiz id.
     app.get('/api/admin/quiz_results/start_date/:startDate/end_date/:endDate', QuizResultsController.readByDateRange) // Reads results by date range.
     app.get('/api/admin/quiz_results', QuizResultsController.readAll) // Reads all results.
     // Quiz Questions

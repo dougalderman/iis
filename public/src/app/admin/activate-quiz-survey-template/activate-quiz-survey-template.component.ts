@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms'
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { appRoutes } from '../../app-routing.module';
@@ -152,26 +152,17 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
                 // If active route doesn't exist in DB
                 let thisPage: WebpageModel = new WebpageModel();
                 thisPage.title = route.data.title;
-                  this.webpageAdminService.saveNewWebpage(thisPage)
+                this.webpageAdminService.saveNewWebpage(thisPage)
                   .subscribe(
-                    (result: any) => {
-                      if (result) {
-                        this.webpageAdminService.getWebpageByTitle(route.data.title)
-                        .subscribe(
-                          (webpage: WebpageDataModel[]) => {
-                            if (webpage && webpage.length) {
-                              const page = webpage[0];
-                              if (page.id) {
-                                this.activeRoutes.push(new WebpageModel(page));
-                                this.activeRoutes = _.sortBy(this.activeRoutes, ['title']);
-                              }
-                            }
-                          },
-                          error => {
-                            console.error(error);
-                            this.generalError = true;
-                          }
-                        );
+                    (results: any) => {
+                      if (results && results.length) {
+                        const page = new WebpageModel();
+                        page.id = results[0].id;
+                        page.title = thisPage.title;
+                        if (page.id) {
+                          this.activeRoutes.push(page);
+                          this.activeRoutes = _.sortBy(this.activeRoutes, ['title']);
+                        }
                       }
                     },
                     error => {
@@ -420,80 +411,68 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
           this.quizAdminService.saveNewQuiz(quiz)
             .subscribe(
-              (result: any) => {
-                if (result) {
-                  this.quizAdminService.getQuizByUniqueName(quiz.uniqueName)
+              (results: any) => {
+                if (results && results.length) {
+                  const thisQuizId: number = results[0].id;
+                  this.webpage.quizId = thisQuizId;
+                  this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
                     .subscribe(
-                      (quizzes: QuizDataModel[]) => {
-                        if (quizzes && quizzes.length) {
-                          const thisQuiz: QuizDataModel = quizzes[0];
-                          const thisQuizId: number = thisQuiz.id;
-                          this.webpage.quizId = thisQuizId;
-                          this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+                      (result: any) => {
+                        if (result) {
+                          this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
                             .subscribe(
-                              (result: any) => {
-                                if (result) {
-                                  this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
-                                    .subscribe(
-                                      (questions: QuizQuestionDataModel[]) => {
-                                        if (questions && questions.length) {
-                                          let questionSavedCount = 0;
+                              (questions: QuizQuestionDataModel[]) => {
+                                if (questions && questions.length) {
+                                  let questionSavedCount = 0;
 
-                                          for (let i = 0; i < questions.length; i++) {
-                                            const questionId = questions[i].id;
-                                            const quizId = questions[i].quiz_id;
-                                            if (!quizId) {
-                                              // If question isn't currently associated with a quiz.
-                                              let question: any = {};
-                                              question.quizId = thisQuizId;
-                                              this.quizAdminService.saveExistingQuizQuestionQuizId(questionId, question)
-                                                .subscribe(
-                                                  (result: any) => {
-                                                    if (result) {
-                                                      questionSavedCount++;
-                                                      if (questionSavedCount === questions.length) {
-                                                        this.saveSuccess = true;
-                                                        this.clearForms();
-                                                      }
-                                                    }
-                                                  },
-                                                  error => {
-                                                    console.error(error);
-                                                    this.saveError = true;
-                                                  }
-                                                );
+                                  for (let i = 0; i < questions.length; i++) {
+                                    const questionId = questions[i].id;
+                                    const quizId = questions[i].quiz_id;
+                                    if (!quizId) {
+                                      // If question isn't currently associated with a quiz.
+                                      let question: any = {};
+                                      question.quizId = thisQuizId;
+                                      this.quizAdminService.saveExistingQuizQuestionQuizId(questionId, question)
+                                        .subscribe(
+                                          (res: any) => {
+                                            if (res) {
+                                              questionSavedCount++;
+                                              if (questionSavedCount === questions.length) {
+                                                this.saveSuccess = true;
+                                                this.clearForms();
+                                              }
                                             }
-                                            else {
-                                              // question is associated with a quiz
-                                              let question = new QuizQuestionModel(questions[i]);
-                                                question.id = null;
-                                                question.quizId = thisQuizId;
-                                                question.templateId = null;
-                                                this.quizAdminService.saveNewQuizQuestion(question)
-                                                  .subscribe(
-                                                    (result: any) => {
-                                                      if (result) {
-                                                        questionSavedCount++;
-                                                        if (questionSavedCount === questions.length) {
-                                                          this.saveSuccess = true;
-                                                          this.clearForms();
-                                                        }
-                                                      }
-                                                    },
-                                                    error => {
-                                                      console.error(error);
-                                                      this.saveError = true;
-                                                    }
-                                                  );
-                                            }
+                                          },
+                                          error => {
+                                            console.error(error);
+                                            this.saveError = true;
                                           }
-                                        }
-                                      },
-                                      error => {
-                                        console.error(error);
-                                        this.saveError = true;
-                                      }
-                                    );
+                                        );
+                                    }
+                                    else {
+                                      // question is associated with a quiz
+                                      let question = new QuizQuestionModel(questions[i]);
+                                        question.id = null;
+                                        question.quizId = thisQuizId;
+                                        question.templateId = null;
+                                        this.quizAdminService.saveNewQuizQuestion(question)
+                                          .subscribe(
+                                            (re: any) => {
+                                              if (re) {
+                                                questionSavedCount++;
+                                                if (questionSavedCount === questions.length) {
+                                                  this.saveSuccess = true;
+                                                  this.clearForms();
+                                                }
+                                              }
+                                            },
+                                            error => {
+                                              console.error(error);
+                                              this.saveError = true;
+                                            }
+                                          );
+                                    }
+                                  }
                                 }
                               },
                               error => {

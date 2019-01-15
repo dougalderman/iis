@@ -22,15 +22,15 @@ export class QuizController {
       const pgSqlPool = new Pool();
       const quiz = new Quiz(req.body.uniqueName, req.body.title, req.body.description, req.body.config);
       const query = {
-        text: 'INSERT INTO Quizzes(unique_name, title, description, config) VALUES($1, $2, $3, $4)',
+        text: 'INSERT INTO Quizzes(unique_name, title, description, config) VALUES($1, $2, $3, $4) RETURNING *',
         values: [quiz.uniqueName, quiz.title, quiz.description, quiz.config]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
         }
         else {
           res.send([]);

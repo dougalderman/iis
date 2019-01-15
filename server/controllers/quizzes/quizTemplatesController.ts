@@ -20,15 +20,15 @@ export class QuizTemplatesController {
       const pgSqlPool = new Pool();
       const template = new Template(req.body.name, req.body.description);
       const query = {
-        text: 'INSERT INTO QuizTemplates(name, description) VALUES($1, $2)',
+        text: 'INSERT INTO QuizTemplates(name, description) VALUES($1, $2) RETURNING *',
         values: [template.name, template.description]
       };
       console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
         console.log('result: ', result);
-        if (result) {
-          res.send(result);
+        if (result && result.rows) {
+          res.send(result.rows);
         }
         else {
           res.send([]);
