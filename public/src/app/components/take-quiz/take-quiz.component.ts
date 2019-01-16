@@ -24,22 +24,20 @@ import { QuizAdminService } from '../../services/quiz-admin.service';
     trigger('greatJobTrigger', [
       transition(':enter', [
         style({
-          'transform': 'perspective(400px) rotateX(90deg)',
           'background-image': 'url("https://media.giphy.com/media/iabcSfUB6VZYc/giphy.gif")',
           'background-size': 'cover'
         }),
-        animate('7s ease-in')
+        animate('7s ease-in',  style({transform: 'perspective(400px) rotateX(90deg)'}))
       ]),
     ]),
     trigger('okJobTrigger', [
       transition(':enter', [
         style({
-          'transform': 'perspective(400px) rotateX(90deg)',
           'background-image': 'url("https://media.giphy.com/media/aLdiZJmmx4OVW/giphy.gif")',
           'background-size': 'cover'
         }),
-        animate('7s ease-in')
-      ]),
+        animate('7s ease-in',  style({transform: 'perspective(400px) rotateX(90deg)'}))
+      ])
     ])
   ]
 })
