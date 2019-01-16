@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import  { Router } from '@angular/router';
-import { FormBuilder, FormArray, FormGroup } from '@angular/forms'
+import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 import * as _ from 'lodash';
 
 import { QuizDataModel } from '../../../../../models/quizzes/data/quiz-data.model';
+import { QuizConfigModel } from '../../../../../models/quizzes/quiz.model';
 import { TakeQuizFormModel } from '../../../../../models/forms/take-quiz-form.model';
 import { QuizQuestionDataModel } from '../../../../../models/quizzes/data/quiz-question-data.model';
 import { QuizQuestionModel } from '../../../../../models/quizzes/quiz-question.model';
@@ -16,7 +18,29 @@ import { QuizAdminService } from '../../services/quiz-admin.service';
 @Component({
   selector: 'app-take-quiz',
   templateUrl: './take-quiz.component.html',
-  styleUrls: ['./take-quiz.component.scss']
+  styleUrls: ['./take-quiz.component.scss'],
+  animations: [
+    trigger('greatJobTrigger', [
+      transition(':enter', [
+        style({
+          'transform': 'perspective(400px) rotateX(90deg)',
+          'background-image': 'url("https://media.giphy.com/media/iabcSfUB6VZYc/giphy.gif")',
+          'background-size': 'cover'
+        }),
+        animate('7s ease-in')
+      ]),
+    ]),
+    trigger('okJobTrigger', [
+      transition(':enter', [
+        style({
+          'transform': 'perspective(400px) rotateX(90deg)',
+          'background-image': 'url("https://media.giphy.com/media/aLdiZJmmx4OVW/giphy.gif")',
+          'background-size': 'cover'
+        }),
+        animate('7s ease-in')
+      ]),
+    ])
+  ]
 })
 export class TakeQuizComponent implements OnInit {
 
@@ -30,6 +54,7 @@ export class TakeQuizComponent implements OnInit {
   percentCorrectlyAnswered: number = 0;
   questionsCount: number = 0;
   quizAnswers: QuizAnswerModel[] = [];
+  configPercentGreatJob: number = 0;
 
   takeQuizFormModel = new TakeQuizFormModel(this.fb);
   takeQuizForm: FormGroup = this.takeQuizFormModel.takeQuizForm;
@@ -61,6 +86,8 @@ export class TakeQuizComponent implements OnInit {
             if (quiz && quiz.length) {
               this.quiz = quiz[0];
               this.title = this.quiz.title;
+              const config: QuizConfigModel = this.quiz.config;
+              this.configPercentGreatJob = config.percentGreatJob;
               this.quizAdminService.getQuestionsForQuiz(this.quizId)
                 .subscribe(
                   (questions: QuizQuestionDataModel[]) => {
