@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import  { Router } from '@angular/router';
 import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { trigger, style, animate, transition } from '@angular/animations';
+import { Location } from '@angular/common';
 import * as _ from 'lodash';
 
 import { QuizDataModel } from '../../../../../models/quizzes/data/quiz-data.model';
@@ -55,6 +56,7 @@ export class TakeQuizComponent implements OnInit {
   questionsCount: number = 0;
   quizAnswers: QuizAnswerModel[] = [];
   configPercentGreatJob: number = 0;
+  quizDurationInSeconds: number = 0;
 
   takeQuizFormModel = new TakeQuizFormModel(this.fb);
   takeQuizForm: FormGroup = this.takeQuizFormModel.takeQuizForm;
@@ -73,7 +75,8 @@ export class TakeQuizComponent implements OnInit {
     private takeQuizService: TakeQuizService,
     private quizAdminService: QuizAdminService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -218,16 +221,22 @@ export class TakeQuizComponent implements OnInit {
     this.correctAnswerArray = [];
   }
 
+  back(): void {
+    this.location.back();
+  }
+
   endOfQuizProcessing(): void {
     let quizResult = new QuizResultModel();
     quizResult.quizId = this.quizId;
     quizResult.questionsAnswered = this.questionsAnsweredCount;
     quizResult.questionsAnsweredCorrectly = this.questionsCorrectlyAnsweredCount;
     if (quizResult.questionsAnswered) {
-      this.percentCorrectlyAnswered = quizResult.questionsAnsweredCorrectly / quizResult.questionsAnswered;
+      this.percentCorrectlyAnswered = (quizResult.questionsAnsweredCorrectly / quizResult.questionsAnswered) * 100;
     }
     quizResult.datetimeQuizCompleted = 'now';
-    quizResult.quizDuration =  ((new Date).getTime() - this.dateQuizStart.getTime()).toString() + ' milliseconds';
+    const quizDurationInMilliseconds = (new Date).getTime() - this.dateQuizStart.getTime()
+    quizResult.quizDuration =  quizDurationInMilliseconds.toString() + ' milliseconds';
+    this.quizDurationInSeconds = Math.round(quizDurationInMilliseconds / 1000);
     this.takeQuizService.saveNewQuizResult(quizResult)
       .subscribe(
         (results: any) => {

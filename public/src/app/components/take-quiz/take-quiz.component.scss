@@ -14,21 +14,6 @@
   height: 200px;
 }
 
-.take-quiz-results .giphy-great-job {
-  transition: transform 7s ease-in;
-  background-image: url("https://media.giphy.com/media/iabcSfUB6VZYc/giphy.gif");
-  background-size: cover;
+.num {
+  font-weight: bold;
 }
-
-.take-quiz-results .giphy-ok-job {
-  transition: transform 7s ease-in;
-  background-image: url("https://media.giphy.com/media/aLdiZJmmx4OVW/giphy.gif");
-  background-size: cover;
-}
-
-.take-quiz-results {
-  .giphy-ok-job.active, .giphy-great-job.active {
-    transform: perspective(400px) rotateX(90deg);
-  }
-}
-
