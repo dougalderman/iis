@@ -20,7 +20,7 @@
   <div class="take-quiz-results" *ngIf="questionsAnsweredCount && questionsAnsweredCount === questionsCount">
     <p>Your score is: <span class="num">{{questionsCorrectlyAnsweredCount}}</span> correct out of <span class="num">{{questionsAnsweredCount}}</span> questions, or <span class="num">{{(percentCorrectlyAnswered / 100)| percent}}</span>.</p>
     <br>
-    <p>You completed the test in: <span class="num">{{quizDurationInSeconds}}</span> seconds.</p>
+    <p>You completed the quiz in: <span class="num">{{quizDurationInSeconds}}</span> seconds.</p>
     <br>
     <button type="button" class="btn btn-primary" (click)="back()">Return to Page</button>
     <div @greatJobTrigger *ngIf="percentCorrectlyAnswered >= configPercentGreatJob" class="giphy"></div>
