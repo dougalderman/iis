@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as expressSession from 'express-session';
-import * as passport from 'passport';
 import * as bodyParser from 'body-parser';
 import { EndpointsController } from './controllers/endpointsController';
 import { TimedTasksController } from './controllers/timedTasksController';
@@ -22,8 +21,6 @@ app.use(expressSession({
   saveUninitialized: false,
   resave: false
 }));
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Execute timed tasks
 new TimedTasksController();
