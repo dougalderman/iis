@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -13,6 +15,7 @@ import { SamplePageOneComponent } from './components/sample-page-one/sample-page
 import { SamplePageTwoComponent } from './components/sample-page-two/sample-page-two.component';
 import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { TakeSurveyComponent } from './components/take-survey/take-survey.component';
+import { TakeQuizQuestionComponent } from './components/take-quiz-question/take-quiz-question.component';
 
 @NgModule({
   declarations: [
@@ -23,12 +26,15 @@ import { TakeSurveyComponent } from './components/take-survey/take-survey.compon
     SamplePageOneComponent,
     SamplePageTwoComponent,
     TakeQuizComponent,
-    TakeSurveyComponent
+    TakeSurveyComponent,
+    TakeQuizQuestionComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AdminModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     HttpClientModule,
     NgbModalModule
   ],

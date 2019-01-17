@@ -108,37 +108,37 @@ export class QuizAdminService {
     }
   }
 
-  saveNewQuizTemplate(templateData: QuizTemplateModel) {
+  saveNewQuizTemplate(templateData: QuizTemplateModel): Observable<any> {
     if (templateData) {
       return this.http.post(this.quizTemplatesUrl, templateData);
     }
   }
 
-  saveExistingQuizTemplate(templateId: number, templateData: QuizTemplateModel) {
+  saveExistingQuizTemplate(templateId: number, templateData: QuizTemplateModel): Observable<any> {
     if (templateId && templateData) {
       return this.http.put(this.quizTemplatesUrl + '/' + templateId, templateData);
     }
   }
 
-  deleteQuizTemplate(templateId: number) {
+  deleteQuizTemplate(templateId: number): Observable<any> {
     if (templateId) {
       return this.http.delete(this.quizTemplatesUrl + '/' + templateId);
     }
   }
 
-  saveNewQuizQuestion(questionData: QuizQuestionModel) {
+  saveNewQuizQuestion(questionData: QuizQuestionModel): Observable<any> {
     if (questionData) {
       return this.http.post(this.quizQuestionsUrl, questionData);
     }
   }
 
-  saveExistingQuizQuestionQuizId(questionId: number, questionData: QuizQuestionModel) {
+  saveExistingQuizQuestionQuizId(questionId: number, questionData: QuizQuestionModel): Observable<any> {
     if (questionData) {
       return this.http.put(this.quizQuestionsUpdateQuizIdUrl + questionId, questionData);
     }
   }
 
-  deleteQuizQuestionsByTemplateId(templateId: number) {
+  deleteQuizQuestionsByTemplateId(templateId: number): Observable<any> {
     if (templateId) {
       return this.http.delete(this.questionsForQuizTemplateUrl + templateId);
     }

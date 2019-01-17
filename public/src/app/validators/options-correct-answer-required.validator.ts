@@ -1,4 +1,4 @@
-import { ValidatorFn, ValidationErrors, FormArray } from '@angular/forms'
+import { ValidatorFn, ValidationErrors, FormArray } from '@angular/forms';
 
 export const optionsCorrectAnswerRequiredValidator: ValidatorFn = (control: FormArray):  ValidationErrors | null => {
   let noCorrectAnswer = true;

@@ -1,6 +1,7 @@
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const helpers = require('./config/helpers');
 
 module.exports = {
@@ -21,6 +22,9 @@ module.exports = {
       template: helpers.root('./public/src', 'index.html'),
       favicon: helpers.root('./public/src', 'favicon.ico')
     }),
+    new CopyWebpackPlugin([
+      helpers.root('./public/src', 'robots.txt')
+    ]),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {

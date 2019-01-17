@@ -4,7 +4,7 @@ export class QuizAnswerModel {
   id: number;
   quizId: number;
   questionId: number;
-  resultsId: number;
+  resultId: number;
   textAnswer: string;
   booleanAnswer: boolean;
   dateAnswer: Date;
@@ -25,7 +25,7 @@ export class QuizAnswerModel {
       this.id = data.id;
       this.quizId = data.quiz_id;
       this.questionId = data.question_id;
-      this.resultsId = data.results_id;
+      this.resultId = data.result_id;
       this.textAnswer = data.text_answer;
       this.booleanAnswer = data.boolean_answer;
       this.dateAnswer = data.date_answer;

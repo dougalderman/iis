@@ -11,8 +11,7 @@ export class EndpointsController {
   }
 
   runEndpoints(app) {
-    console.log('in runEndpoints()');
-    // Quizzes
+    // Quiz Endpoints
 
     // Quizzes
     app.post('/api/admin/quizzes', QuizController.create) // Writes new quiz.
@@ -32,7 +31,7 @@ export class EndpointsController {
     app.delete('/api/admin/quiz_templates/:id', QuizTemplatesController.delete) // Deletes template.
     // Quiz Results
     app.post('/api/quiz_results', QuizResultsController.create) // Writes new results.
-    app.get('/api/admin/quiz_results/quiz_id/:quizId', QuizResultsController.readByQuizId) // Reads results by quiz id.
+    app.get('/api/quiz_results/quiz_id/:quizId', QuizResultsController.readByQuizId) // Reads results by quiz id.
     app.get('/api/admin/quiz_results/start_date/:startDate/end_date/:endDate', QuizResultsController.readByDateRange) // Reads results by date range.
     app.get('/api/admin/quiz_results', QuizResultsController.readAll) // Reads all results.
     // Quiz Questions
@@ -50,11 +49,12 @@ export class EndpointsController {
     app.get('/api/admin/quiz_answers/id/:id', QuizAnswersController.readById) // Reads answer by id.
     app.get('/api/admin/quiz_answers/quiz_id/:quizId', QuizAnswersController.readByQuizId) // Reads answers by quiz id.
     app.get('/api/admin/quiz_answers/question_id/:questionId', QuizAnswersController.readByQuestionId) // Reads answer by question id.
-    app.get('/api/admin/quiz_answers/results_id/:resultsId', QuizAnswersController.readByResultsId) // Reads answers by results id.
+    app.get('/api/admin/quiz_answers/result_id/:resultId', QuizAnswersController.readByResultId) // Reads answers by result id.
     app.put('/api/quiz_answers/:id', QuizAnswersController.update) // Updates quiz answer.
     app.delete('/api/admin/quiz_answers/:id', QuizAnswersController.delete) // Deletes quiz answer.
 
-    // Webpages
+
+    // Webpage Endpoints
     app.post('/api/admin/webpages', WebpagesController.create) // Writes new webpage record
     app.get('/api/admin/webpages/id/:id', WebpagesController.readById) // Reads webpage by id.
     app.get('/api/admin/webpages/quiz_id/:quizId', WebpagesController.readByQuizId) // Reads webpages by quiz id.

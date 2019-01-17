@@ -2,7 +2,7 @@ export class QuizAnswerDataModel {
   id: number;
   quiz_id: number;
   question_id: number;
-  results_id: number;
+  result_id: number;
   text_answer: string;
   boolean_answer: boolean;
   date_answer: Date;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms'
+import { FormBuilder, FormGroup, FormArray } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { appRoutes } from '../../app-routing.module';
@@ -19,9 +19,7 @@ import { PreviewQuizTemplateFormModel } from '../../../../../models/forms/previe
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
 import { CheckQuizUniqueNameValidator } from '../../validators/check-quiz-unique-name.validator';
-
-const NO_QUIZ = -10;
-const KEEP_SAME_QUIZ = -20;
+import { NO_QUIZ, KEEP_SAME_QUIZ } from '../../constants/activate-quiz-survey.constants';
 
 @Component({
   selector: 'app-activate-quiz-survey-template',
@@ -50,15 +48,15 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   webpage: WebpageModel = new WebpageModel();
 
   activateQuizSurveyTemplateForm = new ActivateQuizSurveyTemplateFormModel(this.fb, this.checkQuizUniqueNameValidator);
-  selectQuizTemplateForm = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
-  quizForm =  this.activateQuizSurveyTemplateForm.quizForm;
-  defaultQuizConfigurationForm =  this.activateQuizSurveyTemplateForm.defaultQuizConfigurationForm;
-  quizConfigurationForm =  this.activateQuizSurveyTemplateForm.quizConfigurationForm;
-  selectSurveyTemplateForm = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
-  selectWebpageForm = this.activateQuizSurveyTemplateForm.selectWebpageForm;
+  selectQuizTemplateForm: FormGroup = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
+  quizForm: FormGroup =  this.activateQuizSurveyTemplateForm.quizForm;
+  defaultQuizConfigurationForm: FormGroup =  this.activateQuizSurveyTemplateForm.defaultQuizConfigurationForm;
+  quizConfigurationForm: FormGroup =  this.activateQuizSurveyTemplateForm.quizConfigurationForm;
+  selectSurveyTemplateForm: FormGroup = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
+  selectWebpageForm: FormGroup = this.activateQuizSurveyTemplateForm.selectWebpageForm;
 
   quizTemplateForm = new PreviewQuizTemplateFormModel(this.fb);
-  previewQuizTemplateForm = this.quizTemplateForm.previewQuizTemplateForm;
+  previewQuizTemplateForm: FormGroup = this.quizTemplateForm.previewQuizTemplateForm;
 
   saveSuccess: boolean = false;
   saveError: boolean = false;
@@ -154,26 +152,17 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
                 // If active route doesn't exist in DB
                 let thisPage: WebpageModel = new WebpageModel();
                 thisPage.title = route.data.title;
-                  this.webpageAdminService.saveNewWebpage(thisPage)
+                this.webpageAdminService.saveNewWebpage(thisPage)
                   .subscribe(
-                    (result: any) => {
-                      if (result) {
-                        this.webpageAdminService.getWebpageByTitle(route.data.title)
-                        .subscribe(
-                          (webpage: WebpageDataModel[]) => {
-                            if (webpage && webpage.length) {
-                              const page = webpage[0];
-                              if (page.id) {
-                                this.activeRoutes.push(new WebpageModel(page));
-                                this.activeRoutes = _.sortBy(this.activeRoutes, ['title']);
-                              }
-                            }
-                          },
-                          error => {
-                            console.error(error);
-                            this.generalError = true;
-                          }
-                        );
+                    (results: any) => {
+                      if (results && results.length) {
+                        const page = new WebpageModel();
+                        page.id = results[0].id;
+                        page.title = thisPage.title;
+                        if (page.id) {
+                          this.activeRoutes.push(page);
+                          this.activeRoutes = _.sortBy(this.activeRoutes, ['title']);
+                        }
                       }
                     },
                     error => {
@@ -422,80 +411,68 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
           this.quizAdminService.saveNewQuiz(quiz)
             .subscribe(
-              (result: any) => {
-                if (result) {
-                  this.quizAdminService.getQuizByUniqueName(quiz.uniqueName)
+              (results: any) => {
+                if (results && results.length) {
+                  const thisQuizId: number = results[0].id;
+                  this.webpage.quizId = thisQuizId;
+                  this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
                     .subscribe(
-                      (quizzes: QuizDataModel[]) => {
-                        if (quizzes && quizzes.length) {
-                          const thisQuiz: QuizDataModel = quizzes[0];
-                          const thisQuizId: number = thisQuiz.id;
-                          this.webpage.quizId = thisQuizId;
-                          this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+                      (result: any) => {
+                        if (result) {
+                          this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
                             .subscribe(
-                              (result: any) => {
-                                if (result) {
-                                  this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
-                                    .subscribe(
-                                      (questions: QuizQuestionDataModel[]) => {
-                                        if (questions && questions.length) {
-                                          let questionSavedCount = 0;
+                              (questions: QuizQuestionDataModel[]) => {
+                                if (questions && questions.length) {
+                                  let questionSavedCount = 0;
 
-                                          for (let i = 0; i < questions.length; i++) {
-                                            const questionId = questions[i].id;
-                                            const quizId = questions[i].quiz_id;
-                                            if (!quizId) {
-                                              // If question isn't currently associated with a quiz.
-                                              let question: any = {};
-                                              question.quizId = thisQuizId;
-                                              this.quizAdminService.saveExistingQuizQuestionQuizId(questionId, question)
-                                                .subscribe(
-                                                  (result: any) => {
-                                                    if (result) {
-                                                      questionSavedCount++;
-                                                      if (questionSavedCount === questions.length) {
-                                                        this.saveSuccess = true;
-                                                        this.clearForms();
-                                                      }
-                                                    }
-                                                  },
-                                                  error => {
-                                                    console.error(error);
-                                                    this.saveError = true;
-                                                  }
-                                                );
+                                  for (let i = 0; i < questions.length; i++) {
+                                    const questionId = questions[i].id;
+                                    const quizId = questions[i].quiz_id;
+                                    if (!quizId) {
+                                      // If question isn't currently associated with a quiz.
+                                      let question: any = {};
+                                      question.quizId = thisQuizId;
+                                      this.quizAdminService.saveExistingQuizQuestionQuizId(questionId, question)
+                                        .subscribe(
+                                          (res: any) => {
+                                            if (res) {
+                                              questionSavedCount++;
+                                              if (questionSavedCount === questions.length) {
+                                                this.saveSuccess = true;
+                                                this.clearForms();
+                                              }
                                             }
-                                            else {
-                                              // question is associated with a quiz
-                                              let question = new QuizQuestionModel(questions[i]);
-                                                question.id = null;
-                                                question.quizId = thisQuizId;
-                                                question.templateId = null;
-                                                this.quizAdminService.saveNewQuizQuestion(question)
-                                                  .subscribe(
-                                                    (result: any) => {
-                                                      if (result) {
-                                                        questionSavedCount++;
-                                                        if (questionSavedCount === questions.length) {
-                                                          this.saveSuccess = true;
-                                                          this.clearForms();
-                                                        }
-                                                      }
-                                                    },
-                                                    error => {
-                                                      console.error(error);
-                                                      this.saveError = true;
-                                                    }
-                                                  );
-                                            }
+                                          },
+                                          error => {
+                                            console.error(error);
+                                            this.saveError = true;
                                           }
-                                        }
-                                      },
-                                      error => {
-                                        console.error(error);
-                                        this.saveError = true;
-                                      }
-                                    );
+                                        );
+                                    }
+                                    else {
+                                      // question is associated with a quiz
+                                      let question = new QuizQuestionModel(questions[i]);
+                                        question.id = null;
+                                        question.quizId = thisQuizId;
+                                        question.templateId = null;
+                                        this.quizAdminService.saveNewQuizQuestion(question)
+                                          .subscribe(
+                                            (re: any) => {
+                                              if (re) {
+                                                questionSavedCount++;
+                                                if (questionSavedCount === questions.length) {
+                                                  this.saveSuccess = true;
+                                                  this.clearForms();
+                                                }
+                                              }
+                                            },
+                                            error => {
+                                              console.error(error);
+                                              this.saveError = true;
+                                            }
+                                          );
+                                    }
+                                  }
                                 }
                               },
                               error => {
@@ -536,7 +513,6 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       quiz.description = quiz.description.trim();
     }
     quiz.config = new QuizConfigModel();
-    quiz.config.autoSubmit = this.quizConfigurationForm.get('autoSubmit').value;
     quiz.config.percentGreatJob = this.quizConfigurationForm.get('percentGreatJob').value;
 
     return quiz;
@@ -571,8 +547,6 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     let description = this.quizForm.get('description')
     description.setValue(quiz.description);
 
-    let autoSubmit = this.quizConfigurationForm.get('autoSubmit');
-    autoSubmit.setValue(quiz.config.autoSubmit);
     let percentGreatJob = this.quizConfigurationForm.get('percentGreatJob');
     percentGreatJob.setValue(quiz.config.percentGreatJob);
   }

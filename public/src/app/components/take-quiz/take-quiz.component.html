@@ -1,3 +1,30 @@
-<p>
-  take-quiz works!
-</p>
+<div class="container">
+  <div class="take-quiz-header">
+    <div class="top-left">{{title}}</div>
+    <div class="top-right" *ngIf="questionsAnsweredCount < questionsCount">Question {{questionsAnsweredCount + 1}} of {{questionsCount}}</div>
+  </div>
+
+  <div class="take-quiz-body" *ngIf="questionsAnsweredCount < questionsCount">
+    <app-take-quiz-question
+      [takeQuizForm]="takeQuizForm"
+      [questionIndex]="questionsAnsweredCount"
+      [answerFeedbackGiven]="answerFeedbackGiven"
+      [answeredCorrectly]="answeredCorrectly"
+      [correctAnswer]="correctAnswer"
+      [correctAnswerArray]="correctAnswerArray"
+      (submit)="submitAnswer($event)"
+      (nextQuestion)="getNextQuestion($event)">
+    </app-take-quiz-question>
+  </div>
+
+  <div class="take-quiz-results" *ngIf="questionsAnsweredCount && questionsAnsweredCount === questionsCount">
+    <p>Your score is: <span class="num">{{questionsCorrectlyAnsweredCount}}</span> correct out of <span class="num">{{questionsAnsweredCount}}</span> questions, or <span class="num">{{(percentCorrectlyAnswered / 100)| percent}}</span>.</p>
+    <br>
+    <p>You completed the quiz in: <span class="num">{{quizDurationInSeconds}}</span> seconds.</p>
+    <br>
+    <button type="button" class="btn btn-primary" (click)="back()">Return to Page</button>
+    <div @greatJobTrigger *ngIf="percentCorrectlyAnswered >= configPercentGreatJob" class="giphy"></div>
+    <div @okJobTrigger *ngIf="percentCorrectlyAnswered < configPercentGreatJob" class="giphy"></div>
+  </div>
+  <div *ngIf="generalError" class="alert alert-danger">An error occurred.</div>
+</div>

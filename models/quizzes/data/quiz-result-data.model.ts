@@ -1,7 +1,9 @@
 export class QuizResultDataModel {
   id: number;
   quiz_id: number;
-  date_taken: Date;
+  questions_answered: number;
+  questions_answered_correctly: number;
+  datetime_quiz_completed: string;
   quiz_duration: string;
 
   constructor() {}

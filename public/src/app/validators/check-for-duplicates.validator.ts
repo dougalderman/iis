@@ -1,4 +1,4 @@
-import { ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms'
+import { ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
 
 export function checkForDuplicatesValidator(type, index): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {

@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as expressSession from 'express-session';
-import * as passport from 'passport';
 import * as bodyParser from 'body-parser';
 import { EndpointsController } from './controllers/endpointsController';
 import { TimedTasksController } from './controllers/timedTasksController';
@@ -22,8 +21,6 @@ app.use(expressSession({
   saveUninitialized: false,
   resave: false
 }));
-app.use(passport.initialize());
-app.use(passport.session());
 
 // Execute timed tasks
 new TimedTasksController();
@@ -39,10 +36,9 @@ app.get('/wiki/*', (req, res) => {
 
 // 404 catch
 app.all('*', (req: any, res: any) => {
-  // console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
   res.status(200).sendFile('index.html', {root: path});
 });
 
 app.listen(port, function () {
-  console.log('Example app listening on port ' + port + '\n');
+  console.log('App listening on port ' + port + '\n');
 });
