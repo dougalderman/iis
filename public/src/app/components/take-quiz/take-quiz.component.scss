@@ -1,4 +1,6 @@
 .take-quiz-header {
+  display: flex;
+  align-items: center;
   margin-bottom: 2rem;
   font-family: Helvetica;
 }
@@ -16,4 +18,11 @@
 
 .num {
   font-weight: bold;
+}
+
+@media (max-width: 500px)  {
+  .take-quiz-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

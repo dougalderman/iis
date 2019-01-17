@@ -23,8 +23,6 @@ class Results extends QuizResultModel {
 export class QuizResultsController {
 
   static create(req, res) : void {
-    console.log('in QuizResultsController--create()');
-    console.log('req.body: ', req.body);
     if (req.body) {
       const pgSqlPool = new Pool();
       const results = new Results(
@@ -45,10 +43,8 @@ export class QuizResultsController {
           results.quizDuration
         ]
       };
-      console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
-        console.log('result: ', result);
         if (result && result.rows) {
           res.send(result.rows);
         }
@@ -68,8 +64,6 @@ export class QuizResultsController {
   }
 
   static readByQuizId(req, res) : void {
-    console.log('in QuizResultsController--readByQuizId()');
-    console.log('req.params: ', req.params);
     if (req.params && req.params.quizId) {
       const pgSqlPool = new Pool();
       const quizId = req.params.quizId;
@@ -77,10 +71,8 @@ export class QuizResultsController {
         text: 'SELECT * FROM QuizResults WHERE quiz_id = $1 ORDER BY id DESC',
         values: [quizId]
       };
-      console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
-        console.log('result: ', result);
         if (result && result.rows) {
           res.send(result.rows);
         }
@@ -100,8 +92,6 @@ export class QuizResultsController {
   }
 
   static readByDateRange(req, res) : void {
-    console.log('in QuizResultsController--readByDateRange()');
-    console.log('req.params: ', req.params);
     if (req.params && req.params.startDate && req.params.endDate) {
       const pgSqlPool = new Pool();
       const startDate = req.params.startDate;
@@ -111,10 +101,8 @@ export class QuizResultsController {
         'ORDER BY datetime_quiz_completed DESC',
         values: [startDate, endDate]
       };
-      console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
-        console.log('result: ', result);
         if (result && result.rows) {
           res.send(result.rows);
         }
@@ -134,16 +122,13 @@ export class QuizResultsController {
   }
 
   static readAll(req, res) : void {
-    console.log('in QuizResultsController--readAll()');
     const pgSqlPool = new Pool();
     const query = {
       text: 'SELECT * FROM QuizResults ORDER BY datetime_quiz_completed DESC',
       values: []
     };
-    console.log('query: ', query);
     pgSqlPool.query(query)
     .then(result => {
-      console.log('result: ', result);
       if (result && result.rows) {
         res.send(result.rows);
       }
@@ -158,5 +143,3 @@ export class QuizResultsController {
     });
   }
 }
-
-

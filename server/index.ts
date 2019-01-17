@@ -36,7 +36,6 @@ app.get('/wiki/*', (req, res) => {
 
 // 404 catch
 app.all('*', (req: any, res: any) => {
-  // console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
   res.status(200).sendFile('index.html', {root: path});
 });
 

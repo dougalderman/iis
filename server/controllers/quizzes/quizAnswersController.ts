@@ -47,8 +47,6 @@ class Answer extends QuizAnswerModel {
 export class QuizAnswersController {
 
   static create(req, res) : void {
-    console.log('in QuizAnswersController--create()');
-    console.log('req.body: ', req.body);
     if (req.body) {
       const pgSqlPool = new Pool();
       const answer = new Answer(
@@ -96,10 +94,8 @@ export class QuizAnswersController {
           answer.timeToAnswer
         ]
       };
-      console.log('query: ', query);
-      pgSqlPool.query(query)
+     pgSqlPool.query(query)
       .then(result => {
-        console.log('result: ', result);
         if (result) {
           res.send(result);
         }
@@ -119,8 +115,6 @@ export class QuizAnswersController {
   }
 
   static readById(req, res) : void {
-    console.log('in QuizAnswersController--readById()');
-    console.log('req.params: ', req.params);
     if (req.params && req.params.id) {
       const pgSqlPool = new Pool();
       const id = req.params.id;
@@ -128,10 +122,8 @@ export class QuizAnswersController {
         text: 'SELECT * FROM QuizAnswers WHERE id = $1',
         values: [id]
       };
-      console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
-        console.log('result: ', result);
         if (result && result.rows) {
           res.send(result.rows);
         }
@@ -151,8 +143,6 @@ export class QuizAnswersController {
   }
 
   static readByQuizId(req, res) : void {
-    console.log('in QuizAnswersController--readByQuizId()');
-    console.log('req.params: ', req.params);
     if (req.params && req.params.quizId) {
       const pgSqlPool = new Pool();
       const quizId = req.params.quizId;
@@ -160,10 +150,8 @@ export class QuizAnswersController {
         text: 'SELECT * FROM QuizAnswers WHERE quiz_id = $1 ORDER BY id',
         values: [quizId]
       };
-      console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
-        console.log('result: ', result);
         if (result && result.rows) {
           res.send(result.rows);
         }
@@ -183,8 +171,6 @@ export class QuizAnswersController {
   }
 
   static readByQuestionId(req, res) : void {
-    console.log('in QuizAnswersController--readByQuestionId()');
-    console.log('req.params: ', req.params);
     if (req.params && req.params.questionId) {
       const pgSqlPool = new Pool();
       const questionId = req.params.questionId;
@@ -192,10 +178,8 @@ export class QuizAnswersController {
         text: 'SELECT * FROM QuizAnswers WHERE question_id = $1 ORDER BY id',
         values: [questionId]
       };
-      console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
-        console.log('result: ', result);
         if (result && result.rows) {
           res.send(result.rows);
         }
@@ -215,8 +199,6 @@ export class QuizAnswersController {
   }
 
   static readByResultId(req, res) : void {
-    console.log('in QuizAnswersController--readByResultId()');
-    console.log('req.params: ', req.params);
     if (req.params && req.params.resultId) {
       const pgSqlPool = new Pool();
       const resultId = req.params.resultId;
@@ -224,10 +206,8 @@ export class QuizAnswersController {
         text: 'SELECT * FROM QuizAnswers WHERE result_id = $1 ORDER BY id',
         values: [resultId]
       };
-      console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
-        console.log('result: ', result);
         if (result && result.rows) {
           res.send(result.rows);
         }
@@ -247,9 +227,6 @@ export class QuizAnswersController {
   }
 
   static update(req, res) : void {
-    console.log('in QuizAnswersController--update()');
-    console.log('req.body: ', req.body);
-    console.log('req.params: ', req.params);
     if (req.body && req.params && req.params.id) {
       const pgSqlPool = new Pool();
       const answer = new Answer(
@@ -299,10 +276,8 @@ export class QuizAnswersController {
           id
         ]
       };
-      console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
-        console.log('result: ', result);
         if (result) {
           res.send(result);
         }
@@ -322,8 +297,6 @@ export class QuizAnswersController {
   }
 
   static delete(req, res) : void {
-    console.log('in QuizAnswersController--delete()');
-    console.log('req.params: ', req.params);
     if (req.params && req.params.id) {
       const pgSqlPool = new Pool();
       const id = req.params.id;
@@ -331,10 +304,8 @@ export class QuizAnswersController {
         text: 'DELETE FROM QuizAnswers WHERE id = $1',
         values: [id]
       };
-      console.log('query: ', query);
       pgSqlPool.query(query)
       .then(result => {
-        console.log('result: ', result);
         if (result) {
           res.send(result);
         }
@@ -353,5 +324,3 @@ export class QuizAnswersController {
     }
   }
 }
-
-

@@ -11,8 +11,7 @@ export class EndpointsController {
   }
 
   runEndpoints(app) {
-    console.log('in runEndpoints()');
-    // Quizzes
+    // Quiz Endpoints
 
     // Quizzes
     app.post('/api/admin/quizzes', QuizController.create) // Writes new quiz.
@@ -54,7 +53,8 @@ export class EndpointsController {
     app.put('/api/quiz_answers/:id', QuizAnswersController.update) // Updates quiz answer.
     app.delete('/api/admin/quiz_answers/:id', QuizAnswersController.delete) // Deletes quiz answer.
 
-    // Webpages
+
+    // Webpage Endpoints
     app.post('/api/admin/webpages', WebpagesController.create) // Writes new webpage record
     app.get('/api/admin/webpages/id/:id', WebpagesController.readById) // Reads webpage by id.
     app.get('/api/admin/webpages/quiz_id/:quizId', WebpagesController.readByQuizId) // Reads webpages by quiz id.

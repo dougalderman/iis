@@ -22,9 +22,9 @@ module.exports = {
       template: helpers.root('./public/src', 'index.html'),
       favicon: helpers.root('./public/src', 'favicon.ico')
     }),
-    new CopyWebpackPlugin({
-      from: helpers.root('./public/src', 'robots.txt')
-    }),
+    new CopyWebpackPlugin([
+      helpers.root('./public/src', 'robots.txt')
+    ]),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
