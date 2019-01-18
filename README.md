@@ -14,7 +14,7 @@ A survey can provide feedback to the site owner on various aspects related to th
 
 From a development persepective, quizzes and surveys are very similar. They both ask a series of questions, and provide a way for the user to answer the questions. This similarity reduces development time. The big difference is that a quiz question has a correct answer, while a survey doesn't. There are also some differences in common question types. 
 
-The purpose of this project is to use Angular v.7 and a Node.js server, along with PostgreSQL database, to allow for a quick and efficient site to create quizzes and surveys that will add interactivity to an informational site. 
+The purpose of this project is to use Angular v.7 and a Node.js server, along with PostgreSQL database, to allow for a quick and efficient way to create quizzes and surveys that will add interactivity to an informational site. 
 
 This site includes a template-based quiz and survey administration system that allows for quizzes and surveys to be created, modified, and added as links to a webpage on a site. A Wikipedia page is used as an example, with Take Quiz and Take Survey links added to the header. 
 
@@ -66,7 +66,7 @@ The database table setup script can be found in db/create_database.pgsql. There 
 The Node.js server code is written in TypeScript, and is located in the server folder. The lightweight index.js starts an Express session and calls TimedTasksController and EndpointsController. TimedTasksController is used to periodically delete unused quiz questions. EndpointsController manages the Quiz, Survey, and Webpages endpoints. Controllers for the endpoints are located in the controllers folder.
 
 ### Angular Overview
-[Reactive forms](https://angular.io/guide/reactive-forms) are used exclusively in this project. The form models are stored in the models/forms folder. Data models for DB API calls are stored in models/quizzes, models/surveys, and models/webpages. The public/src/app folder has the AppModule and AppComponent, along with a separate AppRoutingModule to handle routing. The admin folder has the AdminModule and AdminRoutingModule, along with all admin components. The components folder includes all non-admin components. Constants, services, utitities, and (Reactive Form) validators are separated out into their own folders. Bootstrap is used for styling and ng-bootstrap for modals and tooltips.
+[Reactive forms](https://angular.io/guide/reactive-forms) are used exclusively in this project. The form models are stored in the models/forms folder. Data models for DB API calls are stored in models/quizzes, models/surveys, and models/webpages. The public/src/app folder has the AppModule and AppComponent, along with a separate AppRoutingModule to handle routing. The admin folder has the AdminModule and AdminRoutingModule, along with all admin components. The components folder includes all non-admin components. Constants, services, utilities, and (Reactive Form) validators are separated out into their own folders. Bootstrap is used for styling and ng-bootstrap for modals and tooltips.
 
 ### Admin Section
 The admin section is a separate component with its own routing module. The AdminHomeComponent has a menu which provides options for Create/Modify Quiz Template, Create/Modify Survey Template, and Activate Quiz/Survey Template.
