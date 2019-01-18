@@ -28,8 +28,8 @@ This site includes a template-based quiz and survey administration system that a
 1. git clone https://github.com/dougalderman/iis.git
 2. npm install
 3. Create a .env file in the project root folder with the following format:
-	 ```
-	  NODE_ENV = ['development' or 'production']
+    ```
+    NODE_ENV = ['development' or 'production']
     PORT= [port #]
     APP_DIR = ['/../public' for development or '/../dist' for production]
     SECRET = [some random number and letter combination]
@@ -38,7 +38,7 @@ This site includes a template-based quiz and survey administration system that a
     PGDATABASE=
     PGUSER=
     PGPASSWORD=
-	 ```
+    ```
 4. npm run [one or more of the build scripts in package.json]
 5. npm run server.
 
