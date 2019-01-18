@@ -46,9 +46,9 @@ This site includes a template-based quiz and survey administration system that a
 
 1. Point the browser to [url]/admin to get the Admin Main Menu.
 2. Select Create/Modify Quiz Template.
-3. Create a new quiz template or modify an existing one by changing the Template name.
+3. Create a new quiz template or modify an existing one by changing the template name.
 4. Select Create/Modify Survey Template.
-5. Create a new survey template or modify an existing one by changing the Template name.
+5. Create a new survey template or modify an existing one by changing the template name.
 6. Go back to the Admin Main Menu. Select Activate Quiz/Survey Template.
 7. Follow the instructions on the page to activate a quiz and/or survey template for the Wikipedia page and/or one of the two sample pages.
 8. Point the browser to the home page to go to the Wikipedia Fibromyalgia page, or put in /sample-page-one or /sample-page-two after the base URL to go to one of the sample pages. 
@@ -99,7 +99,7 @@ Each webpage has code that queries the Webpages table whether or not a quiz_id i
 
 ![Take Quiz Question Feedback](https://github.com/dougalderman/iis/blob/master/readme_images/Take_Quiz_Question_Feedback.jpg)
 
-After answering all the questions, a results page that is a <div> element  within the TakeQuizComponent template is shown. This page provides feedback to the user on how many questions he correctly answered, the total time to take the quiz, and a Giphy with an animation that is targeted based on how well he did. A button that returns to the calling page is included.
+After answering all the questions, a results page that is a div element within the TakeQuizComponent template is shown. This page provides feedback to the user on how many questions he correctly answered, the total time to take the quiz, and a Giphy with an animation that is targeted based on how well he did. A button that returns to the calling page is included.
 
 ![Take Quiz Results](https://github.com/dougalderman/iis/blob/master/readme_images/Take_Quiz_Results.jpg)
 
