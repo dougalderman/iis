@@ -6,12 +6,9 @@ import { EndpointsController } from './controllers/endpointsController';
 import { TimedTasksController } from './controllers/timedTasksController';
 
 dotenv.config();
-let node_env = process.env.NODE_ENV;
 let port = process.env.PORT;
 let app_dir = process.env.APP_DIR;
 let path = __dirname + app_dir;
-
-console.log('node_env: ', node_env);
 
 const app = express();
 app.use(bodyParser.json());

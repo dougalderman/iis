@@ -95,6 +95,7 @@
         <form class="select-form" [formGroup]="selectSurveyTemplateForm">
           <div class="form-group">
             <label class="subheading">Third Step: Select Survey Template:</label>
+            <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="right" ngbTooltip="Select survey template to apply to the web page. Select 'No Survey' to not have a survey. Select 'Keep the Same Survey' if a survey is already associated with the web page, and you want to keep the same survey.">
             <select id="survey-template-select" class="form-control survey-template-select-background" formControlName="surveyTemplateSelect">
               <option value="" disabled selected>Select Survey Template</option>
               <option [ngValue]="null">No Survey</option>
