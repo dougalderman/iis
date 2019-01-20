@@ -132,17 +132,18 @@ CREATE TABLE SurveyQuestions (
 DROP TABLE IF EXISTS SurveyResults CASCADE;
 CREATE TABLE SurveyResults (
   id serial PRIMARY KEY,
-  survey_id int REFERENCES Surveys,
-  date_taken date,
-  survey_duration interval
-);
+  survey_id int REFERENCES Surveys NOT NULL,
+  questions_answered int NOT NULL,
+  datetime_survey_completed timestamp with time zone NOT NULL,
+  survey_duration interval NOT NULL
+ );
 
 DROP TABLE IF EXISTS SurveyAnswers CASCADE;
 CREATE TABLE SurveyAnswers (
   id serial PRIMARY KEY,
-  survey_id int REFERENCES Surveys,
-  question_id int REFERENCES SurveyQuestions,
-  results_id int REFERENCES SurveyResults,
+  survey_id int REFERENCES Surveys NOT NULL,
+  question_id int REFERENCES SurveyQuestions NOT NULL,
+  result_id int REFERENCES SurveyResults NOT NULL,
   text_answer text,
   boolean_answer boolean,
   date_answer date,
@@ -155,6 +156,7 @@ CREATE TABLE SurveyAnswers (
   real_answer real,
   real_start_answer real,
   real_end_answer real,
+  answered_correctly boolean,
   time_to_answer interval
 );
 
