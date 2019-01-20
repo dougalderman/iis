@@ -3,6 +3,8 @@ export class QuizAnswerDataModel {
   quiz_id: number;
   question_id: number;
   result_id: number;
+  answered_correctly: boolean;
+  time_to_answer: string;
   text_answer: string;
   boolean_answer: boolean;
   date_answer: Date;
@@ -15,8 +17,6 @@ export class QuizAnswerDataModel {
   real_answer: number;
   real_start_answer: number;
   real_end_answer: number;
-  answered_correctly: boolean;
-  time_to_answer: string;
 
   constructor() {}
 }

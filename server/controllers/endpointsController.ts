@@ -3,6 +3,13 @@ import { QuizTemplatesController } from './quizzes/quizTemplatesController';
 import { QuizResultsController } from './quizzes/quizResultsController';
 import { QuizQuestionsController } from './quizzes/quizQuestionsController';
 import { QuizAnswersController } from './quizzes/quizAnswersController';
+
+import { SurveyController } from './surveys/surveyController';
+import { SurveyTemplatesController } from './surveys/surveyTemplatesController';
+import { SurveyResultsController } from './surveys/surveyResultsController';
+import { SurveyQuestionsController } from './surveys/surveyQuestionsController';
+import { SurveyAnswersController } from './surveys/surveyAnswersController';
+
 import { WebpagesController } from './webpages/webpagesController';
 
 export class EndpointsController {
@@ -54,10 +61,53 @@ export class EndpointsController {
     app.delete('/api/admin/quiz_answers/:id', QuizAnswersController.delete) // Deletes quiz answer.
 
 
+    // Survey Endpoints
+
+    // Surveys
+    app.post('/api/admin/surveys', SurveyController.create) // Writes new survey.
+    app.get('/api/admin/surveys/id/:id', SurveyController.readById) // Reads survey by id.
+    app.get('/api/admin/surveys/unique_name/:uniqueName', SurveyController.readByUniqueName) // Reads survey by unique name.
+    app.get('/api/admin/surveys/unique_name_taken/:uniqueName', SurveyController.isUniqueNameTaken) // Returns true if unique name is taken.
+    app.get('/api/admin/surveys', SurveyController.readAll) // Reads all surveys.
+    app.put('/api/admin/surveys/:id', SurveyController.update) // Updates survey.
+    app.delete('/api/admin/surveys/:id', SurveyController.delete) // Deletes survey.
+    // Survey Templates
+    app.post('/api/admin/survey_templates', SurveyTemplatesController.create) // Writes new template.
+    app.get('/api/admin/survey_templates/id/:id', SurveyTemplatesController.readById) // Reads template by id.
+    app.get('/api/admin/survey_templates/name/:name', SurveyTemplatesController.readByName) // Reads template by name.
+    app.get('/api/admin/survey_templates/name_taken/:name', SurveyTemplatesController.isNameTaken) // Returns true if name is taken.
+    app.get('/api/admin/survey_templates', SurveyTemplatesController.readAll) // Reads all templates.
+    app.put('/api/admin/survey_templates/:id', SurveyTemplatesController.update) // Updates template.
+    app.delete('/api/admin/survey_templates/:id', SurveyTemplatesController.delete) // Deletes template.
+    // Survey Results
+    app.post('/api/survey_results', SurveyResultsController.create) // Writes new results.
+    app.get('/api/survey_results/survey_id/:surveyId', SurveyResultsController.readBySurveyId) // Reads results by survey id.
+    app.get('/api/admin/survey_results/start_date/:startDate/end_date/:endDate', SurveyResultsController.readByDateRange) // Reads results by date range.
+    app.get('/api/admin/survey_results', SurveyResultsController.readAll) // Reads all results.
+    // Survey Questions
+    app.post('/api/admin/survey_questions', SurveyQuestionsController.create) // Writes new survey question.
+    app.get('/api/admin/survey_questions/id/:id', SurveyQuestionsController.readById) // Reads question by id.
+    app.get('/api/admin/survey_questions/survey_id/:surveyId', SurveyQuestionsController.readBySurveyId) // Reads questions by survey id.
+    app.get('/api/admin/survey_questions/template_id/:templateId', SurveyQuestionsController.readByTemplateId) // Reads questions by template id.
+    app.put('/api/admin/survey_questions/:id', SurveyQuestionsController.update) // Updates survey question.
+    app.put('/api/admin/survey_questions/survey_id/:id', SurveyQuestionsController.updateSurveyId) // Updates survey question survey id.
+    app.delete('/api/admin/survey_questions/:id', SurveyQuestionsController.deleteById) // Deletes survey question.
+    app.delete('/api/admin/survey_questions/survey_id/:surveyId', SurveyQuestionsController.deleteBySurveyId) // Deletes all survey questions asssociated with survey id.
+    app.delete('/api/admin/survey_questions/template_id/:templateId', SurveyQuestionsController.deleteByTemplateId) // Deletes all survey questions associated with template id.
+    // Survey Answers
+    app.post('/api/survey_answers', SurveyAnswersController.create) // Writes new survey answers.
+    app.get('/api/admin/survey_answers/id/:id', SurveyAnswersController.readById) // Reads answer by id.
+    app.get('/api/admin/survey_answers/survey_id/:surveyId', SurveyAnswersController.readBySurveyId) // Reads answers by survey id.
+    app.get('/api/admin/survey_answers/question_id/:questionId', SurveyAnswersController.readByQuestionId) // Reads answer by question id.
+    app.get('/api/admin/survey_answers/result_id/:resultId', SurveyAnswersController.readByResultId) // Reads answers by result id.
+    app.put('/api/survey_answers/:id', SurveyAnswersController.update) // Updates survey answer.
+    app.delete('/api/admin/survey_answers/:id', SurveyAnswersController.delete) // Deletes survey answer.
+
+
     // Webpage Endpoints
     app.post('/api/admin/webpages', WebpagesController.create) // Writes new webpage record
     app.get('/api/admin/webpages/id/:id', WebpagesController.readById) // Reads webpage by id.
-    app.get('/api/admin/webpages/quiz_id/:quizId', WebpagesController.readByQuizId) // Reads webpages by quiz id.
+    app.get('/api/admin/webpages/survey_id/:quizId', WebpagesController.readByQuizId) // Reads webpages by quiz id.
     app.get('/api/admin/webpages/survey_id/:surveyId', WebpagesController.readBySurveyId) // Reads webpages by survey id.
     app.get('/api/admin/webpages/title/:title', WebpagesController.readByTitle) // Reads webpages by title.
     app.get('/api/admin/webpages', WebpagesController.readAll) // Reads all webpages.

@@ -79,6 +79,8 @@ CREATE TABLE QuizAnswers (
   quiz_id int REFERENCES Quizzes NOT NULL,
   question_id int REFERENCES QuizQuestions NOT NULL,
   result_id int REFERENCES QuizResults NOT NULL,
+  answered_correctly boolean NOT NULL,
+  time_to_answer interval NOT NULL,
   text_answer text,
   boolean_answer boolean,
   date_answer date,
@@ -90,9 +92,7 @@ CREATE TABLE QuizAnswers (
   integer_end_answer int,
   real_answer real,
   real_start_answer real,
-  real_end_answer real,
-  answered_correctly boolean,
-  time_to_answer interval
+  real_end_answer real
 );
 
 
@@ -144,6 +144,7 @@ CREATE TABLE SurveyAnswers (
   survey_id int REFERENCES Surveys NOT NULL,
   question_id int REFERENCES SurveyQuestions NOT NULL,
   result_id int REFERENCES SurveyResults NOT NULL,
+  time_to_answer interval NOT NULL,
   text_answer text,
   boolean_answer boolean,
   date_answer date,
@@ -155,9 +156,7 @@ CREATE TABLE SurveyAnswers (
   integer_end_answer int,
   real_answer real,
   real_start_answer real,
-  real_end_answer real,
-  answered_correctly boolean,
-  time_to_answer interval
+  real_end_answer real
 );
 
 

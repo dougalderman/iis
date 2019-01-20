@@ -4,7 +4,7 @@ export class SurveyResultModel {
   id: number;
   surveyId: number;
   questionsAnswered: number;
-  datetimeQuizCompleted: string;
+  datetimeSurveyCompleted: string;
   surveyDuration: string;
 
   constructor(data?: SurveyResultDataModel) {
@@ -12,7 +12,7 @@ export class SurveyResultModel {
       this.id = data.id;
       this.surveyId = data.survey_id;
       this.questionsAnswered = data.questions_answered;
-      this.datetimeQuizCompleted = data.datetime_survey_completed;
+      this.datetimeSurveyCompleted = data.datetime_survey_completed;
       this.surveyDuration = data.survey_duration;
     }
   }

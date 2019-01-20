@@ -1,6 +1,6 @@
 import { SurveyDataModel } from './data/survey-data.model';
 
-export class QuizModel {
+export class SurveyModel {
   id: number;
   uniqueName: string;
   title: string;
