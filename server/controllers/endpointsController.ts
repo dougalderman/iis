@@ -107,7 +107,7 @@ export class EndpointsController {
     // Webpage Endpoints
     app.post('/api/admin/webpages', WebpagesController.create) // Writes new webpage record
     app.get('/api/admin/webpages/id/:id', WebpagesController.readById) // Reads webpage by id.
-    app.get('/api/admin/webpages/survey_id/:quizId', WebpagesController.readByQuizId) // Reads webpages by quiz id.
+    app.get('/api/admin/webpages/quiz_id/:quizId', WebpagesController.readByQuizId) // Reads webpages by quiz id.
     app.get('/api/admin/webpages/survey_id/:surveyId', WebpagesController.readBySurveyId) // Reads webpages by survey id.
     app.get('/api/admin/webpages/title/:title', WebpagesController.readByTitle) // Reads webpages by title.
     app.get('/api/admin/webpages', WebpagesController.readAll) // Reads all webpages.
