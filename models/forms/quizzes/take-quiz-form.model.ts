@@ -1,9 +1,9 @@
 import { FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms'
 import * as _ from 'lodash';
 
-import { QuizQuestionModel } from  '../quizzes/quiz-question.model';
-import { noOptionsSelectedValidator } from '../../public/src/app/validators/no-options-selected.validator';
-import { requiredTrimWhitespaceValidator } from '../../public/src/app/validators/required-trim-whitespace.validator';
+import { QuizQuestionModel } from  '../../quizzes/quiz-question.model';
+import { noOptionsSelectedValidator } from '../../../public/src/app/validators/no-options-selected.validator';
+import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
 
 export class TakeQuizFormModel {
   constructor(

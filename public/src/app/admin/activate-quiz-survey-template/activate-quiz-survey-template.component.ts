@@ -13,8 +13,8 @@ import { WebpageDataModel } from  '../../../../../models/webpages/data/webpage-d
 import { QuizQuestionModel } from  '../../../../../models/quizzes/quiz-question.model';
 import { QuizQuestionDataModel } from  '../../../../../models/quizzes/data/quiz-question-data.model';
 
-import { ActivateQuizSurveyTemplateFormModel } from '../../../../../models//forms/activate-quiz-survey-template-form.model';
-import { PreviewQuizTemplateFormModel } from '../../../../../models/forms/preview-quiz-template-form.model';
+import { ActivateQuizSurveyTemplateFormModel } from '../../../../../models/forms/activate-quiz-survey-template-form.model';
+import { PreviewQuizTemplateFormModel } from '../../../../../models/forms/quizzes/preview-quiz-template-form.model';
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { WebpageAdminService } from '../../services/webpage-admin.service';

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { QuizAnswerModel } from  '../../../../models/quizzes/quiz-answer.model';
 import { QuizResultModel } from '../../../../models/quizzes/quiz-result.model';
-import { QuizResultDataModel } from '../../../../models/quizzes/data/quiz-result-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,11 +13,10 @@ export class TakeQuizService {
   private quizId: number = 0;
   private quizAnswersUrl = '/api/quiz_answers';
   private quizResultsUrl = '/api/quiz_results';
-  private quizResultsReadByQuizIdUrl = '/api/quiz_results/quiz_id'
 
   constructor(
     private http: HttpClient
-  ) { }
+  ) {}
 
   getQuizId() {
     return this.quizId;

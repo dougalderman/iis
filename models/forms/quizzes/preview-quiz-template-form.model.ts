@@ -1,8 +1,8 @@
 import { FormBuilder, FormControl, FormGroup, FormArray } from '@angular/forms'
 import * as _ from 'lodash';
 
-import { QuizQuestionModel } from  '../quizzes/quiz-question.model';
-import { getDefaultQuestionType } from '../../public/src/app/utilities/get-default-question-type.utility';
+import { QuizQuestionModel } from  '../../quizzes/quiz-question.model';
+import { getDefaultQuestionType } from '../../../public/src/app/utilities/get-default-question-type.utility';
 
 export class PreviewQuizTemplateFormModel  {
   constructor(
@@ -17,7 +17,7 @@ export class PreviewQuizTemplateFormModel  {
 
   question: FormGroup = this.fb.group({
     text: [{value: '', disabled: true}],
-    typeSelect: new FormControl({value: getDefaultQuestionType(), disabled: true}),
+    typeSelect: new FormControl({value: getDefaultQuestionType('quiz'), disabled: true}),
     answer: _.cloneDeep(this.answer)
   })
 

@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 
 import { QuizDataModel } from '../../../../../models/quizzes/data/quiz-data.model';
 import { QuizConfigModel } from '../../../../../models/quizzes/quiz.model';
-import { TakeQuizFormModel } from '../../../../../models/forms/take-quiz-form.model';
+import { TakeQuizFormModel } from '../../../../../models/forms/quizzes/take-quiz-form.model';
 import { QuizQuestionDataModel } from '../../../../../models/quizzes/data/quiz-question-data.model';
 import { QuizQuestionModel } from '../../../../../models/quizzes/quiz-question.model';
 import { QuizAnswerModel } from '../../../../../models/quizzes/quiz-answer.model';

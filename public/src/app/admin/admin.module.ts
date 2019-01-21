@@ -11,6 +11,8 @@ import { CreateModifySurveyTemplateComponent } from './create-modify-survey-temp
 import { ActivateQuizSurveyTemplateComponent } from './activate-quiz-survey-template/activate-quiz-survey-template.component';
 import { TemplateQuizQuestionComponent } from './template-quiz-question/template-quiz-question.component';
 import { TemplateQuizQuestionDisabledComponent } from './template-quiz-question-disabled/template-quiz-question-disabled.component';
+import { TemplateSurveyQuestionComponent } from './template-survey-question/template-survey-question.component';
+import { TemplateSurveyQuestionDisabledComponent } from './template-survey-question-disabled/template-survey-question-disabled.component';
 
 @NgModule({
   imports: [
@@ -26,7 +28,9 @@ import { TemplateQuizQuestionDisabledComponent } from './template-quiz-question-
     CreateModifySurveyTemplateComponent,
     ActivateQuizSurveyTemplateComponent,
     TemplateQuizQuestionComponent,
-    TemplateQuizQuestionDisabledComponent
+    TemplateQuizQuestionDisabledComponent,
+    TemplateSurveyQuestionComponent,
+    TemplateSurveyQuestionDisabledComponent
   ]
 })
 export class AdminModule {}
