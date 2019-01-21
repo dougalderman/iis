@@ -55,12 +55,6 @@ export class TakeQuizService {
     }
   }
 
-  getQuizResultByQuizId(quizId: number): Observable<QuizResultDataModel[]> {
-    if (quizId) {
-      return this.http.get<QuizResultDataModel[]>(this.quizResultsReadByQuizIdUrl + '/' + quizId);
-    }
-  }
-
   saveNewQuizResult(resultData: QuizResultModel): Observable<any> {
     if (resultData) {
       return this.http.post(this.quizResultsUrl, resultData);

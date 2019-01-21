@@ -1,11 +1,10 @@
-import { QuizAnswerDataModel } from './data/quiz-answer-data.model';
+import { SurveyAnswerDataModel } from './data/survey-answer-data.model';
 
-export class QuizAnswerModel {
+export class SurveyAnswerModel {
   id: number;
-  quizId: number;
+  surveyId: number;
   questionId: number;
   resultId: number;
-  answeredCorrectly: boolean;
   timeToAnswer: string;
   textAnswer: string;
   booleanAnswer: boolean;
@@ -20,13 +19,12 @@ export class QuizAnswerModel {
   realStartAnswer: number;
   realEndAnswer: number;
 
-  constructor(data?: QuizAnswerDataModel) {
+  constructor(data?: SurveyAnswerDataModel) {
     if (data) {
       this.id = data.id;
-      this.quizId = data.quiz_id;
+      this.surveyId = data.survey_id;
       this.questionId = data.question_id;
       this.resultId = data.result_id;
-      this.answeredCorrectly = data.answered_correctly;
       this.timeToAnswer = data.time_to_answer;
       this.textAnswer = data.text_answer;
       this.booleanAnswer = data.boolean_answer;

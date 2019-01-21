@@ -1,4 +1,5 @@
 import { DeleteUnusedQuizQuestionsController } from './timedTasks/deleteUnusedQuizQuestions';
+import { DeleteUnusedSurveyQuestionsController } from './timedTasks/deleteUnusedSurveyQuestions';
 
 export class TimedTasksController {
   constructor() {
@@ -6,6 +7,7 @@ export class TimedTasksController {
   }
 
   runTimedTasks() {
-    setInterval(DeleteUnusedQuizQuestionsController.deleteUnusedQuizQuestions, 900000);
+    setInterval(DeleteUnusedQuizQuestionsController.deleteUnusedQuizQuestions, 900000); // every 15 minutes
+    setInterval(DeleteUnusedSurveyQuestionsController.deleteUnusedSurveyQuestions, 900000); // every 15 minutes
   }
 }

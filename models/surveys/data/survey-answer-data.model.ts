@@ -1,9 +1,8 @@
-export class QuizAnswerDataModel {
+export class SurveyAnswerDataModel {
   id: number;
-  quiz_id: number;
+  survey_id: number;
   question_id: number;
   result_id: number;
-  answered_correctly: boolean;
   time_to_answer: string;
   text_answer: string;
   boolean_answer: boolean;
