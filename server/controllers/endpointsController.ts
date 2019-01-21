@@ -38,7 +38,7 @@ export class EndpointsController {
     app.delete('/api/admin/quiz_templates/:id', QuizTemplatesController.delete) // Deletes template.
     // Quiz Results
     app.post('/api/quiz_results', QuizResultsController.create) // Writes new results.
-    app.get('/api/quiz_results/quiz_id/:quizId', QuizResultsController.readByQuizId) // Reads results by quiz id.
+    app.get('/api/admin/quiz_results/quiz_id/:quizId', QuizResultsController.readByQuizId) // Reads results by quiz id.
     app.get('/api/admin/quiz_results/start_date/:startDate/end_date/:endDate', QuizResultsController.readByDateRange) // Reads results by date range.
     app.get('/api/admin/quiz_results', QuizResultsController.readAll) // Reads all results.
     // Quiz Questions
@@ -57,7 +57,7 @@ export class EndpointsController {
     app.get('/api/admin/quiz_answers/quiz_id/:quizId', QuizAnswersController.readByQuizId) // Reads answers by quiz id.
     app.get('/api/admin/quiz_answers/question_id/:questionId', QuizAnswersController.readByQuestionId) // Reads answer by question id.
     app.get('/api/admin/quiz_answers/result_id/:resultId', QuizAnswersController.readByResultId) // Reads answers by result id.
-    app.put('/api/quiz_answers/:id', QuizAnswersController.update) // Updates quiz answer.
+    app.put('/api/admin/quiz_answers/:id', QuizAnswersController.update) // Updates quiz answer.
     app.delete('/api/admin/quiz_answers/:id', QuizAnswersController.delete) // Deletes quiz answer.
 
 
@@ -81,7 +81,7 @@ export class EndpointsController {
     app.delete('/api/admin/survey_templates/:id', SurveyTemplatesController.delete) // Deletes template.
     // Survey Results
     app.post('/api/survey_results', SurveyResultsController.create) // Writes new results.
-    app.get('/api/survey_results/survey_id/:surveyId', SurveyResultsController.readBySurveyId) // Reads results by survey id.
+    app.get('/api/admin/survey_results/survey_id/:surveyId', SurveyResultsController.readBySurveyId) // Reads results by survey id.
     app.get('/api/admin/survey_results/start_date/:startDate/end_date/:endDate', SurveyResultsController.readByDateRange) // Reads results by date range.
     app.get('/api/admin/survey_results', SurveyResultsController.readAll) // Reads all results.
     // Survey Questions
@@ -100,7 +100,7 @@ export class EndpointsController {
     app.get('/api/admin/survey_answers/survey_id/:surveyId', SurveyAnswersController.readBySurveyId) // Reads answers by survey id.
     app.get('/api/admin/survey_answers/question_id/:questionId', SurveyAnswersController.readByQuestionId) // Reads answer by question id.
     app.get('/api/admin/survey_answers/result_id/:resultId', SurveyAnswersController.readByResultId) // Reads answers by result id.
-    app.put('/api/survey_answers/:id', SurveyAnswersController.update) // Updates survey answer.
+    app.put('/api/admin/survey_answers/:id', SurveyAnswersController.update) // Updates survey answer.
     app.delete('/api/admin/survey_answers/:id', SurveyAnswersController.delete) // Deletes survey answer.
 
 

@@ -7,7 +7,7 @@ export class SurveyQuestionModel {
   textQuestion: string;
   pictureQuestion: string;
   questionType: string;
-  options: SurveyQuestionOptionModel[];
+  options: string[];
   integerStartAnswerRange: number;
   integerEndAnswerRange: number;
   realStartAnswerRange: number;
@@ -28,8 +28,4 @@ export class SurveyQuestionModel {
       this.realEndAnswerRange = data.real_end_answer_range;
     }
   }
-}
-
-export class SurveyQuestionOptionModel {
-  option: string
 }

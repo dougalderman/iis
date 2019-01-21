@@ -1,4 +1,4 @@
-import { SurveyQuestionModel, SurveyQuestionOptionModel } from  '../../../models/surveys/survey-question.model';
+import { SurveyQuestionModel } from  '../../../models/surveys/survey-question.model';
 import { Pool } from 'pg';
 
 class Question extends SurveyQuestionModel {
@@ -9,7 +9,7 @@ class Question extends SurveyQuestionModel {
     reqTextQuestion: string,
     reqPictureQuestion: string,
     reqQuestionType: string,
-    reqOptions: SurveyQuestionOptionModel[],
+    reqOptions: string[],
     reqIntegerStartAnswerRange: number,
     reqIntegerEndAnswerRange: number,
     reqRealStartAnswerRange: number,
