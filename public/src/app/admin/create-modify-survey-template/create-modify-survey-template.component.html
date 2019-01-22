@@ -1,3 +1,57 @@
-<p>
-  create-modify-survey-template works!
-</p>
+<div class="container">
+  <div class="template-container">
+    <h2>Create / Modify Survey Template</h2>
+    <form [formGroup]="selectTemplateForm">
+      <div class="form-group">
+        <select id="template-select" class="form-control survey-template-background" formControlName="templateSelect">
+          <option value="" disabled selected>Select Template</option>
+          <option *ngFor="let templ of templates" [ngValue]="templ.id">{{templ.name}}</option>
+        </select>
+      </div>
+    </form>
+    <form [formGroup]="createModifySurveyTemplateForm" (ngSubmit)="saveTemplate()">
+      <div class="form-group extra-margin-bottom">
+        <div class="form-group">
+          <label>Name:</label>
+          <input type="text" id="name" class="form-control" formControlName="name" required>
+          <div *ngIf="name.invalid && (name.dirty || name.touched)">
+            <div *ngIf="name.errors.requiredTrimWhitespace" class="alert alert-warning">Template name is required</div>
+            <div *ngIf="name.errors.templateNameTaken" class="alert alert-warning">
+              Template name is already being used. If you want to modify an existing template, select it from the menu above.
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Description:</label>
+          <input type="text" id="description" class="form-control" formControlName="description">
+        </div>
+      </div>
+      <div formArrayName="formQuestions" class="form-group extra-margin-bottom">
+        <app-template-survey-question *ngFor="let question of formQuestions.controls; let i=index"
+          [surveyTemplateForm]="surveyTemplateForm"
+          [questionIndex]="i"
+          (deletedQuestion)="onDeletedQuestion($event)">
+        </app-template-survey-question>
+      </div>
+      <div class="form-group extra-margin-bottom">
+        <button type="button" class="btn btn-primary" (click)="addQuestion()">Add New Question</button>
+      </div>
+      <div class="form-group extra-margin-bottom">
+        <button type="submit" class="btn btn-success" [disabled]="!createModifySurveyTemplateForm.valid">Save Template</button>
+      </div>
+      <div *ngIf="name.value" class="form-inline">
+        <button type="button" class="btn btn-warning" (click)="clearTemplate()" placement="right" ngbTooltip="Clear screen without deleting template data from the database.">Clear</button>
+        &nbsp;&nbsp;
+        <button type="button" class="btn btn-danger" *ngIf="template.id" (click)="deleteTemplate()" placement="top" ngbTooltip="Delete template from the database.">Delete</button>
+      </div>
+      <div class="form-group">
+        <div *ngIf="saveSuccess" class="alert alert-success">Template successfully saved</div>
+        <div *ngIf="deleteSuccess" class="alert alert-success">Template successfully deleted</div>
+        <div *ngIf="saveError" class="alert alert-danger">Error saving template</div>
+        <div *ngIf="deleteError" class="alert alert-danger">Error deleting template</div>
+        <div *ngIf="generalError" class="alert alert-danger">An error occurred. Please try again.</div>
+        <div *ngIf="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
+      </div>
+    </form>
+  </div>
+</div>

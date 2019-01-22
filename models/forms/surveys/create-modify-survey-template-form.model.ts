@@ -1,7 +1,8 @@
-import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
+import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { SurveyQuestionModel } from  '../../surveys/survey-question.model';
+import { numericRangeValidator } from '../../../public/src/app/validators/numeric-range.validator';
 import { checkForDuplicatesValidator } from '../../../public/src/app/validators/check-for-duplicates.validator';
 import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
 import { CheckTemplateNameValidator } from '../../../public/src/app/validators/check-template-name.validator';
@@ -19,8 +20,12 @@ export class CreateModifySurveyTemplateFormModel {
 
   answer: FormGroup = this.fb.group({
     options: this.fb.array([]),
-    numericLowRange: [''],
-    numericHighRange: ['']
+    numericRange: this.fb.group({
+      numericLowRange: [''],
+      numericHighRange: ['']
+    }, {
+      validators: numericRangeValidator
+    })
   })
 
   question: FormGroup = this.fb.group({
@@ -99,11 +104,14 @@ export class CreateModifySurveyTemplateFormModel {
 
       case 'textQuestionNumericAnswer':
         if (question) {
-          let numericLowRange = answer.controls.numericLowRange;
-          let numericHighRange = answer.controls.numericHighRange;
+          let numericRange = answer.controls.numericRange as FormGroup;
 
-          numericLowRange.setValue(question.integerStartAnswerRange);
-          numericHighRange.setValue(question.integerEndAnswerRange);
+          if (question.integerStartAnswerRange) {
+            numericRange.controls.numericLowRange.setValue(question.integerStartAnswerRange);
+          }
+          if (question.integerEndAnswerRange) {
+            numericRange.controls.numericHighRange.setValue(question.integerEndAnswerRange);
+          }
         }
         break;
     }

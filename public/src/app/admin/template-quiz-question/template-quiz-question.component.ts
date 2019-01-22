@@ -53,14 +53,4 @@ export class TemplateQuizQuestionComponent implements OnInit {
   deleteCorrectAnswer(indx: number) {
     this.quizTemplateForm.deleteCorrectAnswer(this.questionIndex, indx);
   }
-
-  getDefaultQuestionType(): string {
-    const defaultQuestionType = this.questionTypes.find(
-      (type: any) => {
-        return type.default === true;
-      }
-    );
-
-    return defaultQuestionType.name;
-  }
 }

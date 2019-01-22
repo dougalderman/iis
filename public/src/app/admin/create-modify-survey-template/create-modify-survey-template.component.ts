@@ -327,6 +327,20 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
           this.question.options.push(option.option.trim());
         }
       }
+
+      const numericRange = questions[i].answer.numericRange;
+      if (numericRange.controls.numericLowRange) {
+        this.question.integerStartAnswerRange = numericRange.controls.numericLowRange;
+      }
+      else {
+        this.question.integerStartAnswerRange = 0;
+      }
+      if (numericRange.controls.numericHighRange) {
+        this.question.integerEndAnswerRange = numericRange.controls.numericHighRange;
+      }
+      else {
+        this.question.integerEndAnswerRange = 0;
+      }
       this.surveyAdminService.saveNewSurveyQuestion(this.question)
         .subscribe(
           (result: any) => {
