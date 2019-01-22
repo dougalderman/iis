@@ -11,7 +11,7 @@ import { CreateModifyQuizTemplateFormModel } from '../../../../../models/forms/q
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';
-import { CheckTemplateNameValidator } from '../../validators/check-template-name.validator';
+import { CheckQuizTemplateNameValidator } from '../../validators/check-quiz-template-name.validator';
 
 @Component({
   selector: 'app-create-modify-quiz-template',
@@ -32,7 +32,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   templateSelectionProcessing: boolean = false;
   errorMessage: string = '';
 
-  quizTemplateForm = new CreateModifyQuizTemplateFormModel(this.fb, this.checkTemplateName);
+  quizTemplateForm = new CreateModifyQuizTemplateFormModel(this.fb, this.checkQuizTemplateName);
   selectTemplateForm: FormGroup = this.quizTemplateForm.selectTemplateForm;
   createModifyQuizTemplateForm: FormGroup = this.quizTemplateForm.createModifyQuizTemplateForm;
 
@@ -40,7 +40,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     private quizAdminService: QuizAdminService,
     private modalService: ModalService,
     private fb: FormBuilder,
-    private checkTemplateName: CheckTemplateNameValidator
+    private checkQuizTemplateName: CheckQuizTemplateNameValidator
   ) {}
 
   ngOnInit(): void {

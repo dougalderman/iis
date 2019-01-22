@@ -48,7 +48,7 @@
         <input type="number" class="form-control" formControlName="numericHighRange" min="2" required>
         <br>
         <div *ngIf="question.controls.answer.controls.numericRange.invalid && (question.controls.answer.controls.numericRange.dirty || question.controls.answer.controls.numericRange.touched)">
-          <div *ngIf="question.controls.answer.controls.numericRange.errors.numericRangeIncorrect" class="alert alert-warning">Numeric answer high value must be greater than low value. Low value must be greater than 0.</div>
+          <div *ngIf="question.controls.answer.controls.numericRange.errors && question.controls.answer.controls.numericRange.errors.numericRangeIncorrect" class="alert alert-warning">Numeric answer high value must be greater than low value. Low value must be greater than 0.</div>
         </div>
       </div>
     </div>

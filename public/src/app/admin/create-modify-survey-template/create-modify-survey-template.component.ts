@@ -11,7 +11,7 @@ import { CreateModifySurveyTemplateFormModel } from '../../../../../models/forms
 
 import { SurveyAdminService } from '../../services/survey-admin.service';
 import { ModalService } from '../../services/modal.service';
-import { CheckTemplateNameValidator } from '../../validators/check-template-name.validator';
+import { CheckSurveyTemplateNameValidator } from '../../validators/check-survey-template-name.validator';
 
 
 @Component({
@@ -33,7 +33,7 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
   templateSelectionProcessing: boolean = false;
   errorMessage: string = '';
 
-  surveyTemplateForm = new CreateModifySurveyTemplateFormModel(this.fb, this.checkTemplateName);
+  surveyTemplateForm = new CreateModifySurveyTemplateFormModel(this.fb, this.checkSurveyTemplateName);
   selectTemplateForm: FormGroup = this.surveyTemplateForm.selectTemplateForm;
   createModifySurveyTemplateForm: FormGroup = this.surveyTemplateForm.createModifySurveyTemplateForm;
 
@@ -41,7 +41,7 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
     private surveyAdminService: SurveyAdminService,
     private modalService: ModalService,
     private fb: FormBuilder,
-    private checkTemplateName: CheckTemplateNameValidator
+    private checkSurveyTemplateName: CheckSurveyTemplateNameValidator
   ) {}
 
   ngOnInit(): void {
@@ -329,14 +329,14 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
       }
 
       const numericRange = questions[i].answer.numericRange;
-      if (numericRange.controls.numericLowRange) {
-        this.question.integerStartAnswerRange = numericRange.controls.numericLowRange;
+      if (numericRange.numericLowRange) {
+        this.question.integerStartAnswerRange = numericRange.numericLowRange;
       }
       else {
         this.question.integerStartAnswerRange = 0;
       }
-      if (numericRange.controls.numericHighRange) {
-        this.question.integerEndAnswerRange = numericRange.controls.numericHighRange;
+      if (numericRange.numericHighRange) {
+        this.question.integerEndAnswerRange = numericRange.numericHighRange;
       }
       else {
         this.question.integerEndAnswerRange = 0;

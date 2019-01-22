@@ -5,13 +5,13 @@ import { SurveyQuestionModel } from  '../../surveys/survey-question.model';
 import { numericRangeValidator } from '../../../public/src/app/validators/numeric-range.validator';
 import { checkForDuplicatesValidator } from '../../../public/src/app/validators/check-for-duplicates.validator';
 import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
-import { CheckTemplateNameValidator } from '../../../public/src/app/validators/check-template-name.validator';
+import { CheckSurveyTemplateNameValidator } from '../../../public/src/app/validators/check-survey-template-name.validator';
 import { getDefaultQuestionType } from '../../../public/src/app/utilities/get-default-question-type.utility';
 
 export class CreateModifySurveyTemplateFormModel {
   constructor(
     private fb: FormBuilder,
-    private checkTemplateName: CheckTemplateNameValidator
+    private checkSurveyTemplateName: CheckSurveyTemplateNameValidator
   ) {}
 
   selectTemplateForm: FormGroup = this.fb.group({
@@ -21,8 +21,8 @@ export class CreateModifySurveyTemplateFormModel {
   answer: FormGroup = this.fb.group({
     options: this.fb.array([]),
     numericRange: this.fb.group({
-      numericLowRange: [''],
-      numericHighRange: ['']
+      numericLowRange: ['', Validators.min(1)],
+      numericHighRange: ['', Validators.min(2)]
     }, {
       validators: numericRangeValidator
     })
@@ -41,7 +41,7 @@ export class CreateModifySurveyTemplateFormModel {
   createModifySurveyTemplateForm: FormGroup = this.fb.group({
     name: ['', {
       validators: requiredTrimWhitespaceValidator(),
-      asyncValidators: this.checkTemplateName.validate.bind(this.checkTemplateName),
+      asyncValidators: this.checkSurveyTemplateName.validate.bind(this.checkSurveyTemplateName),
       updateOn: 'blur'
     }],
     description: [''],

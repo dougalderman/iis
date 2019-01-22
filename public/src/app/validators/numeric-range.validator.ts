@@ -1,4 +1,4 @@
-import { ValidatorFn, ValidationErrors, FormArray, ControlContainer } from '@angular/forms';
+import { ValidatorFn, ValidationErrors, FormArray } from '@angular/forms';
 
 export const numericRangeValidator: ValidatorFn = (control: FormArray):  ValidationErrors | null => {
   let numericRangeIncorrect = true;

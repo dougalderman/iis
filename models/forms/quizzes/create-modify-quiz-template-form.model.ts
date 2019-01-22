@@ -5,13 +5,13 @@ import { QuizQuestionModel } from  '../../quizzes/quiz-question.model';
 import { checkForDuplicatesValidator } from '../../../public/src/app/validators/check-for-duplicates.validator';
 import { optionsCorrectAnswerRequiredValidator } from '../../../public/src/app/validators/options-correct-answer-required.validator';
 import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
-import { CheckTemplateNameValidator } from '../../../public/src/app/validators/check-template-name.validator';
+import { CheckQuizTemplateNameValidator } from '../../../public/src/app/validators/check-quiz-template-name.validator';
 import { getDefaultQuestionType } from '../../../public/src/app/utilities/get-default-question-type.utility';
 
 export class CreateModifyQuizTemplateFormModel {
   constructor(
     private fb: FormBuilder,
-    private checkTemplateName: CheckTemplateNameValidator
+    private checkQuizTemplateName: CheckQuizTemplateNameValidator
   ) {}
 
   selectTemplateForm: FormGroup = this.fb.group({
@@ -41,7 +41,7 @@ export class CreateModifyQuizTemplateFormModel {
   createModifyQuizTemplateForm: FormGroup = this.fb.group({
     name: ['', {
       validators: requiredTrimWhitespaceValidator(),
-      asyncValidators: this.checkTemplateName.validate.bind(this.checkTemplateName),
+      asyncValidators: this.checkQuizTemplateName.validate.bind(this.checkQuizTemplateName),
       updateOn: 'blur'
     }],
     description: [''],
