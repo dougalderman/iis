@@ -8,18 +8,29 @@ import { QuizModel, QuizConfigModel } from  '../../../../../models/quizzes/quiz.
 import { QuizDataModel } from  '../../../../../models/quizzes/data/quiz-data.model';
 import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.model';
 import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-template-data.model';
-import { WebpageModel } from  '../../../../../models/webpages/webpage.model';
-import { WebpageDataModel } from  '../../../../../models/webpages/data/webpage-data.model';
 import { QuizQuestionModel } from  '../../../../../models/quizzes/quiz-question.model';
 import { QuizQuestionDataModel } from  '../../../../../models/quizzes/data/quiz-question-data.model';
 
+import { SurveyModel } from  '../../../../../models/surveys/survey.model';
+import { SurveyDataModel } from  '../../../../../models/surveys/data/survey-data.model';
+import { SurveyTemplateModel } from  '../../../../../models/surveys/survey-template.model';
+import { SurveyTemplateDataModel } from  '../../../../../models/surveys/data/survey-template-data.model';
+import { SurveyQuestionModel } from  '../../../../../models/surveys/survey-question.model';
+import { SurveyQuestionDataModel } from  '../../../../../models/surveys/data/survey-question-data.model';
+
+import { WebpageModel } from  '../../../../../models/webpages/webpage.model';
+import { WebpageDataModel } from  '../../../../../models/webpages/data/webpage-data.model';
+
 import { ActivateQuizSurveyTemplateFormModel } from '../../../../../models/forms/activate-quiz-survey-template-form.model';
 import { PreviewQuizTemplateFormModel } from '../../../../../models/forms/quizzes/preview-quiz-template-form.model';
+import { PreviewSurveyTemplateFormModel } from '../../../../../models/forms/surveys/preview-survey-template-form.model';
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
+import { SurveyAdminService } from '../../services/survey-admin.service';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
 import { CheckQuizUniqueNameValidator } from '../../validators/check-quiz-unique-name.validator';
-import { NO_QUIZ, KEEP_SAME_QUIZ } from '../../constants/activate-quiz-survey.constants';
+import { CheckSurveyUniqueNameValidator } from '../../validators/check-survey-unique-name.validator';
+import { NO_QUIZ, KEEP_SAME_QUIZ, NO_SURVEY, KEEP_SAME_SURVEY } from '../../constants/activate-quiz-survey.constants';
 
 @Component({
   selector: 'app-activate-quiz-survey-template',
@@ -39,24 +50,39 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   quizPreview: boolean = false;
   quizTemplateSelected: number = 0;
 
-  surveyTemplates = []; // modify later
-  surveyTemplateSelected: number = 0;
+  survey: SurveyModel = new SurveyModel();
+  surveyId: number = 0;
+
+  noSurvey: number = NO_SURVEY;
+  keepSameSurvey: number = KEEP_SAME_SURVEY;
+
+  surveyTemplate: SurveyTemplateModel = new SurveyTemplateModel();
+  surveyTemplates: SurveyTemplateModel[] = [];
   surveyPreview: boolean = false;
+  surveyTemplateSelected: number = 0;
 
   activeRoutes: WebpageModel[] = [];
   webpageSelected: number = 0;
   webpage: WebpageModel = new WebpageModel();
 
-  activateQuizSurveyTemplateForm = new ActivateQuizSurveyTemplateFormModel(this.fb, this.checkQuizUniqueNameValidator);
+  activateQuizSurveyTemplateForm = new ActivateQuizSurveyTemplateFormModel(
+    this.fb,
+    this.checkQuizUniqueNameValidator,
+    this.checkSurveyUniqueNameValidator
+  );
   selectQuizTemplateForm: FormGroup = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
   quizForm: FormGroup =  this.activateQuizSurveyTemplateForm.quizForm;
   defaultQuizConfigurationForm: FormGroup =  this.activateQuizSurveyTemplateForm.defaultQuizConfigurationForm;
   quizConfigurationForm: FormGroup =  this.activateQuizSurveyTemplateForm.quizConfigurationForm;
   selectSurveyTemplateForm: FormGroup = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
+  surveyForm: FormGroup =  this.activateQuizSurveyTemplateForm.surveyForm;
   selectWebpageForm: FormGroup = this.activateQuizSurveyTemplateForm.selectWebpageForm;
 
   quizTemplateForm = new PreviewQuizTemplateFormModel(this.fb);
   previewQuizTemplateForm: FormGroup = this.quizTemplateForm.previewQuizTemplateForm;
+
+  surveyTemplateForm = new PreviewSurveyTemplateFormModel(this.fb);
+  previewSurveyTemplateForm: FormGroup = this.surveyTemplateForm.previewSurveyTemplateForm;
 
   saveSuccess: boolean = false;
   saveError: boolean = false;
@@ -65,9 +91,11 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
   constructor(
     private quizAdminService: QuizAdminService,
+    private surveyAdminService: SurveyAdminService,
     private webpageAdminService: WebpageAdminService,
     private fb: FormBuilder,
-    private checkQuizUniqueNameValidator: CheckQuizUniqueNameValidator
+    private checkQuizUniqueNameValidator: CheckQuizUniqueNameValidator,
+    private checkSurveyUniqueNameValidator: CheckSurveyUniqueNameValidator
   ) {}
 
   ngOnInit() {
@@ -105,9 +133,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.selectSurveyTemplateForm.get('surveyTemplateSelect').valueChanges.subscribe(
       (val: number) => {
         if (val) {
-          this.clearStatusFlags();
-          this.surveyTemplateSelected = val;
-          this.surveyPreview = false;
+          this.surveyTemplateSelectionChanged(val);
         }
       },
       error => {
@@ -201,18 +227,22 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
   }
 
   getSurveyTemplates(): void {
-    /* this.quizAdminService.getAllSurveyTemplates()
+    this.surveyTemplates = [];
+
+    this.surveyAdminService.getAllSurveyTemplates()
       .subscribe(
         (templates: SurveyTemplateDataModel[]) => {
-          if (templates) {
-            this.surveyTemplates = templates;
+          if (templates && templates.length) {
+            for (let template of templates) {
+              this.surveyTemplates.push(new SurveyTemplateModel(template));
+            }
           }
         },
         error => {
           console.error(error);
           this.generalError = true;
         }
-      ); */
+      );
   }
 
   webpageSelectionChanged(webpageSelected: number): void {
@@ -301,6 +331,45 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       this.quiz = new QuizModel();
     }
   }
+
+  surveyTemplateSelectionChanged(surveyTemplateSelected: number): void {
+    this.clearStatusFlags();
+    this.surveyForm.reset();
+    this.surveyTemplateSelected = surveyTemplateSelected;
+    this.surveyPreview = false;
+
+    if (surveyTemplateSelected > 0) {
+      this.surveyAdminService.getSurveyTemplate(surveyTemplateSelected)
+        .subscribe(
+          (template: SurveyTemplateDataModel[]) => {
+            if (template && template.length) {
+              this.surveyId = 0;
+              this.survey = new SurveyModel();
+
+              this.surveyTemplate = new SurveyTemplateModel(template[0]);
+
+              let uniqueName = this.surveyForm.get('uniqueName')
+              uniqueName.setValue(this.surveyTemplate.name);
+              this.surveyAdminService.setSurveyUniqueNameOriginal('');
+              let description = this.surveyForm.get('description')
+              description.setValue(this.surveyTemplate.description);
+            }
+          },
+          error => {
+            console.error(error);
+            this.generalError = true;
+          }
+        );
+    }
+    else if (surveyTemplateSelected === this.keepSameSurvey) {
+      this.setSurveyFormValues(this.survey);
+    }
+    else if (surveyTemplateSelected === this.noQuiz) {
+      this.surveyId = 0;
+      this.survey = new QuizModel();
+    }
+  }
+
 
   previewQuiz(): void {
     this.quizPreview = !this.quizPreview;
@@ -549,5 +618,15 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
     let percentGreatJob = this.quizConfigurationForm.get('percentGreatJob');
     percentGreatJob.setValue(quiz.config.percentGreatJob);
+  }
+
+  setSurveyFormValues(survey: SurveyModel) {
+    let uniqueName = this.surveyForm.get('uniqueName')
+    uniqueName.setValue(survey.uniqueName);
+    this.surveyAdminService.setSurveyUniqueNameOriginal(survey.uniqueName);
+    let title = this.surveyForm.get('title')
+    title.setValue(survey.title);
+    let description = this.surveyForm.get('description')
+    description.setValue(survey.description);
   }
 }
