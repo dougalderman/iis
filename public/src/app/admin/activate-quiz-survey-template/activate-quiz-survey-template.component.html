@@ -83,8 +83,8 @@
         </div>
         <div class="form-group three-rem-margin-bottom" *ngIf="quizPreview">
           <form [formGroup]="previewQuizTemplateForm">
-            <div formArrayName="formQuestions" class="form-group three-rem-margin-bottom">
-              <app-template-quiz-question-disabled *ngFor="let question of formQuestions.controls; let i=index"
+            <div formArrayName="quizFormQuestions" class="form-group three-rem-margin-bottom">
+              <app-template-quiz-question-disabled *ngFor="let question of quizFormQuestions.controls; let i=index"
                 [quizTemplateForm]="quizTemplateForm"
                 [questionIndex]="i"
                 (deletedQuestion)="onDeletedQuestion($event)">
@@ -99,13 +99,49 @@
             <select id="survey-template-select" class="form-control survey-template-select-background" formControlName="surveyTemplateSelect">
               <option value="" disabled selected>Select Survey Template</option>
               <option [ngValue]="null">No Survey</option>
+              <option *ngIf="surveyId" [ngValue]="keepSameSurvey">Keep the Same Survey</option>
               <option *ngFor="let surveyTempl of surveyTemplates" [ngValue]="surveyTempl.id">{{surveyTempl.name}}</option>
             </select>
           </div>
         </form>
+        <div *ngIf="surveyTemplateSelected > 0 || surveyId" class="form-group three-rem-margin-bottom">
+          <form [formGroup]="surveyForm">
+            <div class="form-group  three-rem-margin-bottom">
+              <div class="form-group">
+                <label>Unique Name:</label>
+                <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="Enter a survey unique name that will identify the survey in the database.">
+                <input type="text" id="survey-unique-name" class="form-control" formControlName="uniqueName">
+                <div *ngIf="surveyForm.controls.uniqueName.invalid && (surveyForm.controls.uniqueName.dirty || surveyForm.controls.uniqueName.touched)">
+                  <div *ngIf="surveyForm.controls.uniqueName.errors.requiredTrimWhitespace" class="alert alert-warning">Survey unique name required</div>
+                  <div *ngIf="surveyForm.controls.uniqueName.errors.surveyUniqueNameTaken" class="alert alert-warning">Survey unique name is already being used.</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Title:</label>
+                <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="This will be visible to the user taking the survey.">
+                <input type="text" id="survey-title" class="form-control" formControlName="title">
+              </div>
+              <div class="form-group">
+                <label>Description:</label>
+                <input type="text" id="survey-description" class="form-control" formControlName="description">
+              </div>
+            </div>
+          </form>
+        </div>
         <div class="form-group three-rem-margin-bottom">
-          <button *ngIf="!surveyPreview" type="button" class="btn btn-primary" (click)="previewSurvey()" [disabled]="!surveyTemplateSelected">Preview</button>
-          <button *ngIf="surveyPreview" type="button" class="btn btn-secondary" (click)="clearPreviewSurvey()" [disabled]="!surveyTemplateSelected">Clear</button>
+          <button *ngIf="!surveyPreview" type="button" class="btn btn-primary" (click)="previewSurvey()" [disabled]="!(surveyTemplateSelected > 0) && !surveyId">Preview</button>
+          <button *ngIf="surveyPreview" type="button" class="btn btn-secondary" (click)="clearPreviewSurvey()" [disabled]="!(surveyTemplateSelected > 0) && !surveyId">Clear</button>
+        </div>
+        <div class="form-group three-rem-margin-bottom" *ngIf="surveyPreview">
+          <form [formGroup]="previewSurveyTemplateForm">
+            <div formArrayName="surveyFormQuestions" class="form-group three-rem-margin-bottom">
+              <app-template-survey-question-disabled *ngFor="let question of surveyFormQuestions.controls; let i=index"
+                [surveyTemplateForm]="surveyTemplateForm"
+                [questionIndex]="i"
+                (deletedQuestion)="onDeletedQuestion($event)">
+              </app-template-survey-question-disabled>
+            </div>
+          </form>
         </div>
       </div>
     </div>
