@@ -394,12 +394,11 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     else if (surveyTemplateSelected === this.keepSameSurvey) {
       this.setSurveyFormValues(this.survey);
     }
-    else if (surveyTemplateSelected === this.noQuiz) {
+    else if (surveyTemplateSelected === this.noSurvey) {
       this.surveyId = 0;
-      this.survey = new QuizModel();
+      this.survey = new SurveyModel();
     }
   }
-
 
   previewQuiz(): void {
     this.quizPreview = !this.quizPreview;
@@ -512,135 +511,276 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
 
     if (this.webpageSelected) {
       if (this.quizId && this.quizTemplateSelected !== this.noQuiz) {
-        // Save existing quiz changes
-        this.quiz = this.updateQuizDataFromForm(this.quiz);
-
-        this.quizAdminService.saveExistingQuiz(this.quizId, this.quiz)
-          .subscribe(
-            (result: any) => {
-              if (result) {
-                this.saveSuccess = true;
-                this.clearForms();
-              }
-            },
-            error => {
-              console.error(error);
-              this.saveError = true;
-            }
-          );
+        this.saveExistingQuizChanges();
       }
       else if (this.quizTemplateSelected === this.noQuiz) {
-        // Save Webpage with null quiz id
+        // Save webpage with null quiz
         this.webpage.quizId = null;
-        this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
-          .subscribe(
-            (result: any) => {
-              if (result) {
-                this.saveSuccess = true;
-                this.clearForms();
-              }
-            },
-            error => {
-              console.error(error);
-              this.saveError = true;
-            }
-          );
+        if (this.surveyTemplateSelected === this.noSurvey) {
+          // Save webpage with null survey
+          this.webpage.surveyId = null;
+        }
+        this.saveExistingWebpage();
       }
       else {
-        // Save new quiz
-        if (this.quizTemplateSelected > 0) {
-          let quiz: QuizModel = new QuizModel();
-          quiz = this.updateQuizDataFromForm(quiz);
-          this.webpage.quizId = null;
+        this.saveNewQuiz();
+      }
 
-          this.quizAdminService.saveNewQuiz(quiz)
-            .subscribe(
-              (results: any) => {
-                if (results && results.length) {
-                  const thisQuizId: number = results[0].id;
-                  this.webpage.quizId = thisQuizId;
-                  this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
-                    .subscribe(
-                      (result: any) => {
-                        if (result) {
-                          this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
-                            .subscribe(
-                              (questions: QuizQuestionDataModel[]) => {
-                                if (questions && questions.length) {
-                                  let questionSavedCount = 0;
-
-                                  for (let i = 0; i < questions.length; i++) {
-                                    const questionId = questions[i].id;
-                                    const quizId = questions[i].quiz_id;
-                                    if (!quizId) {
-                                      // If question isn't currently associated with a quiz.
-                                      let question: any = {};
-                                      question.quizId = thisQuizId;
-                                      this.quizAdminService.saveExistingQuizQuestionQuizId(questionId, question)
-                                        .subscribe(
-                                          (res: any) => {
-                                            if (res) {
-                                              questionSavedCount++;
-                                              if (questionSavedCount === questions.length) {
-                                                this.saveSuccess = true;
-                                                this.clearForms();
-                                              }
-                                            }
-                                          },
-                                          error => {
-                                            console.error(error);
-                                            this.saveError = true;
-                                          }
-                                        );
-                                    }
-                                    else {
-                                      // question is associated with a quiz
-                                      let question = new QuizQuestionModel(questions[i]);
-                                        question.id = null;
-                                        question.quizId = thisQuizId;
-                                        question.templateId = null;
-                                        this.quizAdminService.saveNewQuizQuestion(question)
-                                          .subscribe(
-                                            (re: any) => {
-                                              if (re) {
-                                                questionSavedCount++;
-                                                if (questionSavedCount === questions.length) {
-                                                  this.saveSuccess = true;
-                                                  this.clearForms();
-                                                }
-                                              }
-                                            },
-                                            error => {
-                                              console.error(error);
-                                              this.saveError = true;
-                                            }
-                                          );
-                                    }
-                                  }
-                                }
-                              },
-                              error => {
-                                console.error(error);
-                                this.saveError = true;
-                              }
-                            );
-                        }
-                      },
-                      error => {
-                        console.error(error);
-                        this.saveError = true;
-                      }
-                    );
-                }
-              },
-              error => {
-                console.error(error);
-                this.saveError = true;
-              }
-            );
-        }
+      if (this.surveyId && this.surveyTemplateSelected !== this.noSurvey) {
+        this.saveExistingSurveyChanges();
+      }
+      else if (this.surveyTemplateSelected === this.noSurvey && this.quizTemplateSelected !== this.noQuiz) {
+        // Save webpage with null survey, if quiz is not null.
+        this.saveExistingWebpage();
+      }
+      else if (this.surveyTemplateSelected !== this.noSurvey) {
+        this.saveNewSurvey();
       }
     }
+  }
+
+  saveExistingQuizChanges(): void {
+    this.quiz = this.updateQuizDataFromForm(this.quiz);
+
+    this.quizAdminService.saveExistingQuiz(this.quizId, this.quiz)
+      .subscribe(
+        (result: any) => {
+          if (result) {
+            this.saveSuccess = true;
+            this.clearQuizForms();
+          }
+        },
+        error => {
+          console.error(error);
+          this.saveError = true;
+        }
+      );
+  }
+
+  saveNewQuiz(): void {
+    if (this.quizTemplateSelected > 0) {
+      let quiz: QuizModel = new QuizModel();
+      quiz = this.updateQuizDataFromForm(quiz);
+      this.webpage.quizId = null;
+
+      this.quizAdminService.saveNewQuiz(quiz)
+        .subscribe(
+          (results: any) => {
+            if (results && results.length) {
+              const thisQuizId: number = results[0].id;
+              this.webpage.quizId = thisQuizId;
+              this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+                .subscribe(
+                  (result: any) => {
+                    if (result) {
+                      this.quizAdminService.getQuestionsForQuizTemplate(this.quizTemplateSelected)
+                        .subscribe(
+                          (questions: QuizQuestionDataModel[]) => {
+                            if (questions && questions.length) {
+                              let questionSavedCount = 0;
+
+                              for (let i = 0; i < questions.length; i++) {
+                                const questionId = questions[i].id;
+                                const quizId = questions[i].quiz_id;
+                                if (!quizId) {
+                                  // If question isn't currently associated with a quiz.
+                                  let question: any = {};
+                                  question.quizId = thisQuizId;
+                                  this.quizAdminService.saveExistingQuizQuestionQuizId(questionId, question)
+                                    .subscribe(
+                                      (res: any) => {
+                                        if (res) {
+                                          questionSavedCount++;
+                                          if (questionSavedCount === questions.length) {
+                                            this.saveSuccess = true;
+                                            this.clearQuizForms();
+                                          }
+                                        }
+                                      },
+                                      error => {
+                                        console.error(error);
+                                        this.saveError = true;
+                                      }
+                                    );
+                                }
+                                else {
+                                  // question is associated with a quiz
+                                  let question = new QuizQuestionModel(questions[i]);
+                                    question.id = null;
+                                    question.quizId = thisQuizId;
+                                    question.templateId = null;
+                                    this.quizAdminService.saveNewQuizQuestion(question)
+                                      .subscribe(
+                                        (re: any) => {
+                                          if (re) {
+                                            questionSavedCount++;
+                                            if (questionSavedCount === questions.length) {
+                                              this.saveSuccess = true;
+                                              this.clearQuizForms();
+                                            }
+                                          }
+                                        },
+                                        error => {
+                                          console.error(error);
+                                          this.saveError = true;
+                                        }
+                                      );
+                                }
+                              }
+                            }
+                          },
+                          error => {
+                            console.error(error);
+                            this.saveError = true;
+                          }
+                        );
+                    }
+                  },
+                  error => {
+                    console.error(error);
+                    this.saveError = true;
+                  }
+                );
+            }
+          },
+          error => {
+            console.error(error);
+            this.saveError = true;
+          }
+        );
+    }
+  }
+
+  saveExistingSurveyChanges(): void {
+    if (this.surveyId && this.surveyTemplateSelected !== this.noSurvey) {
+      // Save existing survey changes
+      this.survey = this.updateSurveyDataFromForm(this.quiz);
+
+      this.surveyAdminService.saveExistingSurvey(this.surveyId, this.survey)
+        .subscribe(
+          (result: any) => {
+            if (result) {
+              this.saveSuccess = true;
+              this.clearSurveyForms();
+            }
+          },
+          error => {
+            console.error(error);
+            this.saveError = true;
+          }
+        );
+    }
+  }
+
+  saveNewSurvey(): void {
+    if (this.surveyTemplateSelected > 0) {
+      let survey: SurveyModel = new SurveyModel();
+      survey = this.updateSurveyDataFromForm(survey);
+      this.webpage.surveyId = null;
+
+      this.surveyAdminService.saveNewSurvey(survey)
+        .subscribe(
+          (results: any) => {
+            if (results && results.length) {
+              const thisSurveyId: number = results[0].id;
+              this.webpage.surveyId = thisSurveyId;
+              this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+                .subscribe(
+                  (result: any) => {
+                    if (result) {
+                      this.surveyAdminService.getQuestionsForSurveyTemplate(this.surveyTemplateSelected)
+                        .subscribe(
+                          (questions: SurveyQuestionDataModel[]) => {
+                            if (questions && questions.length) {
+                              let questionSavedCount = 0;
+
+                              for (let i = 0; i < questions.length; i++) {
+                                const questionId = questions[i].id;
+                                const surveyId = questions[i].survey_id;
+                                if (!surveyId) {
+                                  // If question isn't currently associated with a survey.
+                                  let question: any = {};
+                                  question.surveyId = thisSurveyId;
+                                  this.surveyAdminService.saveExistingSurveyQuestionSurveyId(questionId, question)
+                                    .subscribe(
+                                      (res: any) => {
+                                        if (res) {
+                                          questionSavedCount++;
+                                          if (questionSavedCount === questions.length) {
+                                            this.saveSuccess = true;
+                                            this.clearSurveyForms();
+                                          }
+                                        }
+                                      },
+                                      error => {
+                                        console.error(error);
+                                        this.saveError = true;
+                                      }
+                                    );
+                                }
+                                else {
+                                  // question is associated with a survey
+                                  let question = new SurveyQuestionModel(questions[i]);
+                                    question.id = null;
+                                    question.surveyId = thisSurveyId;
+                                    question.templateId = null;
+                                    this.surveyAdminService.saveNewSurveyQuestion(question)
+                                      .subscribe(
+                                        (re: any) => {
+                                          if (re) {
+                                            questionSavedCount++;
+                                            if (questionSavedCount === questions.length) {
+                                              this.saveSuccess = true;
+                                              this.clearSurveyForms();
+                                            }
+                                          }
+                                        },
+                                        error => {
+                                          console.error(error);
+                                          this.saveError = true;
+                                        }
+                                      );
+                                }
+                              }
+                            }
+                          },
+                          error => {
+                            console.error(error);
+                            this.saveError = true;
+                          }
+                        );
+                    }
+                  },
+                  error => {
+                    console.error(error);
+                    this.saveError = true;
+                  }
+                );
+            }
+          },
+          error => {
+            console.error(error);
+            this.saveError = true;
+          }
+        );
+    }
+  }
+
+  saveExistingWebpage(): void {
+    this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+    .subscribe(
+      (result: any) => {
+        if (result) {
+          this.saveSuccess = true;
+          this.clearQuizForms();
+          this.clearSurveyForms();
+        }
+      },
+      error => {
+        console.error(error);
+        this.saveError = true;
+      }
+    );
   }
 
   updateQuizDataFromForm(quiz: QuizModel): QuizModel {
@@ -662,6 +802,23 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     return quiz;
   }
 
+  updateSurveyDataFromForm(survey: SurveyModel): SurveyModel {
+    survey.uniqueName = this.surveyForm.get('uniqueName').value;
+    if (survey.uniqueName) {
+      survey.uniqueName = survey.uniqueName.trim();
+    }
+    survey.title = this.surveyForm.get('title').value;
+    if (survey.title) {
+      survey.title = survey.title.trim();
+    }
+    survey.description = this.surveyForm.get('description').value;
+    if (survey.description) {
+      survey.description = survey.description.trim();
+    }
+
+    return survey;
+  }
+
   clearStatusFlags() {
     this.saveSuccess = false;
     this.saveError = false;
@@ -669,17 +826,24 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.errorMessage = '';
   }
 
-  clearForms() {
+  clearQuizForms() {
     this.quizId = 0;
     this.quizTemplateSelected = 0;
     this.quizPreview = false;
-    this.surveyTemplateSelected = 0;
     this.quizForm.reset();
     this.quizConfigurationForm.reset();
     this.quizConfigurationForm = _.cloneDeep(this.defaultQuizConfigurationForm);
-    this.selectWebpageForm.reset();
     this.selectQuizTemplateForm.reset();
+    this.selectWebpageForm.reset();
+  }
+
+  clearSurveyForms() {
+    this.surveyId = 0
+    this.surveyTemplateSelected = 0;
+    this.surveyPreview = false;
+    this.surveyForm.reset();
     this.selectSurveyTemplateForm.reset();
+    this.selectWebpageForm.reset();
   }
 
   setQuizFormValues(quiz: QuizModel) {
