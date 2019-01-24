@@ -19,17 +19,17 @@ export class TakeSurveyFormModel {
     booleanAnswer: ['', Validators.required],
     textAnswer: ['', requiredTrimWhitespaceValidator()],
     numericAnswer: ['', Validators.required]
-  })
+  });
 
   question: FormGroup = this.fb.group({
     text: [{value: '', disabled: true}],
     type: [{value: '', disabled: true}],
     answer: _.cloneDeep(this.answer)
-  })
+  });
 
   questions: FormArray = this.fb.array([
     this.question
-  ])
+  ]);
 
   takeSurveyForm: FormGroup = this.fb.group({
     title: [''],
@@ -52,7 +52,7 @@ export class TakeSurveyFormModel {
 
   deleteQuestion(index: number) {
     if (typeof index === 'number') {
-      this.formQuestions.removeAt(index)
+      this.formQuestions.removeAt(index);
     }
   }
 
@@ -71,7 +71,7 @@ export class TakeSurveyFormModel {
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: [{value: '', disabled: true}],
           numericAnswer: [{value: '', disabled: true}]
-        })
+        });
 
         if (question) {
           let options = answer.controls.options as FormArray;
@@ -93,7 +93,7 @@ export class TakeSurveyFormModel {
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: ['', requiredTrimWhitespaceValidator()],
           numericAnswer: [{value: '', disabled: true}]
-        })
+        });
         break;
 
       case 'textQuestionBoolean':
@@ -102,7 +102,7 @@ export class TakeSurveyFormModel {
           booleanAnswer: ['', Validators.required],
           textAnswer: [{value: '', disabled: true}],
           numericAnswer: [{value: '', disabled: true}],
-        })
+        });
         break;
 
       case 'textQuestionNumericAnswer':
@@ -111,7 +111,7 @@ export class TakeSurveyFormModel {
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: [{value: '', disabled: true}],
           numericAnswer: ['', Validators.required],
-        })
+        });
         break;
     }
 

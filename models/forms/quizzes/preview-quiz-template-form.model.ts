@@ -13,17 +13,17 @@ export class PreviewQuizTemplateFormModel  {
     options: this.fb.array([]),
     booleanCorrectAnswer: [{value: false, disabled: true}],
     correctAnswerArray: this.fb.array([]),
-  })
+  });
 
   question: FormGroup = this.fb.group({
     text: [{value: '', disabled: true}],
     typeSelect: new FormControl({value: getDefaultQuestionType('quiz'), disabled: true}),
     answer: _.cloneDeep(this.answer)
-  })
+  });
 
   questions: FormArray = this.fb.array([
     this.question
-  ])
+  ]);
 
   previewQuizTemplateForm: FormGroup = this.fb.group({
     formQuestions: this.questions
@@ -45,7 +45,7 @@ export class PreviewQuizTemplateFormModel  {
 
   deleteQuestion(index: number) {
     if (typeof index === 'number') {
-      this.formQuestions.removeAt(index)
+      this.formQuestions.removeAt(index);
     }
   }
 
@@ -76,7 +76,7 @@ export class PreviewQuizTemplateFormModel  {
                 this.fb.group({
                   correctAnswer: [{value: question.correctAnswerArray[i], disabled: true}]
                 })
-              )
+              );
             }
           }
         }

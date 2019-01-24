@@ -26,17 +26,17 @@ export class CreateModifyQuizTemplateFormModel {
     ),
     booleanCorrectAnswer: [false],
     correctAnswerArray: this.fb.array([]),
-  })
+  });
 
   question: FormGroup = this.fb.group({
     text: ['', requiredTrimWhitespaceValidator()],
     typeSelect: new FormControl(getDefaultQuestionType('quiz')),
     answer: _.cloneDeep(this.answer)
-  })
+  });
 
   questions: FormArray = this.fb.array([
     this.question
-  ])
+  ]);
 
   createModifyQuizTemplateForm: FormGroup = this.fb.group({
     name: ['', {
@@ -72,7 +72,7 @@ export class CreateModifyQuizTemplateFormModel {
 
   deleteQuestion(index: number) {
     if (typeof index === 'number') {
-      this.formQuestions.removeAt(index)
+      this.formQuestions.removeAt(index);
     }
   }
 
@@ -112,7 +112,7 @@ export class CreateModifyQuizTemplateFormModel {
                 this.fb.group({
                   correctAnswer: [question.correctAnswerArray[i], [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('correctAnswer', i)]]
                 })
-              )
+              );
             }
           }
         }

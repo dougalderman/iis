@@ -16,27 +16,27 @@ export class CreateModifySurveyTemplateFormModel {
 
   selectTemplateForm: FormGroup = this.fb.group({
     templateSelect: new FormControl('')
-  })
+  });
 
   answer: FormGroup = this.fb.group({
     options: this.fb.array([]),
     numericRange: this.fb.group({
-      numericLowRange: ['', Validators.min(1)],
-      numericHighRange: ['', Validators.min(2)]
+      numericLowRange: ['', [Validators.required, Validators.min(1)]],
+      numericHighRange: ['', [Validators.required, Validators.min(2)]]
     }, {
       validators: numericRangeValidator
     })
-  })
+  });
 
   question: FormGroup = this.fb.group({
     text: ['', requiredTrimWhitespaceValidator()],
     typeSelect: new FormControl(getDefaultQuestionType('survey')),
     answer: _.cloneDeep(this.answer)
-  })
+  });
 
   questions: FormArray = this.fb.array([
     this.question
-  ])
+  ]);
 
   createModifySurveyTemplateForm: FormGroup = this.fb.group({
     name: ['', {
@@ -72,7 +72,7 @@ export class CreateModifySurveyTemplateFormModel {
 
   deleteQuestion(index: number) {
     if (typeof index === 'number') {
-      this.formQuestions.removeAt(index)
+      this.formQuestions.removeAt(index);
     }
   }
 
@@ -86,10 +86,19 @@ export class CreateModifySurveyTemplateFormModel {
   }
 
   getAnswer(questionType: string, question?: SurveyQuestionModel): FormGroup {
-    let answer: FormGroup = _.cloneDeep(this.answer);
+    let answer: FormGroup;
 
     switch (questionType) {
       case 'textQuestionMultipleChoice':
+
+        answer = this.fb.group({
+          options: this.fb.array([]),
+          numericRange: this.fb.group({
+            numericLowRange: [{value: '', disabled: true}],
+            numericHighRange: [{value: '', disabled: true}]
+          })
+        });
+
         if (question) {
           let options = answer.controls.options as FormArray;
           if (question.options && question.options.length) {
@@ -102,7 +111,28 @@ export class CreateModifySurveyTemplateFormModel {
         }
         break;
 
+      case 'textQuestionBoolean':
+      case 'textQuestionShortAnswer':
+        answer = this.fb.group({
+          options: this.fb.array([]),
+          numericRange: this.fb.group({
+            numericLowRange: [{value: '', disabled: true}],
+            numericHighRange: [{value: '', disabled: true}]
+          })
+        });
+        break;
+
       case 'textQuestionNumericAnswer':
+        answer = this.fb.group({
+          options: this.fb.array([]),
+          numericRange: this.fb.group({
+            numericLowRange: ['', [Validators.required, Validators.min(1)]],
+            numericHighRange: ['', [Validators.required, Validators.min(2)]]
+          }, {
+            validators: numericRangeValidator
+          })
+        });
+
         if (question) {
           let numericRange = answer.controls.numericRange as FormGroup;
 

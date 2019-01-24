@@ -329,13 +329,13 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
       }
 
       const numericRange = questions[i].answer.numericRange;
-      if (numericRange.numericLowRange) {
+      if (numericRange && numericRange.numericLowRange) {
         this.question.integerStartAnswerRange = numericRange.numericLowRange;
       }
       else {
         this.question.integerStartAnswerRange = 0;
       }
-      if (numericRange.numericHighRange) {
+      if (numericRange && numericRange.numericHighRange) {
         this.question.integerEndAnswerRange = numericRange.numericHighRange;
       }
       else {

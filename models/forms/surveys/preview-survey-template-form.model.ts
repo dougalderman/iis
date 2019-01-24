@@ -15,17 +15,17 @@ export class PreviewSurveyTemplateFormModel  {
       numericLowRange: [{value: '', disabled: true}],
       numericHighRange: [{value: '', disabled: true}]
     })
-  })
+  });
 
   question: FormGroup = this.fb.group({
     text: [{value: '', disabled: true}],
     typeSelect: new FormControl({value: getDefaultQuestionType('survey'), disabled: true}),
     answer: _.cloneDeep(this.answer)
-  })
+  });
 
   questions: FormArray = this.fb.array([
     this.question
-  ])
+  ]);
 
   previewSurveyTemplateForm: FormGroup = this.fb.group({
     formQuestions: this.questions
@@ -47,7 +47,7 @@ export class PreviewSurveyTemplateFormModel  {
 
   deleteQuestion(index: number) {
     if (typeof index === 'number') {
-      this.formQuestions.removeAt(index)
+      this.formQuestions.removeAt(index);
     }
   }
 

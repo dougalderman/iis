@@ -18,17 +18,17 @@ export class TakeQuizFormModel {
     ),
     booleanAnswer: ['', Validators.required],
     textAnswer: ['', requiredTrimWhitespaceValidator()]
-  })
+  });
 
   question: FormGroup = this.fb.group({
     text: [{value: '', disabled: true}],
     type: [{value: '', disabled: true}],
     answer: _.cloneDeep(this.answer)
-  })
+  });
 
   questions: FormArray = this.fb.array([
     this.question
-  ])
+  ]);
 
   takeQuizForm: FormGroup = this.fb.group({
     title: [''],
@@ -51,7 +51,7 @@ export class TakeQuizFormModel {
 
   deleteQuestion(index: number) {
     if (typeof index === 'number') {
-      this.formQuestions.removeAt(index)
+      this.formQuestions.removeAt(index);
     }
   }
 
@@ -69,7 +69,7 @@ export class TakeQuizFormModel {
           ),
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: [{value: '', disabled: true}]
-        })
+        });
 
         if (question) {
           let options = answer.controls.options as FormArray;
@@ -90,7 +90,7 @@ export class TakeQuizFormModel {
           options: this.fb.array([]),
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: ['', requiredTrimWhitespaceValidator()]
-        })
+        });
         break;
 
       case 'textQuestionBoolean':
@@ -98,7 +98,7 @@ export class TakeQuizFormModel {
           options: this.fb.array([]),
           booleanAnswer: ['', Validators.required],
           textAnswer: [{value: '', disabled: true}]
-        })
+        });
         break;
     }
 
