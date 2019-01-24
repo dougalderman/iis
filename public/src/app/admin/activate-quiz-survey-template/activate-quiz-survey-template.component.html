@@ -83,7 +83,7 @@
         </div>
         <div class="form-group three-rem-margin-bottom" *ngIf="quizPreview">
           <form [formGroup]="previewQuizTemplateForm">
-            <div formArrayName="quizFormQuestions" class="form-group three-rem-margin-bottom">
+            <div formArrayName="formQuestions" class="form-group three-rem-margin-bottom">
               <app-template-quiz-question-disabled *ngFor="let question of quizFormQuestions.controls; let i=index"
                 [quizTemplateForm]="quizTemplateForm"
                 [questionIndex]="i"
@@ -134,7 +134,7 @@
         </div>
         <div class="form-group three-rem-margin-bottom" *ngIf="surveyPreview">
           <form [formGroup]="previewSurveyTemplateForm">
-            <div formArrayName="surveyFormQuestions" class="form-group three-rem-margin-bottom">
+            <div formArrayName="formQuestions" class="form-group three-rem-margin-bottom">
               <app-template-survey-question-disabled *ngFor="let question of surveyFormQuestions.controls; let i=index"
                 [surveyTemplateForm]="surveyTemplateForm"
                 [questionIndex]="i"

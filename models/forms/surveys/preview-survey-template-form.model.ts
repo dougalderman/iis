@@ -11,8 +11,10 @@ export class PreviewSurveyTemplateFormModel  {
 
   answer: FormGroup = this.fb.group({
     options: this.fb.array([]),
-    numericLowRange: [{value: '', disabled: true}],
-    numericHighRange: [{value: '', disabled: true}]
+    numericRange: this.fb.group({
+      numericLowRange: [{value: '', disabled: true}],
+      numericHighRange: [{value: '', disabled: true}]
+    })
   })
 
   question: FormGroup = this.fb.group({
@@ -68,11 +70,14 @@ export class PreviewSurveyTemplateFormModel  {
 
       case 'textQuestionNumericAnswer':
         if (question) {
-          let numericLowRange = answer.controls.numericLowRange;
-          let numericHighRange = answer.controls.numericHighRange;
+          let numericRange = answer.controls.numericRange as FormGroup;
 
-          numericLowRange.setValue(question.integerStartAnswerRange);
-          numericHighRange.setValue(question.integerEndAnswerRange);
+          if (question.integerStartAnswerRange) {
+            numericRange.controls.numericLowRange.setValue(question.integerStartAnswerRange);
+          }
+          if (question.integerEndAnswerRange) {
+            numericRange.controls.numericHighRange.setValue(question.integerEndAnswerRange);
+          }
         }
         break;
     }
