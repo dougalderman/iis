@@ -35,7 +35,7 @@
             </select>
           </div>
         </form>
-        <div *ngIf="quizTemplateSelected > 0 || quizId" class="form-group three-rem-margin-bottom">
+        <div *ngIf="quizTemplateSelected > 0 || activeQuizId" class="form-group three-rem-margin-bottom">
           <form [formGroup]="quizForm">
             <div class="form-group  three-rem-margin-bottom">
               <div class="form-group">
@@ -59,7 +59,7 @@
             </div>
           </form>
         </div>
-        <div *ngIf="quizTemplateSelected > 0 || quizId" class="form-group three-rem-margin-bottom">
+        <div *ngIf="quizTemplateSelected > 0 || activeQuizId" class="form-group three-rem-margin-bottom">
           <form [formGroup]="quizConfigurationForm">
             <h3 class="one-rem-margin-bottom">Quiz Settings</h3>
             <div class="form-group two-rem-margin-bottom">
@@ -78,8 +78,8 @@
           </form>
         </div>
         <div class="form-group three-rem-margin-bottom">
-          <button *ngIf="!quizPreview" type="button" class="btn btn-primary" (click)="previewQuiz()" [disabled]="!(quizTemplateSelected > 0) && !quizId">Preview</button>
-          <button *ngIf="quizPreview" type="button" class="btn btn-secondary" (click)="clearPreviewQuiz()" [disabled]="!(quizTemplateSelected > 0) && !quizId">Clear</button>
+          <button *ngIf="!quizPreview" type="button" class="btn btn-primary" (click)="previewQuiz()" [disabled]="!(quizTemplateSelected > 0) && !activeQuizId">Preview</button>
+          <button *ngIf="quizPreview" type="button" class="btn btn-secondary" (click)="clearPreviewQuiz()" [disabled]="!(quizTemplateSelected > 0) && !activeQuizId">Clear</button>
         </div>
         <div class="form-group three-rem-margin-bottom" *ngIf="quizPreview">
           <form [formGroup]="previewQuizTemplateForm">
@@ -104,7 +104,7 @@
             </select>
           </div>
         </form>
-        <div *ngIf="surveyTemplateSelected > 0 || surveyId" class="form-group three-rem-margin-bottom">
+        <div *ngIf="surveyTemplateSelected > 0 || activeSurveyId" class="form-group three-rem-margin-bottom">
           <form [formGroup]="surveyForm">
             <div class="form-group  three-rem-margin-bottom">
               <div class="form-group">
@@ -129,8 +129,8 @@
           </form>
         </div>
         <div class="form-group three-rem-margin-bottom">
-          <button *ngIf="!surveyPreview" type="button" class="btn btn-primary" (click)="previewSurvey()" [disabled]="!(surveyTemplateSelected > 0) && !surveyId">Preview</button>
-          <button *ngIf="surveyPreview" type="button" class="btn btn-secondary" (click)="clearPreviewSurvey()" [disabled]="!(surveyTemplateSelected > 0) && !surveyId">Clear</button>
+          <button *ngIf="!surveyPreview" type="button" class="btn btn-primary" (click)="previewSurvey()" [disabled]="!(surveyTemplateSelected > 0) && !activeSurveyId">Preview</button>
+          <button *ngIf="surveyPreview" type="button" class="btn btn-secondary" (click)="clearPreviewSurvey()" [disabled]="!(surveyTemplateSelected > 0) && !activeSurveyId">Clear</button>
         </div>
         <div class="form-group three-rem-margin-bottom" *ngIf="surveyPreview">
           <form [formGroup]="previewSurveyTemplateForm">
