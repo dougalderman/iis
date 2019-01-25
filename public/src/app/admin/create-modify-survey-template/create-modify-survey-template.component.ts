@@ -388,7 +388,9 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
   clearTemplateNoConfirm() {
     this.createModifySurveyTemplateForm.reset();
     this.resetFormQuestions();
-    this.selectTemplateForm.reset();
     this.template = new SurveyTemplateModel();
+    this.selectTemplateForm.reset();
+    const templateSelect = this.selectTemplateForm.get('templateSelect')
+    templateSelect.setValue('');
   }
 }

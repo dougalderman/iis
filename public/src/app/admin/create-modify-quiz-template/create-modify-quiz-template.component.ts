@@ -383,7 +383,9 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   clearTemplateNoConfirm() {
     this.createModifyQuizTemplateForm.reset();
     this.resetFormQuestions();
-    this.selectTemplateForm.reset();
     this.template = new QuizTemplateModel();
+    this.selectTemplateForm.reset();
+    const templateSelect = this.selectTemplateForm.get('templateSelect')
+    templateSelect.setValue('');
   }
 }

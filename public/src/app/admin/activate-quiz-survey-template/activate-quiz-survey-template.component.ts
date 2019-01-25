@@ -477,6 +477,9 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     let newQuizAndSurvey: boolean = false;
 
     if (this.webpageSelected) {
+      const webpageSelected = this.webpageSelected;
+      this.webpageSelected = 0;
+
       if (this.quizTemplateSelected === this.noQuiz) {
         this.webpage.quizId = null;
       }
@@ -499,23 +502,23 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
         this.saveExistingQuizChanges();
       }
       else if (this.quizTemplateSelected === this.noQuiz && !newSurvey) {
-        this.saveWebpageChanges();
+        this.saveWebpageChanges(webpageSelected);
       }
       else if (newQuizAndSurvey) {
-        this.saveNewQuizAndSurvey();
+        this.saveNewQuizAndSurvey(webpageSelected);
       }
       else if (newQuiz) {
-        this.saveNewQuiz();
+        this.saveNewQuiz(webpageSelected);
       }
 
       if (this.activeSurveyId && this.surveyTemplateSelected !== this.noSurvey) {
         this.saveExistingSurveyChanges();
       }
       else if (this.surveyTemplateSelected === this.noSurvey && this.quizTemplateSelected !== this.noQuiz && !newQuiz) {
-        this.saveWebpageChanges();
+        this.saveWebpageChanges(webpageSelected);
       }
       else if (!newQuizAndSurvey && newSurvey) {
-        this.saveNewSurvey();
+        this.saveNewSurvey(webpageSelected);
       }
     }
   }
@@ -538,7 +541,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       );
   }
 
-  saveNewQuiz(): void {
+  saveNewQuiz(pageSelected: number): void {
     if (this.quizTemplateSelected > 0) {
       let quiz: QuizModel = new QuizModel();
       quiz = this.updateQuizDataFromForm(quiz);
@@ -551,7 +554,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
               const thisQuizId: number = results[0].id;
               this.webpage.quizId = thisQuizId;
 
-              this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+              this.webpageAdminService.saveExistingWebpage(pageSelected, this.webpage)
                 .subscribe(
                   (result: any) => {
                     if (result) {
@@ -659,7 +662,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     }
   }
 
-  saveNewSurvey(): void {
+  saveNewSurvey(pageSelected: number): void {
     if (this.surveyTemplateSelected > 0) {
       let survey: SurveyModel = new SurveyModel();
       survey = this.updateSurveyDataFromForm(survey);
@@ -672,7 +675,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
               const thisSurveyId: number = results[0].id;
               this.webpage.surveyId = thisSurveyId;
 
-              this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+              this.webpageAdminService.saveExistingWebpage(pageSelected, this.webpage)
                 .subscribe(
                   (result: any) => {
                     if (result) {
@@ -759,7 +762,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       );
   }
 
-  saveNewQuizAndSurvey(): void {
+  saveNewQuizAndSurvey(pageSelected: number): void {
     if (this.quizTemplateSelected > 0 && this.surveyTemplateSelected) {
       let quiz: QuizModel = new QuizModel();
       quiz = this.updateQuizDataFromForm(quiz);
@@ -783,7 +786,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
                       const thisSurveyId: number = results[0].id;
                       this.webpage.surveyId = thisSurveyId;
 
-                      this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+                      this.webpageAdminService.saveExistingWebpage(pageSelected, this.webpage)
                         .subscribe(
                           (result: any) => {
                             if (result) {
@@ -813,8 +816,8 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     }
   }
 
-  saveWebpageChanges(): void {
-    this.webpageAdminService.saveExistingWebpage(this.webpageSelected, this.webpage)
+  saveWebpageChanges(pageSelected: number): void {
+    this.webpageAdminService.saveExistingWebpage(pageSelected, this.webpage)
     .subscribe(
       (result: any) => {
         if (result) {
@@ -882,12 +885,13 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.activeQuizId = 0;
     this.quizTemplateSelected = 0;
     this.quizPreview = false;
-    this.getQuizTemplates(); // needed to reset select menu
     this.quizForm.reset();
     this.quizConfigurationForm.reset();
     this.quizConfigurationForm = _.cloneDeep(this.defaultQuizConfigurationForm);
     this.selectQuizTemplateForm.reset();
-    this.selectWebpageForm.reset();
+    const quizTemplateSelect = this.selectQuizTemplateForm.get('quizTemplateSelect')
+    quizTemplateSelect.setValue('');
+    this.clearWebpageForms();
   }
 
   clearSurveyForms() {
@@ -895,10 +899,17 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.activeSurveyId = 0;
     this.surveyTemplateSelected = 0;
     this.surveyPreview = false;
-    this.getSurveyTemplates(); // needed to reset select menu
     this.surveyForm.reset();
     this.selectSurveyTemplateForm.reset();
+    const surveyTemplateSelect = this.selectSurveyTemplateForm.get('surveyTemplateSelect')
+    surveyTemplateSelect.setValue('');
+    this.clearWebpageForms();
+  }
+
+  clearWebpageForms() {
     this.selectWebpageForm.reset();
+    const webpageSelect = this.selectWebpageForm.get('webpageSelect')
+    webpageSelect.setValue('');
   }
 
   setQuizFormValues(quiz: QuizModel, template?: QuizTemplateModel): void {

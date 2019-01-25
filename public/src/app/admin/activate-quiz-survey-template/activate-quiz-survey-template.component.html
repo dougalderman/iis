@@ -29,7 +29,7 @@
             <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="right" ngbTooltip="Select quiz template to apply to the web page. Select 'No Quiz' to not have a quiz. Select 'Keep the Same Quiz' if a quiz is already associated with the web page, and you want to keep the same quiz.">
             <select id="quiz-template-select" class="form-control quiz-template-select-background" formControlName="quizTemplateSelect">
               <option value="" disabled selected>Select Quiz Template</option>
-              <option [ngValue]="noQuiz">No Quiz</option>
+              <option *ngIf="webpageSelected" [ngValue]="noQuiz">No Quiz</option>
               <option *ngIf="quizId" [ngValue]="keepSameQuiz">Keep the Same Quiz</option>
               <option *ngFor="let quizTempl of quizTemplates" [ngValue]="quizTempl.id">{{quizTempl.name}}</option>
             </select>
@@ -98,7 +98,7 @@
             <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="right" ngbTooltip="Select survey template to apply to the web page. Select 'No Survey' to not have a survey. Select 'Keep the Same Survey' if a survey is already associated with the web page, and you want to keep the same survey.">
             <select id="survey-template-select" class="form-control survey-template-select-background" formControlName="surveyTemplateSelect">
               <option value="" disabled selected>Select Survey Template</option>
-              <option [ngValue]="noSurvey">No Survey</option>
+              <option *ngIf="webpageSelected" [ngValue]="noSurvey">No Survey</option>
               <option *ngIf="surveyId" [ngValue]="keepSameSurvey">Keep the Same Survey</option>
               <option *ngFor="let surveyTempl of surveyTemplates" [ngValue]="surveyTempl.id">{{surveyTempl.name}}</option>
             </select>
