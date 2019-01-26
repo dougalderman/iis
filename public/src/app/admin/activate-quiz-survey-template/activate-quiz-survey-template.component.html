@@ -25,14 +25,12 @@
       <div class="quiz-survey-select">
         <app-activate-quiz-template
           [activateQuizSurveyTemplateForm]="activateQuizSurveyTemplateForm"
-          [templateSelected]="quizTemplateSelected"
           [webpage]="webpage"
-          [quiz]="quiz"
-          [quizId]="quizId"
-          [actQuizId]="activeQuizId"
+          [clearForms]="clearQuizForms"
           (quizTemplateSelected)="onQuizTemplateSelected($event)"
           (quizIdChanged)="onChangeQuizId($event)"
           (activeQuizId)="onChangeActiveQuizId($event)"
+          (quizChanged) = "onChangeQuiz($event)"
           (error)="onGeneralError()"
           (clearStatusFlags)="clearStatusFlags()">
         </app-activate-quiz-template>
