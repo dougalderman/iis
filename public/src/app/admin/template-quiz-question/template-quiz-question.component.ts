@@ -34,23 +34,23 @@ export class TemplateQuizQuestionComponent implements OnInit {
     return this.questions.controls[this.questionIndex] as FormGroup;
   }
 
-  deleteQuestion() {
+  deleteQuestion(): void {
     this.deletedQuestion.emit(this.questionIndex);
   }
 
-  addOption() {
+  addOption(): void {
     this.quizTemplateForm.addOption(this.questionIndex);
   }
 
-  deleteOption(indx: number) {
+  deleteOption(indx: number): void {
     this.quizTemplateForm.deleteOption(this.questionIndex, indx);
   }
 
-  addCorrectAnswer() {
+  addCorrectAnswer(): void {
     this.quizTemplateForm.addCorrectAnswer(this.questionIndex);
   }
 
-  deleteCorrectAnswer(indx: number) {
+  deleteCorrectAnswer(indx: number): void {
     this.quizTemplateForm.deleteCorrectAnswer(this.questionIndex, indx);
   }
 }

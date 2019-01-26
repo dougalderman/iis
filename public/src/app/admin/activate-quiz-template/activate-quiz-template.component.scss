@@ -1,0 +1,30 @@
+@import '../../../assets/scss/variables';
+
+label.subheading {
+  font-size: 1.3rem;
+  color: $label-subheading-slateblue;
+}
+
+.select-form {
+  padding-bottom: 1rem;
+}
+
+.one-rem-margin-bottom {
+  margin-bottom: 1rem;
+}
+
+.two-rem-margin-bottom {
+  margin-bottom: 2rem;
+}
+
+.three-rem-margin-bottom {
+  margin-bottom: 3rem;
+}
+
+.info-icon {
+  padding-left: .3rem;
+}
+
+.quiz-template-select-background {
+  background: $select-menu-yellow;
+}
