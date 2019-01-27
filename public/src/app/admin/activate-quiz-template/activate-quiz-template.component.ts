@@ -177,8 +177,6 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
        const quizTemplateSelect = this.selectQuizTemplateForm.get('quizTemplateSelect')
        quizTemplateSelect.setValue(this.templateSelected);
     }
-
-
   }
 
   quizTemplateSelectionChanged(quizTemplateSelected: number): void {

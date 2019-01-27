@@ -34,57 +34,18 @@
           (error)="onGeneralError()"
           (clearStatusFlags)="clearStatusFlags()">
         </app-activate-quiz-template>
-        <form class="select-form" [formGroup]="selectSurveyTemplateForm">
-          <div class="form-group">
-            <label class="subheading">Third Step: Select Survey Template:</label>
-            <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="right" ngbTooltip="Select survey template to apply to the web page. Select 'No Survey' to not have a survey. Select 'Keep the Same Survey' if a survey is already associated with the web page, and you want to keep the same survey.">
-            <select id="survey-template-select" class="form-control survey-template-select-background" formControlName="surveyTemplateSelect">
-              <option value="" disabled selected>Select Survey Template</option>
-              <option *ngIf="webpageSelected" [ngValue]="noSurvey">No Survey</option>
-              <option *ngIf="surveyId" [ngValue]="keepSameSurvey">Keep the Same Survey</option>
-              <option *ngFor="let surveyTempl of surveyTemplates" [ngValue]="surveyTempl.id">{{surveyTempl.name}}</option>
-            </select>
-          </div>
-        </form>
-        <div *ngIf="surveyTemplateSelected > 0 || activeSurveyId" class="form-group three-rem-margin-bottom">
-          <form [formGroup]="surveyForm">
-            <div class="form-group  three-rem-margin-bottom">
-              <div class="form-group">
-                <label>Unique Name:</label>
-                <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="Enter a survey unique name that will identify the survey in the database.">
-                <input type="text" id="survey-unique-name" class="form-control" formControlName="uniqueName">
-                <div *ngIf="surveyForm.controls.uniqueName.invalid && (surveyForm.controls.uniqueName.dirty || surveyForm.controls.uniqueName.touched)">
-                  <div *ngIf="surveyForm.controls.uniqueName.errors.requiredTrimWhitespace" class="alert alert-warning">Survey unique name required</div>
-                  <div *ngIf="surveyForm.controls.uniqueName.errors.surveyUniqueNameTaken" class="alert alert-warning">Survey unique name is already being used.</div>
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Title:</label>
-                <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="This will be visible to the user taking the survey.">
-                <input type="text" id="survey-title" class="form-control" formControlName="title">
-              </div>
-              <div class="form-group">
-                <label>Description:</label>
-                <input type="text" id="survey-description" class="form-control" formControlName="description">
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="form-group three-rem-margin-bottom">
-          <button *ngIf="!surveyPreview" type="button" class="btn btn-primary" (click)="previewSurvey()" [disabled]="!(surveyTemplateSelected > 0) && !activeSurveyId">Preview</button>
-          <button *ngIf="surveyPreview" type="button" class="btn btn-secondary" (click)="clearPreviewSurvey()" [disabled]="!(surveyTemplateSelected > 0) && !activeSurveyId">Clear</button>
-        </div>
-        <div class="form-group three-rem-margin-bottom" *ngIf="surveyPreview">
-          <form [formGroup]="previewSurveyTemplateForm">
-            <div formArrayName="formQuestions" class="form-group three-rem-margin-bottom">
-              <app-template-survey-question-disabled *ngFor="let question of surveyFormQuestions.controls; let i=index"
-                [surveyTemplateForm]="surveyTemplateForm"
-                [questionIndex]="i"
-                (deletedQuestion)="onDeletedQuestion($event)">
-              </app-template-survey-question-disabled>
-            </div>
-          </form>
-        </div>
+
+        <app-activate-survey-template
+          [activateQuizSurveyTemplateForm]="activateQuizSurveyTemplateForm"
+          [webpage]="webpage"
+          [clearForms]="clearSurveyForms"
+          (surveyTemplateSelected)="onSurveyTemplateSelected($event)"
+          (surveyIdChanged)="onChangeSurveyId($event)"
+          (activeSurveyId)="onChangeActiveSurveyId($event)"
+          (surveyChanged) = "onChangeSurvey($event)"
+          (error)="onGeneralError()"
+          (clearStatusFlags)="clearStatusFlags()">
+        </app-activate-survey-template>
       </div>
     </div>
   </div>
