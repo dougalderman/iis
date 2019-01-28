@@ -1,0 +1,42 @@
+<form class="survey-question" [formGroup]="question">
+  <div class="form-group">
+    <label>Question Type:</label>
+    <select class="form-control question-type-background" formControlName="typeSelect">
+      <option value="" disabled>Select Question Type</option>
+      <option *ngFor="let questionType of questionTypes" [ngValue]="questionType.name">{{questionType.description}}</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Question Text:</label>
+    <div class="flex-display">
+      <input type="text" class="form-control" formControlName="text" required>
+    </div>
+  </div>
+  <div formGroupName="answer">
+    <div *ngIf="question.controls.typeSelect.value==='textQuestionMultipleChoice'">
+      <label>Multiple Choice Options:</label>
+      <div formArrayName="options" class="form-group">
+        <div class="form-group">
+          <div *ngFor="let option of question.controls.answer.controls.options.controls; let i=index">
+            <div [formGroupName]="i" class="flex-display wider">
+              <span class="multiple-choice-option-id">{{alphaIdArray[i]}}:</span>
+              <span class="multiple-choice-option">Option:</span>
+              <input type="text"  class="form-control" formControlName="option" required>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="question.controls.typeSelect.value==='textQuestionNumericAnswer'" class="form-group">
+      <div formGroupName="numericRange">
+        <label>Numeric Answer Low Value:</label>
+        <input type="number" class="form-control" formControlName="numericLowRange" min="1" required>
+        <br>
+        <label>Numeric Answer High Value:</label>
+        <input type="number" class="form-control" formControlName="numericHighRange" min="2" required>
+      </div>
+    </div>
+  </div>
+</form>
+
+

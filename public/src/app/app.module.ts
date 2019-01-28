@@ -16,6 +16,7 @@ import { SamplePageTwoComponent } from './components/sample-page-two/sample-page
 import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { TakeSurveyComponent } from './components/take-survey/take-survey.component';
 import { TakeQuizQuestionComponent } from './components/take-quiz-question/take-quiz-question.component';
+import { TakeSurveyQuestionComponent } from './components/take-survey-question/take-survey-question.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { TakeQuizQuestionComponent } from './components/take-quiz-question/take-
     SamplePageTwoComponent,
     TakeQuizComponent,
     TakeSurveyComponent,
-    TakeQuizQuestionComponent
+    TakeQuizQuestionComponent,
+    TakeSurveyQuestionComponent
   ],
   imports: [
     BrowserModule,

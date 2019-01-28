@@ -1,17 +1,17 @@
 import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
 import * as _ from 'lodash';
 
-import { QuizQuestionModel } from  '../quizzes/quiz-question.model';
-import { checkForDuplicatesValidator } from '../../public/src/app/validators/check-for-duplicates.validator';
-import { optionsCorrectAnswerRequiredValidator } from '../../public/src/app/validators/options-correct-answer-required.validator';
-import { requiredTrimWhitespaceValidator } from '../../public/src/app/validators/required-trim-whitespace.validator';
-import { CheckTemplateNameValidator } from '../../public/src/app/validators/check-template-name.validator';
-import { getDefaultQuestionType } from '../../public/src/app/utilities/get-default-question-type.utility';
+import { QuizQuestionModel } from  '../../quizzes/quiz-question.model';
+import { checkForDuplicatesValidator } from '../../../public/src/app/validators/check-for-duplicates.validator';
+import { optionsCorrectAnswerRequiredValidator } from '../../../public/src/app/validators/options-correct-answer-required.validator';
+import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
+import { CheckQuizTemplateNameValidator } from '../../../public/src/app/validators/check-quiz-template-name.validator';
+import { getDefaultQuestionType } from '../../../public/src/app/utilities/get-default-question-type.utility';
 
 export class CreateModifyQuizTemplateFormModel {
   constructor(
     private fb: FormBuilder,
-    private checkTemplateName: CheckTemplateNameValidator
+    private checkQuizTemplateName: CheckQuizTemplateNameValidator
   ) {}
 
   selectTemplateForm: FormGroup = this.fb.group({
@@ -26,22 +26,22 @@ export class CreateModifyQuizTemplateFormModel {
     ),
     booleanCorrectAnswer: [false],
     correctAnswerArray: this.fb.array([]),
-  })
+  });
 
   question: FormGroup = this.fb.group({
     text: ['', requiredTrimWhitespaceValidator()],
-    typeSelect: new FormControl(getDefaultQuestionType()),
+    typeSelect: new FormControl(getDefaultQuestionType('quiz')),
     answer: _.cloneDeep(this.answer)
-  })
+  });
 
   questions: FormArray = this.fb.array([
     this.question
-  ])
+  ]);
 
   createModifyQuizTemplateForm: FormGroup = this.fb.group({
     name: ['', {
       validators: requiredTrimWhitespaceValidator(),
-      asyncValidators: this.checkTemplateName.validate.bind(this.checkTemplateName),
+      asyncValidators: this.checkQuizTemplateName.validate.bind(this.checkQuizTemplateName),
       updateOn: 'blur'
     }],
     description: [''],
@@ -61,7 +61,7 @@ export class CreateModifyQuizTemplateFormModel {
       }));
     }
     else {
-      const defaultQuestionType = getDefaultQuestionType();
+      const defaultQuestionType = getDefaultQuestionType('quiz');
       this.formQuestions.push(this.fb.group({
         text: ['', requiredTrimWhitespaceValidator()],
         typeSelect: new FormControl(defaultQuestionType),
@@ -72,7 +72,7 @@ export class CreateModifyQuizTemplateFormModel {
 
   deleteQuestion(index: number) {
     if (typeof index === 'number') {
-      this.formQuestions.removeAt(index)
+      this.formQuestions.removeAt(index);
     }
   }
 
@@ -112,7 +112,7 @@ export class CreateModifyQuizTemplateFormModel {
                 this.fb.group({
                   correctAnswer: [question.correctAnswerArray[i], [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('correctAnswer', i)]]
                 })
-              )
+              );
             }
           }
         }

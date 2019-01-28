@@ -7,11 +7,11 @@ import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.
 import { QuizQuestionModel } from  '../../../../../models/quizzes/quiz-question.model';
 import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-template-data.model';
 import { QuizQuestionDataModel } from  '../../../../../models/quizzes/data/quiz-question-data.model';
-import { CreateModifyQuizTemplateFormModel } from '../../../../../models/forms/create-modify-quiz-template-form.model';
+import { CreateModifyQuizTemplateFormModel } from '../../../../../models/forms/quizzes/create-modify-quiz-template-form.model';
 
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';
-import { CheckTemplateNameValidator } from '../../validators/check-template-name.validator';
+import { CheckQuizTemplateNameValidator } from '../../validators/check-quiz-template-name.validator';
 
 @Component({
   selector: 'app-create-modify-quiz-template',
@@ -32,7 +32,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   templateSelectionProcessing: boolean = false;
   errorMessage: string = '';
 
-  quizTemplateForm = new CreateModifyQuizTemplateFormModel(this.fb, this.checkTemplateName);
+  quizTemplateForm = new CreateModifyQuizTemplateFormModel(this.fb, this.checkQuizTemplateName);
   selectTemplateForm: FormGroup = this.quizTemplateForm.selectTemplateForm;
   createModifyQuizTemplateForm: FormGroup = this.quizTemplateForm.createModifyQuizTemplateForm;
 
@@ -40,7 +40,7 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     private quizAdminService: QuizAdminService,
     private modalService: ModalService,
     private fb: FormBuilder,
-    private checkTemplateName: CheckTemplateNameValidator
+    private checkQuizTemplateName: CheckQuizTemplateNameValidator
   ) {}
 
   ngOnInit(): void {
@@ -383,7 +383,9 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   clearTemplateNoConfirm() {
     this.createModifyQuizTemplateForm.reset();
     this.resetFormQuestions();
-    this.selectTemplateForm.reset();
     this.template = new QuizTemplateModel();
+    this.selectTemplateForm.reset();
+    const templateSelect = this.selectTemplateForm.get('templateSelect')
+    templateSelect.setValue('');
   }
 }

@@ -1,0 +1,62 @@
+<form class="survey-question" [formGroup]="question">
+  <div class="form-group">
+    <label>Question Type:</label>
+    <select class="form-control question-type-background" formControlName="typeSelect">
+      <option value="" disabled>Select Question Type</option>
+      <option *ngFor="let questionType of questionTypes" [ngValue]="questionType.name">{{questionType.description}}</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Question Text:</label>
+    <div class="double-wide flex-display">
+      <input type="text" class="form-control" formControlName="text" required>
+      <img class="delete_icon" *ngIf="questions.controls.length > 1" (click)="deleteQuestion()" src="../../../assets/images/delete_icon.jpg" height="20">
+    </div>
+    <div *ngIf="question.controls.text.invalid && (question.controls.text.dirty || question.controls.text.touched)">
+      <div *ngIf="question.controls.text.errors.requiredTrimWhitespace" class="alert alert-warning">Question text is required</div>
+    </div>
+  </div>
+  <div formGroupName="answer">
+    <div *ngIf="question.controls.typeSelect.value==='textQuestionMultipleChoice'">
+      <label>Multiple Choice Options:</label>
+      <div formArrayName="options" class="form-group">
+        <div class="form-group">
+          <div *ngFor="let option of question.controls.answer.controls.options.controls; let i=index">
+            <div [formGroupName]="i" class="double-wide flex-display">
+              <span class="multiple-choice-option-id">{{alphaIdArray[i]}}:</span>
+              <span class="multiple-choice-option">Option:</span>
+              <input type="text"  class="form-control" formControlName="option" required>
+              <img class="delete_icon" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i)" src="../../../assets/images/delete_icon.jpg" height="20">
+            </div>
+            <div *ngIf="option.controls.option.invalid && (option.controls.option.dirty || option.controls.option.touched)">
+              <div *ngIf="option.controls.option.errors && option.controls.option.errors.duplicate" class="alert alert-warning">Duplicate option</div>
+              <div *ngIf="option.controls.option.errors && option.controls.option.errors.requiredTrimWhitespace" class="alert alert-warning">Option is required</div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary" (click)="addOption()">Add New Option</button>
+      </div>
+    </div>
+    <div *ngIf="question.controls.typeSelect.value==='textQuestionNumericAnswer'" class="form-group">
+      <div formGroupName="numericRange">
+        <label>Numeric Answer Low Value:</label>
+        <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="right" ngbTooltip="Select low value of range that user will select.">
+        <input type="number" class="form-control" formControlName="numericLowRange" min="1" required>
+        <div *ngIf="question.controls.answer.controls.numericRange.controls.numericLowRange.invalid && (question.controls.answer.controls.numericRange.controls.numericLowRange.dirty || question.controls.answer.controls.numericRange.controls.numericLowRange.touched)">
+          <div *ngIf="question.controls.answer.controls.numericRange.controls.numericLowRange.errors && question.controls.answer.controls.numericRange.controls.numericLowRange.errors.required" class="alert alert-warning">Numeric answer low value is required.</div>
+        </div>
+        <br>
+        <label>Numeric Answer High Value:</label>
+        <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="right" ngbTooltip="Select high value of range that user will select.">
+        <input type="number" class="form-control" formControlName="numericHighRange" min="2" required>
+        <div *ngIf="question.controls.answer.controls.numericRange.controls.numericHighRange.invalid && (question.controls.answer.controls.numericRange.controls.numericHighRange.dirty || question.controls.answer.controls.numericRange.controls.numericHighRange.touched)">
+          <div *ngIf="question.controls.answer.controls.numericRange.controls.numericHighRange.errors && question.controls.answer.controls.numericRange.controls.numericHighRange.errors.required" class="alert alert-warning">Numeric answer high value is required.</div>
+        </div>
+        <div *ngIf="question.controls.answer.controls.numericRange.invalid && (question.controls.answer.controls.numericRange.dirty || question.controls.answer.controls.numericRange.touched)">
+          <div *ngIf="question.controls.answer.controls.numericRange.errors && question.controls.answer.controls.numericRange.errors.numericRangeIncorrect" class="alert alert-warning">Numeric answer high value must be greater than low value. Low value must be greater than 0.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
