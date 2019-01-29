@@ -3,6 +3,9 @@
     <div class="top-left">{{title}}</div>
     <div class="top-right" *ngIf="questionsAnsweredCount < questionsCount">Question {{questionsAnsweredCount + 1}} of {{questionsCount}}</div>
   </div>
+  <div class="warning">
+    This is a demo site with no security. Do not enter any personal information!
+  </div>
 
   <div class="take-quiz-body" *ngIf="questionsAnsweredCount < questionsCount">
     <app-take-quiz-question

@@ -125,6 +125,7 @@ export class TakeSurveyComponent implements OnInit {
 
       case 'textQuestionNumericAnswer':
         surveyAnswer.integerAnswer = answer.controls.numericAnswer.value;
+        break;
     }
 
     surveyAnswer.timeToAnswer = (dateQuestionEnd.getTime() - this.dateQuestionStart.getTime()).toString() + ' milliseconds';
