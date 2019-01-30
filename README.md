@@ -46,9 +46,9 @@ This site includes a template-based quiz and survey administration system that a
 
 1. Point the browser to [url]/admin to get the Admin Main Menu.
 2. Select Create/Modify Quiz Template.
-3. Create a new quiz template or modify an existing one by changing the template name.
+3. (First time) Create a new quiz template by entering a name and description, and creating quiz questions. (Subsequent times) either select an existing template to modify, or create a new quiz template by changing the template name.
 4. Select Create/Modify Survey Template.
-5. Create a new survey template or modify an existing one by changing the template name.
+5. (First time) Create a new quiz template by entering a name and description, and creating quiz questions. (Subsequent times) either select an existing template to modify, or create a new quiz template by changing the template name.
 6. Go back to the Admin Main Menu. Select Activate Quiz/Survey Template.
 7. Follow the instructions on the page to activate a quiz and/or survey template for the Wikipedia page and/or one of the two sample pages.
 8. Point the browser to the home page to go to the Wikipedia Fibromyalgia page, or put in /sample-page-one or /sample-page-two after the base URL to go to one of the sample pages. 
@@ -66,7 +66,7 @@ Database tables for surveys are very similar to those for quizzes. The big diffe
 The Node.js server code is written in TypeScript, and is located in the server folder. The lightweight index.js starts an Express session and calls TimedTasksController and EndpointsController. TimedTasksController is used to periodically delete unused quiz and survey questions. EndpointsController manages the Quiz, Survey, and Webpages endpoints. Controllers for the endpoints are located in the controllers folder.
 
 ### Angular Overview
-[Reactive forms](https://angular.io/guide/reactive-forms) are used exclusively in this project. The form models are stored in the models/forms folder. Data models for DB API calls are stored in models/quizzes, models/surveys, and models/webpages. The public/src/app folder has the AppModule and AppComponent, along with a separate AppRoutingModule to handle routing. The admin folder has the AdminModule and AdminRoutingModule, along with all the admin components. The components folder includes all non-admin components. Constants, services, utilities, and (Reactive Form) validators are separated out into their own folders. Bootstrap is used for styling and ng-bootstrap for modals and tooltips.
+[Reactive forms](https://angular.io/guide/reactive-forms) are used exclusively in this project. The form models are stored in the models/forms folder. Data models for DB API calls are stored in models/quizzes, models/surveys, and models/webpages. The public/src/app folder has the AppModule and AppComponent, along with a separate AppRoutingModule to handle routing. The admin folder has the AdminModule and AdminRoutingModule, along with all the admin components. The components folder includes all non-admin components. Constants, services, utilities, and (Reactive Form) validators are separated out into their own folders. Bootstrap is used for styling, ng-bootstrap for modals and tooltips, and ng5-slider for the Take Survey slider.
 
 ### Admin Section
 The admin section is a separate component with its own routing module. The AdminHomeComponent has a menu which provides options for Create/Modify Quiz Template, Create/Modify Survey Template, and Activate Quiz/Survey Template.
@@ -92,7 +92,7 @@ After creating or modifying quiz and survey templates, the next step is to activ
 
 On initialization, Activate Quiz/Survey Template gets a list of active routes from AppRoutingModule, and syncs this list with the Webpages table. It also gets all quiz and survey templates. The user follows a simple step-by-step approach. After selecting a webpage, she then selects a quiz template. If a quiz has already been associated with that webpage, it will default to "Keep the Same Quiz". If no quiz has been selected, it will default to "No Quiz". The user can either keep the default, or choose a different template. Unique Name, Title (which is visible to the quiz taker) and Description are text input fields that can be modified. The only configuration option is Percent Great Job, which is the percent of questions the user needs to answer correctly to see the "Great Job" Giphy (as opposed to the "OK Job" Giphy). The Preview button provides a way to see all the disabled quiz questions, multiple choice options, and correct answers. This makes use of a child component TemplateQuizQuestionDisabledComponent, which is a child class of TemplateQuizQuestionComponent.
 
-Selecting a survey template is the same user experience as selecting a quiz. After selecting a survey, the user clicks the Activate button to save the changes. The activate() method updates Webpages, Quizzes, Surveys, QuizQuestions, and SurveyQuestions tables. The quiz and/or survey will now be available as links from the webpage.
+Selecting a survey template is virtually the same user experience as selecting a quiz, with the exception of no Percent Great Job option. After selecting a survey, the user clicks the Activate button to save the changes. The activate() method updates Webpages, Quizzes, Surveys, QuizQuestions, and SurveyQuestions tables. The quiz and/or survey will now be available as links from the webpage.
 
 ### Take Quiz
 Each webpage has code that queries the Webpages table whether or not a quiz_id is associated with the webpage. If there is a quiz_id, then the "Take Quiz" link will become visible on the page. When the user clicks on the "Take Quiz" link, the router calls the TakeQuizComponent. On initialization, TakeQuizComponent queries the Quizzes and QuizQuestions tables, randomizes question and multiple choice option order, and adds all the quiz questions to the form. It sends the form and the current question index to a child component TakeQuizQuestionComponent, which handles individual questions. Once the user submits the answer to a question, immediate feedback is given.
@@ -104,7 +104,7 @@ After answering all the questions, a results page that is a div element within t
 ![Take Quiz Results](https://github.com/dougalderman/iis/blob/master/readme_images/Take_Quiz_Results.jpg)
 
 ### Take Survey
-Take Survey is very similar to Take Quiz, with the difference that no feedback is given after each question or at the end of the survey, as there are no correct answers, and no percent correct. A slider is used to handle user input for a numeric answer.
+Take Survey is very similar to Take Quiz, with the difference that no feedback is given after each question or at the end of the survey, as there are no correct answers, and no percent correct. A slider is used to handle user input for a numeric answer. Question order is randomized, but not multiple choice option order.
 
 ### Security Considerations
 In production, the admin pages and endpoints will need to be login secured. In Angular, you secure a routed page by using [route guards](https://angular.io/guide/router#milestone-5-route-guards). The guard will check to see if an authenticated user is signed on, and if not, will redirect to a login page. On the server side, middleware needs to be added to all admin endpoints to confirm that an authenticated user is signed in. If not, the user will be redirected to the login page.

@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~bootstrap/scss/bootstrap.scss';
+@import'./variables';
 
 * {
   box-sizing: border-box;
@@ -25,4 +26,24 @@ p {
 
 .container {
   margin-top: 1rem;
+}
+
+.ng5-slider {
+  span.ng5-slider-pointer {
+    width: 1rem;
+    height: 1.2rem;
+    top: auto; /* to remove the default positioning */
+    bottom: 0;
+    background-color: $slider-pointer-purple;
+    border-top-left-radius: .4rem;
+    border-top-right-radius: .4rem;
+
+    &:after {
+      display: none;
+    }
+  }
+
+  span.ng5-slider-bar {
+    background: $slider-bar-yellow;
+  }
 }

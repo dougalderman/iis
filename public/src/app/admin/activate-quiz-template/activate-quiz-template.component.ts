@@ -189,10 +189,12 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
 
     if (quizTemplateSelected > 0) {
       this.changeActiveQuizId(0);
+      this.quizAdminService.setQuizUniqueNameOriginal('');
       this.setQuizFormValues(null, template);
     }
     else if (quizTemplateSelected === this.keepSameQuiz) {
       this.changeActiveQuizId(this.quizId);
+      this.quizAdminService.setQuizUniqueNameOriginal(this.quiz.uniqueName);
       this.setQuizFormValues(this.quiz);
     }
     else if (quizTemplateSelected === this.noQuiz) {
@@ -257,7 +259,6 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
     if (quiz) {
       let uniqueName = this.quizForm.get('uniqueName')
       uniqueName.setValue(quiz.uniqueName);
-      this.quizAdminService.setQuizUniqueNameOriginal(quiz.uniqueName);
       let title = this.quizForm.get('title')
       title.setValue(quiz.title);
       let description = this.quizForm.get('description')
@@ -271,7 +272,6 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
     else if (template) {
       let uniqueName = this.quizForm.get('uniqueName')
       uniqueName.setValue(template.name);
-      this.quizAdminService.setQuizUniqueNameOriginal('');
       let description = this.quizForm.get('description')
       description.setValue(template.description);
 

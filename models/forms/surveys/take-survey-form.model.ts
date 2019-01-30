@@ -18,7 +18,11 @@ export class TakeSurveyFormModel {
     ),
     booleanAnswer: ['', Validators.required],
     textAnswer: ['', requiredTrimWhitespaceValidator()],
-    numericAnswer: ['', Validators.required]
+    numericAnswer: [0],
+    numericRange: this.fb.group({
+      numericLowRange: [{value: 0, disabled: true}],
+      numericHighRange: [{value: 0, disabled: true}]
+    })
   });
 
   question: FormGroup = this.fb.group({
@@ -70,7 +74,11 @@ export class TakeSurveyFormModel {
           ),
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: [{value: '', disabled: true}],
-          numericAnswer: [{value: '', disabled: true}]
+          numericAnswer: [{value: 0, disabled: true}],
+          numericRange: this.fb.group({
+            numericLowRange: [{value: 0, disabled: true}],
+            numericHighRange: [{value: 0, disabled: true}]
+          })
         });
 
         if (question) {
@@ -92,7 +100,11 @@ export class TakeSurveyFormModel {
           options: this.fb.array([]),
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: ['', requiredTrimWhitespaceValidator()],
-          numericAnswer: [{value: '', disabled: true}]
+          numericAnswer: [{value: 0, disabled: true}],
+          numericRange: this.fb.group({
+            numericLowRange: [{value: 0, disabled: true}],
+            numericHighRange: [{value: 0, disabled: true}]
+          })
         });
         break;
 
@@ -101,7 +113,11 @@ export class TakeSurveyFormModel {
           options: this.fb.array([]),
           booleanAnswer: ['', Validators.required],
           textAnswer: [{value: '', disabled: true}],
-          numericAnswer: [{value: '', disabled: true}],
+          numericAnswer: [{value: 0, disabled: true}],
+          numericRange: this.fb.group({
+            numericLowRange: [{value: 0, disabled: true}],
+            numericHighRange: [{value: 0, disabled: true}]
+          })
         });
         break;
 
@@ -110,8 +126,25 @@ export class TakeSurveyFormModel {
           options: this.fb.array([]),
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: [{value: '', disabled: true}],
-          numericAnswer: ['', Validators.required],
+          numericAnswer: [0],
+          numericRange: this.fb.group({
+            numericLowRange: [{value: 0, disabled: true}],
+            numericHighRange: [{value: 0, disabled: true}]
+          })
         });
+
+        if (question) {
+          let numericAnswer = answer.controls.numericAnswer;
+          let numericRange = answer.controls.numericRange as FormGroup;
+          let numericLowRange = numericRange.controls.numericLowRange;
+          let numericHighRange = numericRange.controls.numericHighRange;
+          if (question.integerStartAnswerRange && question.integerEndAnswerRange) {
+            numericAnswer.setValue(question.integerStartAnswerRange);
+            numericLowRange.setValue(question.integerStartAnswerRange);
+            numericHighRange.setValue(question.integerEndAnswerRange);
+          }
+        }
+
         break;
     }
 

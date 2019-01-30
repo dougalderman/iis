@@ -1,3 +1,23 @@
-<p>
-  take-survey works!
-</p>
+<div class="container">
+  <div class="take-survey-header">
+    <div class="top-left">{{title}}</div>
+    <div class="top-right" *ngIf="questionsAnsweredCount < questionsCount">Question {{questionsAnsweredCount + 1}} of {{questionsCount}}</div>
+  </div>
+  <div class="warning">
+    This is a demo site with no security. Do not enter any personal information!
+  </div>
+  <div class="take-survey-body" *ngIf="questionsAnsweredCount < questionsCount">
+    <app-take-survey-question
+      [takeSurveyForm]="takeSurveyForm"
+      [questionIndex]="questionsAnsweredCount"
+      (submitAns)="submitAnswer($event)">
+    </app-take-survey-question>
+  </div>
+
+  <div class="take-survey-results" *ngIf="questionsAnsweredCount && questionsAnsweredCount === questionsCount">
+    <p>Thanks for taking this survey!</p>
+    <br>
+    <button type="button" class="btn btn-primary" (click)="back()">Return to Page</button>
+    <div *ngIf="generalError" class="alert alert-danger">An error occurred.</div>
+</div>
+

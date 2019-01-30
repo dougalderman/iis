@@ -1,0 +1,24 @@
+.take-survey-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-family: Helvetica;
+}
+
+.top-left {
+  width: 70%;
+  font-size: 2rem;
+}
+
+.warning {
+  color: red;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 500px)  {
+  .take-survey-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

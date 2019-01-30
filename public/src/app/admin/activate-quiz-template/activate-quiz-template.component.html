@@ -17,9 +17,9 @@
         <label>Unique Name:</label>
         <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="Enter a quiz unique name that will identify the quiz in the database.">
         <input type="text" id="quiz-unique-name" class="form-control" formControlName="uniqueName">
+        <div *ngIf="quizForm.controls.uniqueName.errors && quizForm.controls.uniqueName.errors.quizUniqueNameTaken" class="alert alert-warning">Quiz unique name is already being used.</div>
         <div *ngIf="quizForm.controls.uniqueName.invalid && (quizForm.controls.uniqueName.dirty || quizForm.controls.uniqueName.touched)">
           <div *ngIf="quizForm.controls.uniqueName.errors.requiredTrimWhitespace" class="alert alert-warning">Quiz unique name required</div>
-          <div *ngIf="quizForm.controls.uniqueName.errors.quizUniqueNameTaken" class="alert alert-warning">Quiz unique name is already being used.</div>
         </div>
       </div>
       <div class="form-group">

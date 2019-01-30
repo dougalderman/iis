@@ -183,10 +183,12 @@ export class ActivateSurveyTemplateComponent implements OnInit, OnChanges {
 
     if (surveyTemplateSelected > 0) {
       this.changeActiveSurveyId(0);
+      this.surveyAdminService.setSurveyUniqueNameOriginal('');
       this.setSurveyFormValues(null, template);
     }
     else if (surveyTemplateSelected === this.keepSameSurvey) {
       this.changeActiveSurveyId(this.surveyId);
+      this.surveyAdminService.setSurveyUniqueNameOriginal(this.survey.uniqueName);
       this.setSurveyFormValues(this.survey);
     }
     else if (surveyTemplateSelected === this.noSurvey) {
@@ -251,7 +253,6 @@ export class ActivateSurveyTemplateComponent implements OnInit, OnChanges {
     if (survey) {
       let uniqueName = this.surveyForm.get('uniqueName')
       uniqueName.setValue(survey.uniqueName);
-      this.surveyAdminService.setSurveyUniqueNameOriginal(survey.uniqueName);
       let title = this.surveyForm.get('title')
       title.setValue(survey.title);
       let description = this.surveyForm.get('description')
@@ -260,7 +261,6 @@ export class ActivateSurveyTemplateComponent implements OnInit, OnChanges {
     else if (template) {
       let uniqueName = this.surveyForm.get('uniqueName')
       uniqueName.setValue(template.name);
-      this.surveyAdminService.setSurveyUniqueNameOriginal('');
       let description = this.surveyForm.get('description')
       description.setValue(template.description);
     }

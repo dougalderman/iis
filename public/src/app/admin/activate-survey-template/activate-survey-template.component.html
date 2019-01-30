@@ -17,9 +17,9 @@
         <label>Unique Name:</label>
         <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="Enter a survey unique name that will identify the survey in the database.">
         <input type="text" id="survey-unique-name" class="form-control" formControlName="uniqueName">
+        <div *ngIf="surveyForm.controls.uniqueName.errors && surveyForm.controls.uniqueName.errors.surveyUniqueNameTaken" class="alert alert-warning">Survey unique name is already being used.</div>
         <div *ngIf="surveyForm.controls.uniqueName.invalid && (surveyForm.controls.uniqueName.dirty || surveyForm.controls.uniqueName.touched)">
           <div *ngIf="surveyForm.controls.uniqueName.errors.requiredTrimWhitespace" class="alert alert-warning">Survey unique name required</div>
-          <div *ngIf="surveyForm.controls.uniqueName.errors.surveyUniqueNameTaken" class="alert alert-warning">Survey unique name is already being used.</div>
         </div>
       </div>
       <div class="form-group">

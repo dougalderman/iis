@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { Ng5SliderModule } from 'ng5-slider';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -38,7 +39,8 @@ import { TakeSurveyQuestionComponent } from './components/take-survey-question/t
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbModalModule
+    NgbModalModule,
+    Ng5SliderModule
   ],
   entryComponents: [
     ConfirmModalComponent
