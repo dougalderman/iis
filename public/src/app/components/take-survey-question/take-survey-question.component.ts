@@ -13,7 +13,7 @@ export class TakeSurveyQuestionComponent implements OnInit {
   @Input() takeSurveyForm: FormGroup;
   @Input() questionIndex: number;
 
-  @Output() submit = new EventEmitter();
+  @Output() submitAns = new EventEmitter();
 
   alphaIdArray: string[] = [];
   questions: FormArray
@@ -44,6 +44,6 @@ export class TakeSurveyQuestionComponent implements OnInit {
   }
 
   submitAnswer(): void {
-    this.submit.emit();
+    this.submitAns.emit();
   }
 }
