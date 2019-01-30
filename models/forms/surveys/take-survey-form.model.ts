@@ -17,7 +17,7 @@ export class TakeSurveyFormModel {
       }
     ),
     booleanAnswer: ['', Validators.required],
-    textAnswer: [''],
+    textAnswer: ['', requiredTrimWhitespaceValidator()],
     numericAnswer: [0],
     numericRange: this.fb.group({
       numericLowRange: [{value: '', disabled: true}],
@@ -99,7 +99,7 @@ export class TakeSurveyFormModel {
         answer = this.fb.group({
           options: this.fb.array([]),
           booleanAnswer: [{value: false, disabled: true}],
-          textAnswer: [''],
+          textAnswer: ['', requiredTrimWhitespaceValidator()],
           numericAnswer: [{value: 0, disabled: true}],
           numericRange: this.fb.group({
             numericLowRange: [{value: '', disabled: true}],

@@ -162,12 +162,13 @@ export class TakeQuizComponent implements OnInit {
 
       case 'textQuestionShortAnswer':
         let lowerCaseArray: string[] = [];
+        const textAnswer = answer.controls.textAnswer.value.trim();
 
         for (let correctAnswer of question.correctAnswerArray) {
           lowerCaseArray.push(correctAnswer.toLowerCase());
         }
 
-        if (_.find(lowerCaseArray, val => val === answer.controls.textAnswer.value.toLowerCase())) {
+        if (_.find(lowerCaseArray, val => val === textAnswer.toLowerCase())) {
           this.answeredCorrectly = true;
           this.questionsCorrectlyAnsweredCount++;
         }
@@ -175,7 +176,7 @@ export class TakeQuizComponent implements OnInit {
           this.correctAnswerArray = question.correctAnswerArray;
         }
 
-        quizAnswer.textAnswer = answer.controls.textAnswer.value;
+        quizAnswer.textAnswer = textAnswer;
         break;
 
       case 'textQuestionBoolean':

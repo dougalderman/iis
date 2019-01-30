@@ -12,7 +12,7 @@ export class CheckSurveyUniqueNameValidator implements AsyncValidator {
   constructor(private surveyAdminService: SurveyAdminService) {}
 
   validate(ctrl: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    if ((ctrl.dirty || ctrl.touched) && ctrl.value && ctrl.value.trim()) {
+    if (ctrl.value && ctrl.value.trim()) {
       return this.surveyAdminService.isSurveyUniqueNameTaken(ctrl.value.trim()).pipe(
         map((isTaken: boolean) => {
           return isTaken ? { surveyUniqueNameTaken: true } : null;

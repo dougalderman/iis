@@ -25,3 +25,36 @@ label.left-padding {
 .answer-container {
   width: 50%;
 }
+
+.custom-slider {
+  position: relative;
+  height: 6rem;
+
+  .slider-left-img {
+    position: absolute;
+    left: 0;
+    top: 3rem;
+    width: 3.5rem;
+  }
+
+  .slider-right-img {
+    position: absolute;
+    right: 0;
+    top: 3rem;
+    width: 4rem;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .custom-slider {
+    .slider-left-img {
+      width: 2.5rem;
+    }
+
+    .slider-right-img {
+      width: 3rem;
+    }
+  }
+}
+
+

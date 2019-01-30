@@ -116,7 +116,7 @@ export class TakeSurveyComponent implements OnInit {
         break;
 
       case 'textQuestionShortAnswer':
-        surveyAnswer.textAnswer = answer.controls.textAnswer.value;
+        surveyAnswer.textAnswer = answer.controls.textAnswer.value.trim();
         break;
 
       case 'textQuestionBoolean':
