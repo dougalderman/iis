@@ -46,9 +46,9 @@ This site includes a template-based quiz and survey administration system that a
 
 1. Point the browser to [url]/admin to get the Admin Main Menu.
 2. Select Create/Modify Quiz Template.
-3. (First time) Create a new quiz template by entering a name and description, and creating quiz questions. (Subsequent times) either select an existing template to modify, or create a new quiz template by changing the template name.
+3. (First time) create a new quiz template by entering a name and description, and creating quiz questions. (Subsequent times) either select an existing template to modify, or create a new quiz template by changing the template name.
 4. Select Create/Modify Survey Template.
-5. (First time) Create a new quiz template by entering a name and description, and creating quiz questions. (Subsequent times) either select an existing template to modify, or create a new quiz template by changing the template name.
+5. (First time) create a new quiz template by entering a name and description, and creating quiz questions. (Subsequent times) either select an existing template to modify, or create a new quiz template by changing the template name.
 6. Go back to the Admin Main Menu. Select Activate Quiz/Survey Template.
 7. Follow the instructions on the page to activate a quiz and/or survey template for the Wikipedia page and/or one of the two sample pages.
 8. Point the browser to the home page to go to the Wikipedia Fibromyalgia page, or put in /sample-page-one or /sample-page-two after the base URL to go to one of the sample pages. 
