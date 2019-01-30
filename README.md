@@ -1,7 +1,5 @@
 # Angular Interactive Informational Site (IIS)
 
-### Jan. 2019--3 quiz question types are implemented.
-
 See Demo Version at xxx
 
 ## Description
