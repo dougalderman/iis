@@ -20,8 +20,8 @@ export class TakeSurveyFormModel {
     textAnswer: ['', requiredTrimWhitespaceValidator()],
     numericAnswer: [0],
     numericRange: this.fb.group({
-      numericLowRange: [{value: '', disabled: true}],
-      numericHighRange: [{value: '', disabled: true}]
+      numericLowRange: [{value: 0, disabled: true}],
+      numericHighRange: [{value: 0, disabled: true}]
     })
   });
 
@@ -76,8 +76,8 @@ export class TakeSurveyFormModel {
           textAnswer: [{value: '', disabled: true}],
           numericAnswer: [{value: 0, disabled: true}],
           numericRange: this.fb.group({
-            numericLowRange: [{value: '', disabled: true}],
-            numericHighRange: [{value: '', disabled: true}]
+            numericLowRange: [{value: 0, disabled: true}],
+            numericHighRange: [{value: 0, disabled: true}]
           })
         });
 
@@ -102,8 +102,8 @@ export class TakeSurveyFormModel {
           textAnswer: ['', requiredTrimWhitespaceValidator()],
           numericAnswer: [{value: 0, disabled: true}],
           numericRange: this.fb.group({
-            numericLowRange: [{value: '', disabled: true}],
-            numericHighRange: [{value: '', disabled: true}]
+            numericLowRange: [{value: 0, disabled: true}],
+            numericHighRange: [{value: 0, disabled: true}]
           })
         });
         break;
@@ -115,8 +115,8 @@ export class TakeSurveyFormModel {
           textAnswer: [{value: '', disabled: true}],
           numericAnswer: [{value: 0, disabled: true}],
           numericRange: this.fb.group({
-            numericLowRange: [{value: '', disabled: true}],
-            numericHighRange: [{value: '', disabled: true}]
+            numericLowRange: [{value: 0, disabled: true}],
+            numericHighRange: [{value: 0, disabled: true}]
           })
         });
         break;
@@ -128,8 +128,8 @@ export class TakeSurveyFormModel {
           textAnswer: [{value: '', disabled: true}],
           numericAnswer: [0],
           numericRange: this.fb.group({
-            numericLowRange: [{value: '', disabled: true}],
-            numericHighRange: [{value: '', disabled: true}]
+            numericLowRange: [{value: 0, disabled: true}],
+            numericHighRange: [{value: 0, disabled: true}]
           })
         });
 

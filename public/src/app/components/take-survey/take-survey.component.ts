@@ -5,7 +5,6 @@ import { Location } from '@angular/common';
 import * as _ from 'lodash';
 
 import { SurveyDataModel } from '../../../../../models/surveys/data/survey-data.model';
-import { SurveyConfigModel } from '../../../../../models/surveys/survey.model';
 import { TakeSurveyFormModel } from '../../../../../models/forms/surveys/take-survey-form.model';
 import { SurveyQuestionDataModel } from '../../../../../models/surveys/data/survey-question-data.model';
 import { SurveyQuestionModel } from '../../../../../models/surveys/survey-question.model';
