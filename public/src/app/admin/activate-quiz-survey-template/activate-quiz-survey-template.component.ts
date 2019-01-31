@@ -213,34 +213,42 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     let newQuiz: boolean = false;
     let newSurvey: boolean = false;
     let newQuizAndSurvey: boolean = false;
+    let noQuiz: boolean = false;
+    let noSurvey: boolean = false;
+    let activeQuizId: number = this.activeQuizId;
+    let activeSurveyId: number = this.activeSurveyId;
 
     if (this.webpageSelected) {
       const webpageSelected = this.webpageSelected;
 
       if (this.quizTemplateSelected === this.noQuiz) {
         this.webpage.quizId = null;
+        noQuiz = true;
+        this.clearQuizForms = true;
       }
       if (this.surveyTemplateSelected === this.noSurvey) {
         this.webpage.surveyId = null;
+        noSurvey = true;
+        this.clearSurveyForms = true;
       }
 
       const webpage = this.webpage;
 
-      if ((!this.activeQuizId && this.quizTemplateSelected !== this.noQuiz) &&
-      (!this.activeSurveyId && this.surveyTemplateSelected !== this.noSurvey)) {
+      if ((!activeQuizId && !noQuiz) &&
+      (!activeSurveyId && !noSurvey)) {
         newQuizAndSurvey = true;
       }
-      else if (!this.activeQuizId && this.quizTemplateSelected !== this.noQuiz) {
+      else if (!activeQuizId && !noQuiz) {
         newQuiz = true;
       }
-      else if (!this.activeSurveyId && this.surveyTemplateSelected !== this.noSurvey) {
+      else if (!activeSurveyId && !noSurvey) {
         newSurvey = true;
       }
 
-      if (this.activeQuizId && this.quizTemplateSelected !== this.noQuiz) {
+      if (activeQuizId && !noQuiz) {
         this.saveExistingQuizChanges();
       }
-      else if (this.quizTemplateSelected === this.noQuiz && !newSurvey) {
+      else if (noQuiz && !newSurvey) {
         this.saveWebpageChanges(webpageSelected, webpage);
       }
       else if (newQuizAndSurvey) {
@@ -250,10 +258,10 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
         this.saveNewQuiz(webpageSelected, webpage);
       }
 
-      if (this.activeSurveyId && this.surveyTemplateSelected !== this.noSurvey) {
+      if (activeSurveyId && !noSurvey) {
         this.saveExistingSurveyChanges();
       }
-      else if (this.surveyTemplateSelected === this.noSurvey && this.quizTemplateSelected !== this.noQuiz && !newQuiz) {
+      else if (noSurvey && !noQuiz && !newQuiz) {
         this.saveWebpageChanges(webpageSelected, webpage);
       }
       else if (!newQuizAndSurvey && newSurvey) {
@@ -563,12 +571,6 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
       (result: any) => {
         if (result) {
           this.saveSuccess = true;
-          if (this.quizTemplateSelected === this.noQuiz) {
-            this.clearQuizForms = true;
-          }
-          if (this.surveyTemplateSelected === this.noSurvey) {
-            this.clearSurveyForms = true;
-          }
         }
       },
       error => {
@@ -620,6 +622,7 @@ export class ActivateQuizSurveyTemplateComponent implements OnInit {
     this.generalError = false;
     this.errorMessage = '';
     this.clearQuizForms = false;
+    this.clearSurveyForms = false;
   }
 
   clearWebpageForm() {
