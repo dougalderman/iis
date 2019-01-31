@@ -2,15 +2,17 @@ import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as expressSession from 'express-session';
 import * as bodyParser from 'body-parser';
+import { Pool } from 'pg';
+
 import { EndpointsController } from './controllers/endpointsController';
 import { TimedTasksController } from './controllers/timedTasksController';
 
 dotenv.config();
-let port = process.env.PORT;
-let app_dir = process.env.APP_DIR;
-let path = __dirname + app_dir;
+let port: string = process.env.PORT;
+let app_dir: string = process.env.APP_DIR;
+let path: string = __dirname + app_dir;
 
-const app = express();
+const app: any = express();
 app.use(bodyParser.json());
 app.use(express.static(path));
 app.use(expressSession({
@@ -19,11 +21,14 @@ app.use(expressSession({
   resave: false
 }));
 
+// Open DB pool connection
+const pgSqlPool = new Pool();
+
 // Execute timed tasks
-new TimedTasksController();
+// new TimedTasksController(pgSqlPool);
 
 // Endpoints
-new EndpointsController(app);
+new EndpointsController(app, pgSqlPool);
 
 app.get('/wiki/*', (req, res) => {
   if (req.originalUrl) {
