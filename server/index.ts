@@ -25,7 +25,7 @@ app.use(expressSession({
 const pgSqlPool = new Pool();
 
 // Execute timed tasks
-// new TimedTasksController(pgSqlPool);
+new TimedTasksController(pgSqlPool);
 
 // Endpoints
 new EndpointsController(app, pgSqlPool);

@@ -1,13 +1,15 @@
+import { Pool } from 'pg';
+
 import { DeleteUnusedQuizQuestionsController } from './timedTasks/deleteUnusedQuizQuestions';
 import { DeleteUnusedSurveyQuestionsController } from './timedTasks/deleteUnusedSurveyQuestions';
 
 export class TimedTasksController {
-  constructor() {
-    this.runTimedTasks()
+  constructor(pgSqlPool: Pool) {
+    this.runTimedTasks(pgSqlPool)
   }
 
-  runTimedTasks() {
-    setInterval(DeleteUnusedQuizQuestionsController.deleteUnusedQuizQuestions, 900000); // every 15 minutes
-    setInterval(DeleteUnusedSurveyQuestionsController.deleteUnusedSurveyQuestions, 900000); // every 15 minutes
+  runTimedTasks(pgSqlPool: Pool) {
+    setInterval(() => { DeleteUnusedQuizQuestionsController.deleteUnusedQuizQuestions(pgSqlPool) }, 900000); // every 15 minutes
+    setInterval(() => { DeleteUnusedSurveyQuestionsController.deleteUnusedSurveyQuestions(pgSqlPool) }, 900000); // every 15 minutes
   }
 }

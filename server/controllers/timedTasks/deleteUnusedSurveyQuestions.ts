@@ -2,8 +2,7 @@ import { Pool } from 'pg';
 
 export class DeleteUnusedSurveyQuestionsController {
 
-  static deleteUnusedSurveyQuestions() : void {
-    const pgSqlPool = new Pool();
+  static deleteUnusedSurveyQuestions(pgSqlPool: Pool) : void {
     const query = {
       text: 'DELETE FROM SurveyQuestions WHERE survey_id IS NULL AND template_id IS NULL;',
       values: []
