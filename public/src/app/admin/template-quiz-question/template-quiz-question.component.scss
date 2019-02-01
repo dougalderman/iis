@@ -13,8 +13,11 @@
 }
 
 input[type='text']  {
-  width: 90%;
   margin-right: .5rem;
+
+  &.question-text {
+    width: 90%;
+  }
 }
 
 span.multiple-choice-option-id {
@@ -33,7 +36,11 @@ span.multiple-choice-option {
 }
 
 div.multiple-choice-option-radio {
-  width: 30%;
+  margin-right: .5rem;
+}
+
+div.multiple-choice-option-container {
+  width: 71%;
 }
 
 form.quiz-question {

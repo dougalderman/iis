@@ -11,6 +11,7 @@ export class PreviewQuizTemplateFormModel  {
 
   answer: FormGroup = this.fb.group({
     options: this.fb.array([]),
+    correctOption: [{value: 0, disabled: true}],
     booleanCorrectAnswer: [{value: false, disabled: true}],
     correctAnswerArray: this.fb.array([]),
   });
@@ -54,12 +55,17 @@ export class PreviewQuizTemplateFormModel  {
 
     switch (questionType) {
       case 'textQuestionMultipleChoice':
+
         if (question) {
           let options = answer.controls.options as FormArray;
+          let correctOption = answer.controls.correctOption;
           if (question.options && question.options.length) {
             for (let i = 0; i < question.options.length; i++) {
+              const option = question.options[i];
+              if (option.optionCorrectAnswer) {
+                correctOption.setValue(i);
+              }
               options.push(this.fb.group({
-                optionCorrectAnswer: [{value: question.options[i].optionCorrectAnswer, disabled: true}],
                 option: [{value: question.options[i].option, disabled: true}]
               }));
             }

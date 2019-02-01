@@ -1,9 +1,8 @@
-import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms'
+import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { QuizQuestionModel } from  '../../quizzes/quiz-question.model';
 import { checkForDuplicatesValidator } from '../../../public/src/app/validators/check-for-duplicates.validator';
-import { optionsCorrectAnswerRequiredValidator } from '../../../public/src/app/validators/options-correct-answer-required.validator';
 import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
 import { CheckQuizTemplateNameValidator } from '../../../public/src/app/validators/check-quiz-template-name.validator';
 import { getDefaultQuestionType } from '../../../public/src/app/utilities/get-default-question-type.utility';
@@ -19,11 +18,8 @@ export class CreateModifyQuizTemplateFormModel {
   })
 
   answer: FormGroup = this.fb.group({
-    options: this.fb.array([],
-      {
-        validators: optionsCorrectAnswerRequiredValidator
-      }
-    ),
+    options: this.fb.array([]),
+    correctOption: ['', Validators.required],
     booleanCorrectAnswer: [false],
     correctAnswerArray: this.fb.array([]),
   });
@@ -86,17 +82,28 @@ export class CreateModifyQuizTemplateFormModel {
   }
 
   getAnswer(questionType: string, question?: QuizQuestionModel): FormGroup {
-    let answer: FormGroup = _.cloneDeep(this.answer);
+    let answer: FormGroup;
 
     switch (questionType) {
       case 'textQuestionMultipleChoice':
+        answer = this.fb.group({
+          options: this.fb.array([]),
+          correctOption: ['', Validators.required],
+          booleanCorrectAnswer: [{value: false, disabled: true}],
+          correctAnswerArray: this.fb.array([]),
+        });
+
         if (question) {
           let options = answer.controls.options as FormArray;
+          let correctOption = answer.controls.correctOption;
           if (question.options && question.options.length) {
             for (let i = 0; i < question.options.length; i++) {
+              const option = question.options[i];
+              if (option.optionCorrectAnswer) {
+                correctOption.setValue(i);
+              }
               options.push(this.fb.group({
-                optionCorrectAnswer: [question.options[i].optionCorrectAnswer],
-                option: [question.options[i].option, [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', i)]]
+                option: [option.option, [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', i)]]
               }));
             }
           }
@@ -104,6 +111,13 @@ export class CreateModifyQuizTemplateFormModel {
         break;
 
       case 'textQuestionShortAnswer':
+        answer = this.fb.group({
+          options: this.fb.array([]),
+          correctOption: [{value: 0, disabled: true}],
+          booleanCorrectAnswer: [{value: false, disabled: true}],
+          correctAnswerArray: this.fb.array([]),
+        });
+
         if (question) {
           let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
           if (question.correctAnswerArray && question.correctAnswerArray.length) {
@@ -119,6 +133,13 @@ export class CreateModifyQuizTemplateFormModel {
         break;
 
       case 'textQuestionBoolean':
+        answer = this.fb.group({
+          options: this.fb.array([]),
+          correctOption: [{value: 0, disabled: true}],
+          booleanCorrectAnswer: [false],
+          correctAnswerArray: this.fb.array([]),
+        });
+
         if (question) {
           answer.controls.booleanCorrectAnswer.setValue(question.booleanCorrectAnswer);
         }
@@ -135,7 +156,6 @@ export class CreateModifyQuizTemplateFormModel {
       let options =  answer.controls.options as FormArray;
 
       options.push(this.fb.group({
-        optionCorrectAnswer: [false],
         option: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', options.length)]]
       }));
     }
