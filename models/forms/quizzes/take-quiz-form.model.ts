@@ -2,7 +2,6 @@ import { FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { QuizQuestionModel } from  '../../quizzes/quiz-question.model';
-import { noOptionsSelectedValidator } from '../../../public/src/app/validators/no-options-selected.validator';
 import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
 
 export class TakeQuizFormModel {
@@ -11,11 +10,8 @@ export class TakeQuizFormModel {
   ) {}
 
   answer: FormGroup = this.fb.group({
-    options: this.fb.array([],
-      {
-        validators: noOptionsSelectedValidator
-      }
-    ),
+    options: this.fb.array([]),
+    selectedOption: ['', Validators.required],
     booleanAnswer: ['', Validators.required],
     textAnswer: ['', requiredTrimWhitespaceValidator()]
   });
@@ -62,11 +58,8 @@ export class TakeQuizFormModel {
       case 'textQuestionMultipleChoice':
 
         answer = this.fb.group({
-          options: this.fb.array([],
-            {
-              validators: noOptionsSelectedValidator
-            }
-          ),
+          options: this.fb.array([]),
+          selectedOption: ['', Validators.required],
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: [{value: '', disabled: true}]
         });
@@ -76,7 +69,6 @@ export class TakeQuizFormModel {
           if (question.options && question.options.length) {
             for (let i = 0; i < question.options.length; i++) {
               options.push(this.fb.group({
-                optionSelect: [false],
                 option: [{value: question.options[i].option, disabled: true}]
               }));
             }
@@ -88,6 +80,7 @@ export class TakeQuizFormModel {
       case 'textQuestionShortAnswer':
         answer = this.fb.group({
           options: this.fb.array([]),
+          selectedOption: [{value: 0, disabled: true}],
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: ['', requiredTrimWhitespaceValidator()]
         });
@@ -96,6 +89,7 @@ export class TakeQuizFormModel {
       case 'textQuestionBoolean':
         answer = this.fb.group({
           options: this.fb.array([]),
+          selectedOption: [{value: 0, disabled: true}],
           booleanAnswer: ['', Validators.required],
           textAnswer: [{value: '', disabled: true}]
         });

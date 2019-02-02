@@ -145,7 +145,7 @@ export class TakeQuizComponent implements OnInit {
     switch (question.questionType) {
       case 'textQuestionMultipleChoice':
         const correctOptionIndex = _.findIndex(question.options, ['optionCorrectAnswer', true]);
-        const userSelectedOptionIndex = _.findIndex(answer.controls.options.value, ['optionSelect', true])
+        const userSelectedOptionIndex = answer.controls.selectedOption.value;
 
         if (correctOptionIndex === userSelectedOptionIndex) {
           this.answeredCorrectly = true;

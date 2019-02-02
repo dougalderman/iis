@@ -2,7 +2,6 @@ import { FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms'
 import * as _ from 'lodash';
 
 import { SurveyQuestionModel } from  '../../surveys/survey-question.model';
-import { noOptionsSelectedValidator } from '../../../public/src/app/validators/no-options-selected.validator';
 import { requiredTrimWhitespaceValidator } from '../../../public/src/app/validators/required-trim-whitespace.validator';
 
 export class TakeSurveyFormModel {
@@ -11,11 +10,7 @@ export class TakeSurveyFormModel {
   ) {}
 
   answer: FormGroup = this.fb.group({
-    options: this.fb.array([],
-      {
-        validators: noOptionsSelectedValidator
-      }
-    ),
+    options: this.fb.array([]),
     booleanAnswer: ['', Validators.required],
     textAnswer: ['', requiredTrimWhitespaceValidator()],
     numericAnswer: [0],
@@ -67,11 +62,7 @@ export class TakeSurveyFormModel {
       case 'textQuestionMultipleChoice':
 
         answer = this.fb.group({
-          options: this.fb.array([],
-            {
-              validators: noOptionsSelectedValidator
-            }
-          ),
+          options: this.fb.array([]),
           booleanAnswer: [{value: false, disabled: true}],
           textAnswer: [{value: '', disabled: true}],
           numericAnswer: [{value: 0, disabled: true}],
