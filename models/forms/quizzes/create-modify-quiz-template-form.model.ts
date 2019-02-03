@@ -153,7 +153,9 @@ export class CreateModifyQuizTemplateFormModel {
     if (typeof questionIndex === 'number') {
       let question = this.formQuestions.controls[questionIndex] as FormGroup;
       let answer = question.controls.answer as FormGroup;
+      let correctOption = answer.controls.correctOption;
       let options =  answer.controls.options as FormArray;
+      correctOption.setValue('');
 
       options.push(this.fb.group({
         option: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', options.length)]]
@@ -167,15 +169,9 @@ export class CreateModifyQuizTemplateFormModel {
       let answer = question.controls.answer as FormGroup;
       let options =  answer.controls.options as FormArray;
       let correctOption = answer.controls.correctOption;
+      correctOption.setValue('');
 
       options.removeAt(optionIndex);
-
-      if (optionIndex < correctOption.value) {
-        correctOption.setValue(correctOption.value - 1);
-      }
-      else if (optionIndex === correctOption.value) {
-        correctOption.setValue('');
-      }
     }
   }
 
