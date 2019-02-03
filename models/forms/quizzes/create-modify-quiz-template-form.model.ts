@@ -1,4 +1,4 @@
-import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms'
+import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
 
 import { QuizQuestionModel } from  '../../quizzes/quiz-question.model';
@@ -166,8 +166,16 @@ export class CreateModifyQuizTemplateFormModel {
       let question = this.formQuestions.controls[questionIndex] as FormGroup;
       let answer = question.controls.answer as FormGroup;
       let options =  answer.controls.options as FormArray;
+      let correctOption = answer.controls.correctOption;
 
       options.removeAt(optionIndex);
+
+      if (optionIndex < correctOption.value) {
+        correctOption.setValue(correctOption.value - 1);
+      }
+      else if (optionIndex === correctOption.value) {
+        correctOption.setValue('');
+      }
     }
   }
 
