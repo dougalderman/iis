@@ -18,10 +18,18 @@ export class CreateModifyQuizTemplateFormModel {
   })
 
   answer: FormGroup = this.fb.group({
-    options: this.fb.array([]),
+    options: this.fb.array([],
+      {
+        validators: checkForDuplicatesValidator
+      }
+    ),
     correctOption: ['', Validators.required],
     booleanCorrectAnswer: [false],
-    correctAnswerArray: this.fb.array([]),
+    correctAnswerArray: this.fb.array([],
+      {
+        validators: checkForDuplicatesValidator
+      }
+    )
   });
 
   question: FormGroup = this.fb.group({
@@ -87,10 +95,14 @@ export class CreateModifyQuizTemplateFormModel {
     switch (questionType) {
       case 'textQuestionMultipleChoice':
         answer = this.fb.group({
-          options: this.fb.array([]),
+          options: this.fb.array([],
+            {
+              validators: checkForDuplicatesValidator
+            }
+          ),
           correctOption: ['', Validators.required],
           booleanCorrectAnswer: [{value: false, disabled: true}],
-          correctAnswerArray: this.fb.array([]),
+          correctAnswerArray: this.fb.array([])
         });
 
         if (question) {
@@ -103,7 +115,7 @@ export class CreateModifyQuizTemplateFormModel {
                 correctOption.setValue(i);
               }
               options.push(this.fb.group({
-                option: [option.option, [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', i)]]
+                option: [option.option, requiredTrimWhitespaceValidator()]
               }));
             }
           }
@@ -115,7 +127,11 @@ export class CreateModifyQuizTemplateFormModel {
           options: this.fb.array([]),
           correctOption: [{value: 0, disabled: true}],
           booleanCorrectAnswer: [{value: false, disabled: true}],
-          correctAnswerArray: this.fb.array([]),
+          correctAnswerArray: this.fb.array([],
+            {
+              validators: checkForDuplicatesValidator
+            }
+          )
         });
 
         if (question) {
@@ -124,7 +140,7 @@ export class CreateModifyQuizTemplateFormModel {
             for (let i = 0; i < question.correctAnswerArray.length; i++) {
               correctAnswerArray.push(
                 this.fb.group({
-                  correctAnswer: [question.correctAnswerArray[i], [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('correctAnswer', i)]]
+                  correctAnswer: [question.correctAnswerArray[i], requiredTrimWhitespaceValidator()]
                 })
               );
             }
@@ -137,7 +153,7 @@ export class CreateModifyQuizTemplateFormModel {
           options: this.fb.array([]),
           correctOption: [{value: 0, disabled: true}],
           booleanCorrectAnswer: [false],
-          correctAnswerArray: this.fb.array([]),
+          correctAnswerArray: this.fb.array([])
         });
 
         if (question) {
@@ -158,7 +174,7 @@ export class CreateModifyQuizTemplateFormModel {
       correctOption.setValue('');
 
       options.push(this.fb.group({
-        option: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', options.length)]]
+        option: ['', requiredTrimWhitespaceValidator()]
       }));
     }
   }
@@ -182,7 +198,7 @@ export class CreateModifyQuizTemplateFormModel {
       let correctAnswerArray = answer.controls.correctAnswerArray as FormArray;
 
       correctAnswerArray.push(this.fb.group({
-        correctAnswer: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('correctAnswer', correctAnswerArray.length)]],
+        correctAnswer: ['', requiredTrimWhitespaceValidator()],
       }));
     }
   }
