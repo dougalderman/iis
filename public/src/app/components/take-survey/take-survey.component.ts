@@ -108,7 +108,7 @@ export class TakeSurveyComponent implements OnInit {
 
     switch (question.questionType) {
       case 'textQuestionMultipleChoice':
-        const userSelectedOptionIndex = _.findIndex(answer.controls.options.value, ['optionSelect', true])
+        const userSelectedOptionIndex = answer.controls.selectedOption.value;
         const options: FormArray = answer.controls.options as FormArray;
         const option: FormGroup = options.controls[userSelectedOptionIndex] as FormGroup;
         surveyAnswer.textAnswer = option.controls.option.value;

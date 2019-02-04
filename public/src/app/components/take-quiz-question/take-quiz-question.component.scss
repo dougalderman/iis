@@ -6,6 +6,10 @@ input[type='text'] {
   font-size: 1.2rem;
 }
 
+.full-width {
+  width: 100%;
+}
+
 .three-rem-margin-bottom {
   margin-bottom: 3rem;
 }
@@ -16,6 +20,10 @@ input[type='text'] {
 
 span.multiple-choice-option-id {
   margin-right: 0.5rem;
+}
+
+div.multiple-choice-option-radio {
+  margin-right: .5rem;
 }
 
 label.left-padding {

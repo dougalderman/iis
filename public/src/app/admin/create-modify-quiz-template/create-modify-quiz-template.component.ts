@@ -310,9 +310,12 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   saveAllTemplateQuestions(templateId: number): void {
-    let questions = this.formQuestions.value;
+    const questions: any = this.formQuestions.value;
     let questionSavedCount = 0;
     for (let i = 0; i < questions.length; i++) {
+      const answer: any = questions[i].answer;
+      let correctOption: number;
+
       this.question = new QuizQuestionModel()
       this.question.templateId = templateId;
       this.question.textQuestion = questions[i].text;
@@ -321,10 +324,19 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
       }
       this.question.questionType = questions[i].typeSelect;
       this.question.options = [];
-      for (let option of questions[i].answer.options) {
+
+      if (typeof answer.correctOption === 'number') {
+        correctOption = answer.correctOption;
+      }
+      for (let j = 0; j < answer.options.length; j++) {
+        const option = answer.options[j];
+        let correctAnswer = false;
+        if (j === correctOption) {
+          correctAnswer = true;
+        }
         if (option.option) {
           this.question.options.push({
-            optionCorrectAnswer: option.optionCorrectAnswer,
+            optionCorrectAnswer: correctAnswer,
             option: option.option.trim()
           });
         }

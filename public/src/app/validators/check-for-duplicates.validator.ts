@@ -1,24 +1,28 @@
-import { ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
+import { ValidatorFn, ValidationErrors, AbstractControl, FormArray } from '@angular/forms';
 
-export function checkForDuplicatesValidator(type, index): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
+export function checkForDuplicatesValidator(key: string): ValidatorFn  {
+  return (control: FormArray): ValidationErrors | null => {
     let duplicate = false;
+    let arr = [];
 
-    if (control && control.value && control.parent && control.parent.parent) {
-      const val = control.value.trim().toLowerCase();
-      const arr: any[] = control.parent.parent.value;
-      for (let i = 0; i < arr.length; i++) {
-        let previousVal = arr[i][type];
-        if (previousVal) {
-          previousVal = previousVal.trim().toLowerCase();
+    if (control && control.value && control.value.length > 1) {
+      for (let i = 0; i < control.value.length; i++) {
+        const val = control.value[i];
+        if (val[key]) {
+          arr.push(val[key].trim());
         }
-        if (i !== index && val === previousVal) {
-          duplicate = true;
+      }
+
+      if (arr.length > 1) {
+        arr.sort();
+        for (let i = 0; i < arr.length - 1; i++) {
+          if (arr[i + 1] === arr[i]) {
+            duplicate = true;
+          }
         }
       }
     }
 
-    return duplicate ? {'duplicate': {value: control.value}} : null;
+    return duplicate ? { 'duplicate': true } : null;
   };
 }
-

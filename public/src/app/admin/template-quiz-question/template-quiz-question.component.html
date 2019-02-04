@@ -9,7 +9,7 @@
   <div class="form-group">
     <label>Question Text:</label>
     <div class="double-wide flex-display">
-      <input type="text" class="form-control" formControlName="text" required>
+      <input type="text" class="form-control question-text" formControlName="text" required>
       <img class="delete_icon" *ngIf="questions.controls.length > 1" (click)="deleteQuestion()" src="../../../assets/images/delete_icon.jpg" height="20">
     </div>
     <div *ngIf="question.controls.text.invalid && (question.controls.text.dirty || question.controls.text.touched)">
@@ -19,28 +19,30 @@
   <div formGroupName="answer">
     <div *ngIf="question.controls.typeSelect.value==='textQuestionMultipleChoice'">
       <label>Multiple Choice Options:</label>
-      <div formArrayName="options" class="form-group">
-        <div class="form-group">
-          <div *ngFor="let option of question.controls.answer.controls.options.controls; let i=index">
-            <div [formGroupName]="i" class="double-wide flex-display">
-              <span class="multiple-choice-option-id">{{alphaIdArray[i]}}:</span>
-              <div class="custom-control custom-radio multiple-choice-option-radio">
-                <input type="radio" id="{{'option' + questionIndex.toString() + i.toString()}}" class="custom-control-input" name="optionCorrectAnswer" formControlName="optionCorrectAnswer" [value]="true">
-                <label class="custom-control-label" for="{{'option' + questionIndex.toString() + i.toString()}}">Correct Answer</label>
-              </div>
-              <span class="multiple-choice-option">Option:</span>
-              <input type="text"  class="form-control" formControlName="option" required>
-              <img class="delete_icon" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i)" src="../../../assets/images/delete_icon.jpg" height="20">
+      <div class="form-group">
+        <div *ngFor="let option of question.controls.answer.controls.options.controls; let i=index">
+          <div class="double-wide flex-display">
+            <span class="multiple-choice-option-id">{{alphaIdArray[i]}}:</span>
+            <div class="custom-control custom-radio multiple-choice-option-radio">
+              <input type="radio" id="{{'option' + questionIndex.toString() + i.toString()}}" class="custom-control-input" formControlName="correctOption" [value]="i">
+              <label class="custom-control-label" for="{{'option' + questionIndex.toString() + i.toString()}}">Correct Answer</label>
             </div>
-            <div *ngIf="option.controls.option.invalid && (option.controls.option.dirty || option.controls.option.touched)">
-              <div *ngIf="option.controls.option.errors && option.controls.option.errors.duplicate" class="alert alert-warning">Duplicate option</div>
-              <div *ngIf="option.controls.option.errors && option.controls.option.errors.requiredTrimWhitespace" class="alert alert-warning">Option is required</div>
+            <div formArrayName="options" class="multiple-choice-option-container">
+              <div [formGroupName]="i" class="flex-display">
+                <span class="multiple-choice-option">Option:</span>
+                <input type="text" class="form-control" formControlName="option" required>
+                <img class="delete_icon" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i)" src="../../../assets/images/delete_icon.jpg" height="20">
+              </div>
             </div>
           </div>
-          <div *ngIf="question.controls.answer.controls.options.length > 1 && question.controls.answer.controls.options.errors && question.controls.answer.controls.options.errors.noOptionsCorrectAnswer" class="alert alert-warning">Please select a correct answer</div>
+          <div *ngIf="option.controls.option.invalid && (option.controls.option.dirty || option.controls.option.touched)">
+            <div *ngIf="option.controls.option.errors && option.controls.option.errors.requiredTrimWhitespace" class="alert alert-warning">Option is required</div>
+          </div>
         </div>
-        <button type="button" class="btn btn-secondary" (click)="addOption()">Add New Option</button>
+        <div *ngIf="question.controls.answer.controls.options.length > 1 && question.controls.answer.controls.correctOption.errors && question.controls.answer.controls.correctOption.errors.required" class="alert alert-warning">Please select a correct answer</div>
+        <div *ngIf="question.controls.answer.controls.options.length > 1 && question.controls.answer.controls.options.errors && question.controls.answer.controls.options.errors.duplicate" class="alert alert-warning">Duplicate option</div>
       </div>
+      <button type="button" class="btn btn-secondary" (click)="addOption()">Add New Option</button>
     </div>
     <div *ngIf="question.controls.typeSelect.value==='textQuestionShortAnswer'" class="form-group">
       <label>Correct Answers:</label>
@@ -54,9 +56,9 @@
             </div>
             <div *ngIf="correctAnswer.controls.correctAnswer.invalid && (correctAnswer.controls.correctAnswer.dirty || correctAnswer.controls.correctAnswer.touched)">
               <div *ngIf="correctAnswer.controls.correctAnswer.errors && correctAnswer.controls.correctAnswer.errors.requiredTrimWhitespace" class="alert alert-warning">Correct answer is required</div>
-              <div *ngIf="correctAnswer.controls.correctAnswer.errors && correctAnswer.controls.correctAnswer.errors.duplicate" class="alert alert-warning">Duplicate correct answer</div>
             </div>
           </div>
+          <div *ngIf="question.controls.answer.controls.correctAnswerArray.length > 1 && question.controls.answer.controls.correctAnswerArray.errors && question.controls.answer.controls.correctAnswerArray.errors.duplicate" class="alert alert-warning">Duplicate correct answer</div>
         </div>
         <button type="button" class="btn btn-secondary" (click)="addCorrectAnswer()">Add New Correct Answer</button>
       </div>
@@ -65,11 +67,11 @@
       <label>Correct Answer:</label>
       <br>
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="{{'booleanTrueAnswer' + questionIndex}}" class="custom-control-input" name="booleanCorrectAnswer" formControlName="booleanCorrectAnswer" [value]="true">
+        <input type="radio" id="{{'booleanTrueAnswer' + questionIndex}}" class="custom-control-input" formControlName="booleanCorrectAnswer" [value]="true">
         <label class="custom-control-label" for="{{'booleanTrueAnswer' + questionIndex}}">True</label>
       </div>
       <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="{{'booleanFalseAnswer' + questionIndex}}" class="custom-control-input" name="booleanCorrectAnswer" formControlName="booleanCorrectAnswer" [value]="false">
+        <input type="radio" id="{{'booleanFalseAnswer' + questionIndex}}" class="custom-control-input" formControlName="booleanCorrectAnswer" [value]="false">
         <label class="custom-control-label" for="{{'booleanFalseAnswer' + questionIndex}}">False</label>
       </div>
     </div>

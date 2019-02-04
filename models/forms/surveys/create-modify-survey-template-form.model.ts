@@ -19,7 +19,11 @@ export class CreateModifySurveyTemplateFormModel {
   });
 
   answer: FormGroup = this.fb.group({
-    options: this.fb.array([]),
+    options: this.fb.array([],
+      {
+        validators: checkForDuplicatesValidator('option')
+      }
+    ),
     numericRange: this.fb.group({
       numericLowRange: ['', [Validators.required, Validators.min(1)]],
       numericHighRange: ['', [Validators.required, Validators.min(2)]]
@@ -92,7 +96,11 @@ export class CreateModifySurveyTemplateFormModel {
       case 'textQuestionMultipleChoice':
 
         answer = this.fb.group({
-          options: this.fb.array([]),
+          options: this.fb.array([],
+            {
+              validators: checkForDuplicatesValidator('option')
+            }
+          ),
           numericRange: this.fb.group({
             numericLowRange: [{value: '', disabled: true}],
             numericHighRange: [{value: '', disabled: true}]
@@ -104,7 +112,7 @@ export class CreateModifySurveyTemplateFormModel {
           if (question.options && question.options.length) {
             for (let i = 0; i < question.options.length; i++) {
               options.push(this.fb.group({
-                option: [question.options[i], [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', i)]]
+                option: [question.options[i], requiredTrimWhitespaceValidator()]
               }));
             }
           }
@@ -156,7 +164,7 @@ export class CreateModifySurveyTemplateFormModel {
       let options =  answer.controls.options as FormArray;
 
       options.push(this.fb.group({
-        option: ['', [requiredTrimWhitespaceValidator(), checkForDuplicatesValidator('option', options.length)]]
+        option: ['', requiredTrimWhitespaceValidator()]
       }));
     }
   }

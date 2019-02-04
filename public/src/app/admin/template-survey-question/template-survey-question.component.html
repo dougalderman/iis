@@ -29,10 +29,10 @@
               <img class="delete_icon" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i)" src="../../../assets/images/delete_icon.jpg" height="20">
             </div>
             <div *ngIf="option.controls.option.invalid && (option.controls.option.dirty || option.controls.option.touched)">
-              <div *ngIf="option.controls.option.errors && option.controls.option.errors.duplicate" class="alert alert-warning">Duplicate option</div>
               <div *ngIf="option.controls.option.errors && option.controls.option.errors.requiredTrimWhitespace" class="alert alert-warning">Option is required</div>
             </div>
           </div>
+          <div *ngIf="question.controls.answer.controls.options.length > 1 && question.controls.answer.controls.options.errors && question.controls.answer.controls.options.errors.duplicate" class="alert alert-warning">Duplicate option</div>
         </div>
         <button type="button" class="btn btn-secondary" (click)="addOption()">Add New Option</button>
       </div>
