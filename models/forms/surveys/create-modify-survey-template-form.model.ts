@@ -1,5 +1,4 @@
 import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms'
-import * as _ from 'lodash';
 
 import { SurveyQuestionModel } from  '../../surveys/survey-question.model';
 import { numericRangeValidator } from '../../../public/src/app/validators/numeric-range.validator';
@@ -14,28 +13,16 @@ export class CreateModifySurveyTemplateFormModel {
     private checkSurveyTemplateName: CheckSurveyTemplateNameValidator
   ) {}
 
+  private defaultQuestionType = getDefaultQuestionType('survey');
+
   selectTemplateForm: FormGroup = this.fb.group({
     templateSelect: new FormControl('')
   });
 
-  answer: FormGroup = this.fb.group({
-    options: this.fb.array([],
-      {
-        validators: checkForDuplicatesValidator('option')
-      }
-    ),
-    numericRange: this.fb.group({
-      numericLowRange: ['', [Validators.required, Validators.min(1)]],
-      numericHighRange: ['', [Validators.required, Validators.min(2)]]
-    }, {
-      validators: numericRangeValidator
-    })
-  });
-
   question: FormGroup = this.fb.group({
     text: ['', requiredTrimWhitespaceValidator()],
-    typeSelect: new FormControl(getDefaultQuestionType('survey')),
-    answer: _.cloneDeep(this.answer)
+    typeSelect: new FormControl(this.defaultQuestionType),
+    answer:  this.getAnswer(this.defaultQuestionType)
   });
 
   questions: FormArray = this.fb.array([
@@ -65,11 +52,10 @@ export class CreateModifySurveyTemplateFormModel {
       }));
     }
     else {
-      const defaultQuestionType = getDefaultQuestionType('survey');
       this.formQuestions.push(this.fb.group({
         text: ['', requiredTrimWhitespaceValidator()],
-        typeSelect: new FormControl(defaultQuestionType),
-        answer: this.getAnswer(defaultQuestionType)
+        typeSelect: new FormControl(this.defaultQuestionType),
+        answer: this.getAnswer(this.defaultQuestionType)
       }));
     }
   }

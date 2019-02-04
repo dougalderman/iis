@@ -1,5 +1,4 @@
 import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
-import * as _ from 'lodash';
 
 import { QuizQuestionModel } from  '../../quizzes/quiz-question.model';
 import { checkForDuplicatesValidator } from '../../../public/src/app/validators/check-for-duplicates.validator';
@@ -13,29 +12,16 @@ export class CreateModifyQuizTemplateFormModel {
     private checkQuizTemplateName: CheckQuizTemplateNameValidator
   ) {}
 
+  private defaultQuestionType = getDefaultQuestionType('quiz');
+
   selectTemplateForm: FormGroup = this.fb.group({
     templateSelect: new FormControl('')
   })
 
-  answer: FormGroup = this.fb.group({
-    options: this.fb.array([],
-      {
-        validators: checkForDuplicatesValidator('option')
-      }
-    ),
-    correctOption: ['', Validators.required],
-    booleanCorrectAnswer: [false],
-    correctAnswerArray: this.fb.array([],
-      {
-        validators: checkForDuplicatesValidator('correctAnswer')
-      }
-    )
-  });
-
   question: FormGroup = this.fb.group({
     text: ['', requiredTrimWhitespaceValidator()],
-    typeSelect: new FormControl(getDefaultQuestionType('quiz')),
-    answer: _.cloneDeep(this.answer)
+    typeSelect: new FormControl(this.defaultQuestionType),
+    answer:  this.getAnswer(this.defaultQuestionType)
   });
 
   questions: FormArray = this.fb.array([
@@ -65,11 +51,10 @@ export class CreateModifyQuizTemplateFormModel {
       }));
     }
     else {
-      const defaultQuestionType = getDefaultQuestionType('quiz');
       this.formQuestions.push(this.fb.group({
         text: ['', requiredTrimWhitespaceValidator()],
-        typeSelect: new FormControl(defaultQuestionType),
-        answer: this.getAnswer(defaultQuestionType)
+        typeSelect: new FormControl(this.defaultQuestionType),
+        answer: this.getAnswer(this.defaultQuestionType)
       }));
     }
   }
@@ -169,7 +154,6 @@ export class CreateModifyQuizTemplateFormModel {
     if (typeof questionIndex === 'number') {
       let question = this.formQuestions.controls[questionIndex] as FormGroup;
       let answer = question.controls.answer as FormGroup;
-      let correctOption = answer.controls.correctOption;
       let options =  answer.controls.options as FormArray;
 
       options.push(this.fb.group({
