@@ -21,7 +21,7 @@ export class CreateModifySurveyTemplateFormModel {
   answer: FormGroup = this.fb.group({
     options: this.fb.array([],
       {
-        validators: checkForDuplicatesValidator
+        validators: checkForDuplicatesValidator('option')
       }
     ),
     numericRange: this.fb.group({
@@ -98,7 +98,7 @@ export class CreateModifySurveyTemplateFormModel {
         answer = this.fb.group({
           options: this.fb.array([],
             {
-              validators: checkForDuplicatesValidator
+              validators: checkForDuplicatesValidator('option')
             }
           ),
           numericRange: this.fb.group({

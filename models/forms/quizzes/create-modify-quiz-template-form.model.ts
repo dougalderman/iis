@@ -20,14 +20,14 @@ export class CreateModifyQuizTemplateFormModel {
   answer: FormGroup = this.fb.group({
     options: this.fb.array([],
       {
-        validators: checkForDuplicatesValidator
+        validators: checkForDuplicatesValidator('option')
       }
     ),
     correctOption: ['', Validators.required],
     booleanCorrectAnswer: [false],
     correctAnswerArray: this.fb.array([],
       {
-        validators: checkForDuplicatesValidator
+        validators: checkForDuplicatesValidator('correctAnswer')
       }
     )
   });
@@ -97,7 +97,7 @@ export class CreateModifyQuizTemplateFormModel {
         answer = this.fb.group({
           options: this.fb.array([],
             {
-              validators: checkForDuplicatesValidator
+              validators: checkForDuplicatesValidator('option')
             }
           ),
           correctOption: ['', Validators.required],
@@ -129,7 +129,7 @@ export class CreateModifyQuizTemplateFormModel {
           booleanCorrectAnswer: [{value: false, disabled: true}],
           correctAnswerArray: this.fb.array([],
             {
-              validators: checkForDuplicatesValidator
+              validators: checkForDuplicatesValidator('correctAnswer')
             }
           )
         });
@@ -171,7 +171,6 @@ export class CreateModifyQuizTemplateFormModel {
       let answer = question.controls.answer as FormGroup;
       let correctOption = answer.controls.correctOption;
       let options =  answer.controls.options as FormArray;
-      correctOption.setValue('');
 
       options.push(this.fb.group({
         option: ['', requiredTrimWhitespaceValidator()]
@@ -185,7 +184,12 @@ export class CreateModifyQuizTemplateFormModel {
       let answer = question.controls.answer as FormGroup;
       let options =  answer.controls.options as FormArray;
       let correctOption = answer.controls.correctOption;
-      correctOption.setValue('');
+
+      if (optionIndex <= correctOption.value) {
+      // Selected radio button becomes out of sync with correctOption after deleting option,
+      // so force user to re-select.
+        correctOption.setValue('');
+      }
 
       options.removeAt(optionIndex);
     }
