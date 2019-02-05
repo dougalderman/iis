@@ -18,6 +18,7 @@ import { TakeQuizComponent } from './components/take-quiz/take-quiz.component';
 import { TakeSurveyComponent } from './components/take-survey/take-survey.component';
 import { TakeQuizQuestionComponent } from './components/take-quiz-question/take-quiz-question.component';
 import { TakeSurveyQuestionComponent } from './components/take-survey-question/take-survey-question.component';
+import { DemoMenuComponent } from './components/demo-menu/demo-menu.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { TakeSurveyQuestionComponent } from './components/take-survey-question/t
     TakeQuizComponent,
     TakeSurveyComponent,
     TakeQuizQuestionComponent,
-    TakeSurveyQuestionComponent
+    TakeSurveyQuestionComponent,
+    DemoMenuComponent
   ],
   imports: [
     BrowserModule,
