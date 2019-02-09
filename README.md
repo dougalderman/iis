@@ -1,6 +1,6 @@
 # Angular Interactive Informational Site (IIS)
 
-See Demo Version at xxx
+See Demo Version at http://159.203.187.71:5482
 
 ## Description
 
