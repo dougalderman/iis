@@ -1,4 +1,4 @@
-# Angular Interactive Informational Site (IIS)
+# Angular Interactive Informational Site
 
 See Demo Version at http://159.203.187.71:5482
 
