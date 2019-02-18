@@ -10,7 +10,7 @@
     </select>
   </div>
 </form>
-<div *ngIf="templateSelected > 0 || actSurveyId" class="form-group three-rem-margin-bottom">
+<div [hidden]="templateSelected <= 0 && !actSurveyId" class="form-group three-rem-margin-bottom">
   <form [formGroup]="surveyForm">
     <div class="form-group  three-rem-margin-bottom">
       <div class="form-group">

@@ -21,7 +21,7 @@ export class CreateModifyQuizTemplateFormModel {
   question: FormGroup = this.fb.group({
     text: ['', requiredTrimWhitespaceValidator()],
     typeSelect: new FormControl(this.defaultQuestionType),
-    answer:  this.getAnswer(this.defaultQuestionType)
+    answer: this.getAnswer(this.defaultQuestionType)
   });
 
   questions: FormArray = this.fb.array([

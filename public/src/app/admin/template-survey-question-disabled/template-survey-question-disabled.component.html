@@ -9,7 +9,7 @@
   <div class="form-group">
     <label>Question Text:</label>
     <div class="flex-display">
-      <input type="text" class="form-control" formControlName="text" required>
+      <input type="text" class="form-control" formControlName="text">
     </div>
   </div>
   <div formGroupName="answer">
@@ -21,7 +21,7 @@
             <div [formGroupName]="i" class="flex-display wider">
               <span class="multiple-choice-option-id">{{alphaIdArray[i]}}:</span>
               <span class="multiple-choice-option">Option:</span>
-              <input type="text"  class="form-control" formControlName="option" required>
+              <input type="text"  class="form-control" formControlName="option">
             </div>
           </div>
         </div>
@@ -30,10 +30,10 @@
     <div *ngIf="question.controls.typeSelect.value==='textQuestionNumericAnswer'" class="form-group">
       <div formGroupName="numericRange">
         <label>Numeric Answer Low Value:</label>
-        <input type="number" class="form-control" formControlName="numericLowRange" min="1" required>
+        <input type="number" class="form-control" formControlName="numericLowRange" min="1">
         <br>
         <label>Numeric Answer High Value:</label>
-        <input type="number" class="form-control" formControlName="numericHighRange" min="2" required>
+        <input type="number" class="form-control" formControlName="numericHighRange" min="2">
       </div>
     </div>
   </div>
