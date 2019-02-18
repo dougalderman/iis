@@ -10,7 +10,7 @@
     </select>
   </div>
 </form>
-<div *ngIf="templateSelected > 0 || actQuizId" class="form-group three-rem-margin-bottom">
+<div [hidden]="templateSelected <= 0 && !actQuizId" class="form-group three-rem-margin-bottom">
   <form [formGroup]="quizForm">
     <div class="form-group  three-rem-margin-bottom">
       <div class="form-group">
@@ -34,7 +34,7 @@
     </div>
   </form>
 </div>
-<div *ngIf="templateSelected > 0 || actQuizId" class="form-group three-rem-margin-bottom">
+<div [hidden]="templateSelected <= 0 && !actQuizId" class="form-group three-rem-margin-bottom">
   <form [formGroup]="quizConfigurationForm">
     <h3 class="one-rem-margin-bottom">Quiz Settings</h3>
     <div class="form-group two-rem-margin-bottom">
