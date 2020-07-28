@@ -1,6 +1,6 @@
 # Angular Interactive Informational Site
 
-See Demo Version at http://159.203.187.71:5482
+See Demo Version at http://157.245.254.173:5482
 
 ## Description
 
