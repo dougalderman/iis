@@ -2,7 +2,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const helpers = require('./config/helpers');
 const nodeExternals = require('webpack-node-externals');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
@@ -30,7 +30,9 @@ module.exports = {
     chunkFilename: '[id].chunk.js'
   },
   plugins: [
-    new CleanWebpackPlugin([helpers.root('dist/server')]),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: [helpers.root('./dist/server')]
+    }),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   module: {

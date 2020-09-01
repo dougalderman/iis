@@ -1,5 +1,5 @@
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const helpers = require('./config/helpers');
@@ -17,14 +17,18 @@ module.exports = {
     }
   },
   plugins: [
-    new CleanWebpackPlugin(['./dist/public']),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: [helpers.root('./dist/public')]
+    }),
     new HtmlWebpackPlugin({
       template: helpers.root('./public/src', 'index.html'),
       favicon: helpers.root('./public/src', 'favicon.ico')
     }),
-    new CopyWebpackPlugin([
-      helpers.root('./public/src', 'robots.txt')
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        helpers.root('./public/src', 'robots.txt')
+      ]
+    }),
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
