@@ -38,7 +38,7 @@
     "ng5-slider": "^1.2.4",
     "pg": "^8.3.3",
     "rxjs": "^6.6.2",
-    "zone.js": "^0.11.1"
+    "zone.js": "~0.10.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.29",
