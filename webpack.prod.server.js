@@ -1,8 +1,6 @@
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const webpack = require('webpack');
 const helpers = require('./config/helpers');
 const nodeExternals = require('webpack-node-externals');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const RemovePlugin = require('remove-files-webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
@@ -18,22 +16,19 @@ module.exports = {
     __dirname: false
   },
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
-  optimization: {
-    splitChunks: {
-      chunks: 'all'
-    },
-    minimizer: [new UglifyJSPlugin()]
-  },
   output: {
-    path: helpers.root('dist/server'),
+    path: helpers.root('./dist/server'),
     filename: '[name].js',
     chunkFilename: '[id].chunk.js'
   },
   plugins: [
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [helpers.root('./dist/server')]
-    }),
-    new webpack.NoEmitOnErrorsPlugin()
+    new RemovePlugin({
+      before: {
+          include: [
+              helpers.root('./dist/server')
+          ]
+      }
+    })
   ],
   module: {
     rules: [

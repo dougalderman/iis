@@ -1,7 +1,6 @@
-const webpack = require('webpack');
 const helpers = require('./config/helpers');
 const nodeExternals = require('webpack-node-externals');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const RemovePlugin = require('remove-files-webpack-plugin');
 
 module.exports = {
   devtool: 'inline-source-map',
@@ -23,15 +22,18 @@ module.exports = {
     }
   },
   output: {
-    path: helpers.root('dist/server'),
+    path: helpers.root('./dist/server'),
     filename: '[name].js',
     chunkFilename: '[id].chunk.js'
   },
   plugins: [
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [helpers.root('./dist/server')]
-    }),
-    new webpack.NoEmitOnErrorsPlugin()
+    new RemovePlugin({
+      watch: {
+          include: [
+              helpers.root('./dist/server')
+          ]
+      }
+    })
   ],
   module: {
     rules: [
