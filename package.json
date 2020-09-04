@@ -14,9 +14,12 @@
     "build:prodw": "prod_build.sh",
     "build:devw": "dev_build.sh",
     "build:prodangular": "webpack --config webpack.prod.js",
-    "build:devangular": "webpack --config webpack.dev.js --watch",
+    "build:devangular": "webpack --config webpack.dev.js",
     "build:prodserver": "webpack --config webpack.prod.server.js",
-    "build:devserver": "webpack --config webpack.dev.server.js --watch"
+    "build:devserver": "webpack --config webpack.dev.server.js",
+    "watch:devangular": "webpack --config webpack.dev.js --watch",
+    "watch:devserver": "webpack --config webpack.dev.server.js --watch"
+
   },
   "private": true,
   "dependencies": {

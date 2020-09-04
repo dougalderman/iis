@@ -20,7 +20,7 @@ module.exports = merge(common, {
   },
   plugins: [
     new RemovePlugin({
-      watch: {
+      before: {
           include: [
               helpers.root('./dist/public')
           ]

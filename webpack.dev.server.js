@@ -28,7 +28,7 @@ module.exports = {
   },
   plugins: [
     new RemovePlugin({
-      watch: {
+      before: {
           include: [
               helpers.root('./dist/server')
           ]
