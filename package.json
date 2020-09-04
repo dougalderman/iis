@@ -19,7 +19,6 @@
     "build:devserver": "webpack --config webpack.dev.server.js",
     "watch:devangular": "webpack --config webpack.dev.js --watch",
     "watch:devserver": "webpack --config webpack.dev.server.js --watch"
-
   },
   "private": true,
   "dependencies": {
@@ -32,7 +31,7 @@
     "@angular/platform-browser": "^9.1.12",
     "@angular/platform-browser-dynamic": "^9.1.12",
     "@angular/router": "^9.1.12",
-    "@ng-bootstrap/ng-bootstrap": "~5.2.2",
+    "@ng-bootstrap/ng-bootstrap": "^7.0.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.2",
     "dotenv": "^8.2.0",
