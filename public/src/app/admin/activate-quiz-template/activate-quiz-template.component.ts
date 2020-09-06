@@ -104,7 +104,9 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
 
   changeTemplateSelected(templateId: number): void {
     this.templateSelected = templateId;
-    this.quizTemplateSelected.emit(templateId)
+    setTimeout(() => {
+      this.quizTemplateSelected.emit(templateId);
+    });
   }
 
   changeQuizId(quizId: number): void {
