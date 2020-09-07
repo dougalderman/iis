@@ -50,5 +50,5 @@ export class QuizQuestionModel {
 
 export class QuizQuestionOptionModel {
   optionCorrectAnswer: boolean;
-  option: string
+  option: string;
 }

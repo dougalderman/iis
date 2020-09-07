@@ -44,9 +44,6 @@ import { DemoMenuComponent } from './components/demo-menu/demo-menu.component';
     NgbModalModule,
     Ng5SliderModule
   ],
-  entryComponents: [
-    ConfirmModalComponent
-  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

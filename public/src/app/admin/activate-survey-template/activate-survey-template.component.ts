@@ -100,7 +100,9 @@ export class ActivateSurveyTemplateComponent implements OnInit, OnChanges {
 
   changeTemplateSelected(templateId: number): void {
     this.templateSelected = templateId;
-    this.surveyTemplateSelected.emit(templateId)
+    setTimeout(() => {
+      this.surveyTemplateSelected.emit(templateId);
+    });
   }
 
   changeSurveyId(surveyId: number): void {
