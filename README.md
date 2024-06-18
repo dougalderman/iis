@@ -1,7 +1,5 @@
 # Angular Interactive Informational Site
 
-See Demo Version at http://157.245.254.173:5482
-
 ## Description
 
 Information sites like Wikipedia typically don't utilize the full interactive capability of the Web. Most content on Wikipedia consists of text and images, which is what you can also find in a paper book. Wikipedia also has a lot of hyperlinks, and a few multimedia elements like animations and audio files. Many other informational sites have similar content.
