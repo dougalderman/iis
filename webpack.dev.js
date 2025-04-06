@@ -4,7 +4,7 @@ const helpers = require('./config/helpers');
 const RemovePlugin = require('remove-files-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { AngularCompilerPlugin } = require('@ngtools/webpack');
+const { AngularWebpackPlugin } = require('@ngtools/webpack');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -35,7 +35,7 @@ module.exports = merge(common, {
       template: helpers.root('./public/src', 'index.html'),
       favicon: helpers.root('./public/src', 'favicon.ico')
     }),
-    new AngularCompilerPlugin({
+    new AngularWebpackPlugin({
       entryModule: helpers.root('./public/src', 'app/app.module#AppModule'),
       sourceMap: true,
       tsConfigPath: helpers.root('./', 'tsconfig.json'),
