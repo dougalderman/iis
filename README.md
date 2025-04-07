@@ -10,14 +10,14 @@ A survey can provide feedback to the site owner on various aspects related to th
 
 From a development persepective, quizzes and surveys are very similar. They both ask a series of questions, and provide a way for the user to answer the questions. This similarity reduces development time. The big difference is that a quiz question has a correct answer, while a survey doesn't. There are also some differences in common question types. 
 
-The purpose of this project is to use Angular v.10 and a Node.js v.12 server, along with PostgreSQL v.12 database, to allow for a quick and efficient way to create quizzes and surveys that will add interactivity to an informational site. 
+The purpose of this project is to use Angular v.19 and a Node.js v.22 server, along with PostgreSQL v.17 database, to allow for a quick and efficient way to create quizzes and surveys that will add interactivity to an informational site. 
 
 This site includes a template-based quiz and survey administration system that allows for quizzes and surveys to be created, modified, and added as links to a webpage on a site. A Wikipedia page is used as an example, with Take Quiz and Take Survey links added to the header. 
 
 
 ## Getting Started
 ### Prerequisites
- - System with Node.js v12+, npm v6+, and PostgreSQL v12+ database installed.
+ - System with Node.js v22+, npm v10+, and PostgreSQL v17+ database installed.
 
 ### Installation
 1. git clone https://github.com/dougalderman/iis.git

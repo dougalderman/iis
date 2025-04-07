@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms'
+import { FormArray, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { TemplateQuizQuestionComponent } from '../template-quiz-question/template-quiz-question.component'
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
+  imports: [
+    ReactiveFormsModule
+  ],
   selector: 'app-template-quiz-question-disabled',
   templateUrl: './template-quiz-question-disabled.component.html',
   styleUrls: ['./template-quiz-question-disabled.component.scss']

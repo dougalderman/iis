@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms'
+import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
@@ -14,6 +16,9 @@ import { ModalService } from '../../services/modal.service';
 import { CheckQuizTemplateNameValidator } from '../../validators/check-quiz-template-name.validator';
 
 @Component({
+  imports: [
+    ReactiveFormsModule
+  ],
   selector: 'app-create-modify-quiz-template',
   templateUrl: './create-modify-quiz-template.component.html',
   styleUrls: ['./create-modify-quiz-template.component.scss']
