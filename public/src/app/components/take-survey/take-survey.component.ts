@@ -15,6 +15,7 @@ import { TakeSurveyService } from '../../services/take-survey.service';
 import { SurveyAdminService } from '../../services/survey-admin.service';
 
 @Component({
+  standalone: false,
   selector: 'app-take-survey',
   templateUrl: './take-survey.component.html',
   styleUrls: ['./take-survey.component.scss']

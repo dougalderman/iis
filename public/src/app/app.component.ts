@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
-import { AppRoutingModule } from './app-routing.module';
-
 import '../assets/scss/styles.scss';
 
 @Component({
-  imports: [
-    AppRoutingModule
-  ],
+  standalone: false,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

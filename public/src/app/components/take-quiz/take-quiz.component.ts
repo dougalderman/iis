@@ -17,6 +17,7 @@ import { TakeQuizService } from '../../services/take-quiz.service';
 import { QuizAdminService } from '../../services/quiz-admin.service';
 
 @Component({
+  standalone: false,
   selector: 'app-take-quiz',
   templateUrl: './take-quiz.component.html',
   styleUrls: ['./take-quiz.component.scss'],

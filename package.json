@@ -39,7 +39,6 @@
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "lodash": "^4.17.21",
-    "ng5-slider": "^1.2.6",
     "pg": "^8.14.1",
     "rxjs": "^7.8.2",
     "tslib": "^2.0.0",

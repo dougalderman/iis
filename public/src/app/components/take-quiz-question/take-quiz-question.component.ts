@@ -1,13 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
 
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
-  imports: [
-    ReactiveFormsModule
-  ],
+  standalone: false,
   selector: 'app-take-quiz-question',
   templateUrl: './take-quiz-question.component.html',
   styleUrls: ['./take-quiz-question.component.scss']
