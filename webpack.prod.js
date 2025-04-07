@@ -6,7 +6,9 @@ const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 const RemovePlugin = require('remove-files-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { AngularCompilerPlugin } = require('@ngtools/webpack');
+const linkerPlugin = require('@angular/compiler-cli/linker/babel');
+const { AngularWebpackPlugin } = require('@ngtools/webpack');
+
 
 module.exports = merge(common, {
   devtool: 'source-map',
@@ -33,10 +35,11 @@ module.exports = merge(common, {
       template: helpers.root('./public/src', 'index.html'),
       favicon: helpers.root('./public/src', 'favicon.ico')
     }),
-    new AngularCompilerPlugin({
+    new AngularWebpackPlugin({
       entryModule: helpers.root('./public/src', 'app/app.module#AppModule'),
-      sourceMap: false,
+      sourceMap: true,
       tsConfigPath: helpers.root('./', 'tsconfig.json'),
+      skipCodeGeneration: true
     }),
     new webpack.DefinePlugin({
       'process.env': {
@@ -50,7 +53,18 @@ module.exports = merge(common, {
         test: /\.tsx?$/,
         loader: '@ngtools/webpack',
         exclude: /node_modules/
-      }
+      },
+      {
+        test: /\.[cm]?js$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+            compact: false,
+            plugins: [linkerPlugin],
+          },
+        }
+      }    
     ]
   }
 });
