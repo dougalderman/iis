@@ -11,6 +11,7 @@ dotenv.config();
 let port: string = process.env.PORT;
 let app_dir: string = process.env.APP_DIR;
 let path: string = __dirname + app_dir;
+console.log('path:', path);
 
 const app: any = express();
 app.use(bodyParser.json());
@@ -30,14 +31,14 @@ new TimedTasksController(pgSqlPool);
 // Endpoints
 new EndpointsController(app, pgSqlPool);
 
-app.get('/wiki/*', (req, res) => {
+app.get('/wiki/*splat', (req, res) => {
   if (req.originalUrl) {
     res.redirect('https://en.wikipedia.org' + req.originalUrl);
   }
 });
 
 // 404 catch
-app.all('*', (req: any, res: any) => {
+app.all('/{*splat}', (req: any, res: any) => {
   res.status(200).sendFile('index.html', {root: path});
 });
 

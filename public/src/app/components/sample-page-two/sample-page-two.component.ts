@@ -7,6 +7,7 @@ import { TakeQuizService } from '../../services/take-quiz.service';
 import { TakeSurveyService } from '../../services/take-survey.service';
 
 @Component({
+  standalone: false,
   selector: 'app-sample-page-two',
   templateUrl: './sample-page-two.component.html',
   styleUrls: ['./sample-page-two.component.scss']

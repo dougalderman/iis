@@ -4,6 +4,7 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
+  standalone: false,
   selector: 'app-take-survey-question',
   templateUrl: './take-survey-question.component.html',
   styleUrls: ['./take-survey-question.component.scss']

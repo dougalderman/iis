@@ -28,8 +28,8 @@ p {
   margin-top: 1rem;
 }
 
-.ng5-slider {
-  span.ng5-slider-pointer {
+.ngx-slider {
+  span.ngx-slider-pointer {
     width: 1rem;
     height: 1.2rem;
     top: auto; /* to remove the default positioning */
@@ -43,7 +43,7 @@ p {
     }
   }
 
-  span.ng5-slider-bar {
+  span.ngx-slider-bar {
     background: $slider-bar-yellow;
   }
 }

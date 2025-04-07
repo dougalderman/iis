@@ -2,9 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import { Ng5SliderModule } from 'ng5-slider';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -40,9 +40,11 @@ import { DemoMenuComponent } from './components/demo-menu/demo-menu.component';
     AdminModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule,
     NgbModalModule,
-    Ng5SliderModule
+    NgxSliderModule,
+  ],
+  providers: [
+    provideHttpClient(withFetch()),
   ],
   bootstrap: [AppComponent]
 })
