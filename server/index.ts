@@ -39,7 +39,6 @@ app.get('/wiki/*splat', (req, res) => {
 
 // 404 catch
 app.all('/{*splat}', (req: any, res: any) => {
-  console.log('in catch');
   res.status(200).sendFile('index.html', {root: path});
 });
 
