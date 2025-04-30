@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
@@ -16,7 +16,7 @@ import { CheckSurveyTemplateNameValidator } from '../../validators/check-survey-
 
 
 @Component({
-  standalone: false,
+  imports: [ReactiveFormsModule],
   selector: 'app-create-modify-survey-template',
   templateUrl: './create-modify-survey-template.component.html',
   styleUrls: ['./create-modify-survey-template.component.scss']

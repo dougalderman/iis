@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import * as _ from 'lodash';
 
 import { appRoutes } from '../../app-routing.module';
+import { ActivateQuizTemplateComponent } from '../activate-quiz-template/activate-quiz-template.component';
+import { ActivateSurveyTemplateComponent } from '../activate-survey-template/activate-survey-template.component';
 import { QuizModel, QuizConfigModel } from  '../../../../../models/quizzes/quiz.model';
 import { QuizTemplateModel } from  '../../../../../models/quizzes/quiz-template.model';
 import { QuizQuestionModel } from  '../../../../../models/quizzes/quiz-question.model';
@@ -28,7 +30,11 @@ import { NO_QUIZ, KEEP_SAME_QUIZ, NO_SURVEY, KEEP_SAME_SURVEY } from '../../cons
 
 
 @Component({
-  standalone: false,
+  imports: [
+    ActivateQuizTemplateComponent,
+    ActivateSurveyTemplateComponent,
+    ReactiveFormsModule
+  ],
   selector: 'app-activate-quiz-survey-template',
   templateUrl: './activate-quiz-survey-template.component.html',
   styleUrls: ['./activate-quiz-survey-template.component.scss']

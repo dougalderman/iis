@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChange } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
 
 import * as _ from 'lodash';
 
@@ -17,7 +17,7 @@ import { NO_SURVEY, KEEP_SAME_SURVEY } from '../../constants/activate-quiz-surve
 import { WebpageModel } from '../../../../../models/webpages/webpage.model';
 
 @Component({
-  standalone: false,
+  imports: [ReactiveFormsModule],
   selector: 'app-activate-survey-template',
   templateUrl: './activate-survey-template.component.html',
   styleUrls: ['./activate-survey-template.component.scss']
