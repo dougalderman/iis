@@ -1,4 +1,5 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChange } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
 
 import * as _ from 'lodash';
@@ -17,7 +18,7 @@ import { NO_QUIZ, KEEP_SAME_QUIZ } from '../../constants/activate-quiz-survey.co
 import { WebpageModel } from '../../../../../models/webpages/webpage.model';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   selector: 'app-activate-quiz-template',
   templateUrl: './activate-quiz-template.component.html',
   styleUrls: ['./activate-quiz-template.component.scss']

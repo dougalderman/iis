@@ -1,10 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   selector: 'app-take-survey-question',
   templateUrl: './take-survey-question.component.html',
   styleUrls: ['./take-survey-question.component.scss']

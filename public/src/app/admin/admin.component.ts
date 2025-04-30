@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminRoutingModule } from './admin-routing.module';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-  imports: [AdminRoutingModule],
+  imports: [RouterOutlet],
   templateUrl: './admin.component.html'
 })
 export class AdminComponent implements OnInit {

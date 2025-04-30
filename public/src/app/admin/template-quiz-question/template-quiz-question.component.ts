@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { QUIZ_QUESTION_TYPES } from '../../constants/quiz-question-types.constant';
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   selector: 'app-template-quiz-question',
   templateUrl: './template-quiz-question.component.html',
   styleUrls: ['./template-quiz-question.component.scss']

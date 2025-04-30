@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { WebpageDataModel } from '../../../../../models/webpages/data/webpage-data.model';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
@@ -7,6 +8,7 @@ import { TakeQuizService } from '../../services/take-quiz.service';
 import { TakeSurveyService } from '../../services/take-survey.service';
 
 @Component({
+  imports: [CommonModule, RouterLink],
   selector: 'app-sample-page-two',
   templateUrl: './sample-page-two.component.html',
   styleUrls: ['./sample-page-two.component.scss']

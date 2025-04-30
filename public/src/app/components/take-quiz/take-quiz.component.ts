@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import  { Router } from '@angular/router';
 import { FormBuilder, FormArray, FormGroup } from '@angular/forms';
 import { trigger, style, animate, transition } from '@angular/animations';
@@ -17,6 +18,7 @@ import { TakeQuizService } from '../../services/take-quiz.service';
 import { QuizAdminService } from '../../services/quiz-admin.service';
 
 @Component({
+  imports: [CommonModule],
   selector: 'app-take-quiz',
   templateUrl: './take-quiz.component.html',
   styleUrls: ['./take-quiz.component.scss'],
