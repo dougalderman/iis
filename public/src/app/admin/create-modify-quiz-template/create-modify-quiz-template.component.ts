@@ -14,9 +14,10 @@ import { CreateModifyQuizTemplateFormModel } from '../../../../../models/forms/q
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { ModalService } from '../../services/modal.service';
 import { CheckQuizTemplateNameValidator } from '../../validators/check-quiz-template-name.validator';
+import { TemplateQuizQuestionComponent } from '../template-quiz-question/template-quiz-question.component';
 
 @Component({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TemplateQuizQuestionComponent],
   selector: 'app-create-modify-quiz-template',
   templateUrl: './create-modify-quiz-template.component.html',
   styleUrls: ['./create-modify-quiz-template.component.scss']
@@ -52,19 +53,19 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   }
 
   onChanges(): void {
-    this.selectTemplateForm.get('templateSelect').valueChanges.subscribe(
-      (val: number) => {
+    this.selectTemplateForm.get('templateSelect').valueChanges.subscribe({
+      next: (val:number) => {
         if (val) {
           this.templateSelectionChanged(val);
         }
       },
-      error => {
-        console.error(error);
+      error: (e) => {
+        console.error(e);
         this.generalError = true;
-      }
-    );
-    this.createModifyQuizTemplateForm.get('name').valueChanges.subscribe(
-      (val: string) => {
+      }  
+    });
+    this.createModifyQuizTemplateForm.get('name').valueChanges.subscribe({
+      next: (val: string) => {
         if (val) {
           if (!this.templateSelectionProcessing) {
             this.selectTemplateForm.reset();
@@ -72,11 +73,11 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
           this.clearStatusFlags();
         }
       },
-      error => {
-        console.error(error);
+      error: (e) => {
+        console.error(e);
         this.generalError = true;
       }
-    );
+    });
     this.subscribeToQuestionTypeChanges();
   }
 
@@ -91,17 +92,17 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     if (this.formQuestions && this.formQuestions.controls) {
       for (let i = 0; i < this.formQuestions.controls.length; i++) {
         let formQuestionControls: FormGroup = this.formQuestions.controls[i] as FormGroup;
-        this.questionTypeChangedSubscription[i] = formQuestionControls.controls.typeSelect.valueChanges.subscribe(
-          (val: string) => {
+        this.questionTypeChangedSubscription[i] = formQuestionControls.controls.typeSelect.valueChanges.subscribe({
+          next: (val: string) => {
             if (val) {
               this.questionTypeChanged(val, i);
             }
           },
-          error => {
-            console.error(error);
+          error: (e) => {
+            console.error(e);
             this.generalError = true;
           }
-        );
+        });
       }
     }
   }
@@ -117,64 +118,61 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
   getTemplates(): void {
     this.templates = [];
 
-    this.quizAdminService.getAllQuizTemplates()
-      .subscribe(
-        (templates: QuizTemplateDataModel[]) => {
-          if (templates && templates.length) {
-            for (let template of templates) {
-              this.templates.push(new QuizTemplateModel(template));
-            }
+    this.quizAdminService.getAllQuizTemplates().subscribe({
+      next: (templates: QuizTemplateDataModel[]) => {
+        if (templates && templates.length) {
+          for (let template of templates) {
+            this.templates.push(new QuizTemplateModel(template));
           }
-        },
-        error => {
-          console.error(error);
-          this.generalError = true;
         }
-      );
+      },
+      error: (e) => {
+        console.error(e);
+        this.generalError = true;
+      }
+    });
   }
 
   templateSelectionChanged(templateSelected: number): void {
     if (templateSelected) {
       this.clearStatusFlags();
       this.templateSelectionProcessing = true;
-      this.quizAdminService.getQuizTemplate(templateSelected)
-        .subscribe(
-          (template: QuizTemplateDataModel[]) => {
-            if (template && template.length) {
-              this.template = new QuizTemplateModel(template[0]);
-              this.createModifyQuizTemplateForm.reset();
-              this.resetFormQuestions();
-              this.createModifyQuizTemplateForm.controls.name.setValue(this.template.name);
-              this.createModifyQuizTemplateForm.controls.description.setValue(this.template.description);
-              this.quizAdminService.getQuestionsForQuizTemplate(templateSelected)
-                .subscribe(
-                  (questions: QuizQuestionDataModel[]) => {
-                    if (questions && questions.length) {
-                      for (let i = 0; i < questions.length; i++) {
-                        this.addQuestion(new QuizQuestionModel(questions[i]));
-                      }
-                    }
-                    this.templateSelectionProcessing = false;
-                  },
-                  error => {
-                    console.error(error);
-                    this.generalError = true;
-                    this.templateSelectionProcessing = false;
+      this.quizAdminService.getQuizTemplate(templateSelected).subscribe({
+        next: (template: QuizTemplateDataModel[]) => {
+          if (template && template.length) {
+            this.template = new QuizTemplateModel(template[0]);
+            this.createModifyQuizTemplateForm.reset();
+            this.resetFormQuestions();
+            this.createModifyQuizTemplateForm.controls.name.setValue(this.template.name);
+            this.createModifyQuizTemplateForm.controls.description.setValue(this.template.description);
+            this.quizAdminService.getQuestionsForQuizTemplate(templateSelected).subscribe({
+              next: (questions: QuizQuestionDataModel[]) => {
+                if (questions && questions.length) {
+                  for (let i = 0; i < questions.length; i++) {
+                    this.addQuestion(new QuizQuestionModel(questions[i]));
                   }
-                );
-            }
-            else {
-              console.error('Error retrieving selected quiz template');
-              this.generalError = true;
-              this.templateSelectionProcessing = false;
-            }
+                }
+                this.templateSelectionProcessing = false;
+              },
+              error: (e) => {
+                console.error(e);
+                this.generalError = true;
+                this.templateSelectionProcessing = false;
+              }
+            });
+          }
+          else {
+            console.error('Error retrieving selected quiz template');
+            this.generalError = true;
+            this.templateSelectionProcessing = false;
+          }
         },
-        error => {
-          console.error(error);
+        error: (e) => {
+          console.error(e);
           this.generalError = true;
           this.templateSelectionProcessing = false;
         }
-      );
+      });
     }
   }
 
@@ -210,34 +208,36 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
           (result) => {
             if (result === 'OK Click') {
               this.clearStatusFlags();
-              this.quizAdminService.deleteQuizQuestionsByTemplateId(this.template.id)
-                .subscribe(
-                  (result: any) => {
-                    if (result) {
-                      this.quizAdminService.deleteQuizTemplate(this.template.id)
-                        .subscribe(
-                          (result: any) => {
-                            if (result) {
-                              this.deleteSuccess = true;
-                              this.clearTemplateNoConfirm();
-                              this.getTemplates();
-                            }
-                            else {
-                              this.deleteError = true;
-                            }
-                          },
-                          error => {
-                            console.error(error);
-                            this.deleteError = true;
-                          }
-                        );
-                    }
+              this.quizAdminService.deleteQuizQuestionsByTemplateId(this.template.id).subscribe({
+                next: (result: any) => {
+                  if (result) {
+                    this.quizAdminService.deleteQuizTemplate(this.template.id).subscribe({
+                      next: (result: any) => {
+                        if (result) {
+                          this.deleteSuccess = true;
+                          this.clearTemplateNoConfirm();
+                          this.getTemplates();
+                        }
+                        else {
+                          this.deleteError = true;
+                        }
+                      },
+                      error: (e) => {
+                        console.error(e);
+                        this.deleteError = true;
+                      }
+                    });
                   }
-                );
+                },
+                error: (e) => {
+                  console.error(e);
+                  this.deleteError = true;
+                }
+              });     
             }
-          },
+          },        
           () => {}
-      );
+        );
     }
     else {
       this.errorMessage='Cannot delete new template that hasn\'t yet been saved.'
@@ -257,47 +257,44 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
     if (!this.template.id || name !== this.template.name) { // if new template or template name changed
       this.template.name = name;
       this.template.id = null;
-      this.quizAdminService.saveNewQuizTemplate(this.template)
-        .subscribe(
-          (results: any) => {
-            if (results && results.length) {
-              const templateId = results[0].id;
-              if (templateId) {
-                this.saveAllTemplateQuestions(templateId)
-              }
+      this.quizAdminService.saveNewQuizTemplate(this.template).subscribe({
+        next: (results: any) => {
+          if (results && results.length) {
+            const templateId = results[0].id;
+            if (templateId) {
+              this.saveAllTemplateQuestions(templateId)
             }
-          },
-          error => {
-            console.error(error);
-            this.saveError = true;
           }
-        );
-      }
-      else { // modifying existing template
-        this.quizAdminService.saveExistingQuizTemplate(this.template.id, this.template)
-          .subscribe(
-            (result: any) => {
-              if (result) {
-                this.quizAdminService.deleteQuizQuestionsByTemplateId(this.template.id)
-                  .subscribe(
-                    (result: any) => {
-                      if (result) {
-                        this.saveAllTemplateQuestions(this.template.id)
-                      }
-                    },
-                    error => {
-                      console.error(error);
-                      this.saveError = true;
-                    }
-                  );
+        },
+        error: (e) => {
+          console.error(e);
+          this.saveError = true;
+        }
+      });
+    }
+    else { // modifying existing template
+      this.quizAdminService.saveExistingQuizTemplate(this.template.id, this.template).subscribe({
+        next: (result: any) => {
+          if (result) {
+            this.quizAdminService.deleteQuizQuestionsByTemplateId(this.template.id).subscribe({
+              next: (result: any) => {
+                if (result) {
+                  this.saveAllTemplateQuestions(this.template.id)
+                }
+              },
+              error: (e) => {
+                console.error(e);
+                this.saveError = true;
               }
-            },
-            error => {
-              console.error(error);
-              this.saveError = true;
-            }
-          );
-      }
+            });
+          }
+        },  
+        error: (e) => {
+          console.error(e);
+          this.saveError = true;
+        }
+      });
+    }
   }
 
   addQuestion(question?: QuizQuestionModel): void {
@@ -351,23 +348,22 @@ export class CreateModifyQuizTemplateComponent implements OnInit {
           this.question.correctAnswerArray.push(correctAnswer.correctAnswer.trim());
         }
       }
-      this.quizAdminService.saveNewQuizQuestion(this.question)
-        .subscribe(
-          (result: any) => {
-            if (result) {
-              questionSavedCount++;
-              if (questionSavedCount === questions.length) {
-                this.saveSuccess = true;
-                this.getTemplates();
-                this.clearTemplateNoConfirm();
-              }
+      this.quizAdminService.saveNewQuizQuestion(this.question).subscribe({
+        next: (result: any) => {
+          if (result) {
+            questionSavedCount++;
+            if (questionSavedCount === questions.length) {
+              this.saveSuccess = true;
+              this.getTemplates();
+              this.clearTemplateNoConfirm();
             }
-          },
-          error => {
-            console.error(error);
-            this.saveError = true;
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.saveError = true;
+        }
+      });
     }
   }
 
