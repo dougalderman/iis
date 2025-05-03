@@ -11,6 +11,9 @@ const { AngularWebpackPlugin } = require('@ngtools/webpack');
 
 module.exports = merge(common, {
   mode: 'development',
+  entry: {
+    'main': helpers.root('./public/src', 'main.ts')
+  },
   devtool: 'inline-source-map',
   devServer: {
     contentBase: './dist',
@@ -39,9 +42,8 @@ module.exports = merge(common, {
       favicon: helpers.root('./public/src', 'favicon.ico')
     }),
     new AngularWebpackPlugin({
-      entryModule: helpers.root('./public/src', 'app/app.module#AppModule'),
       sourceMap: true,
-      tsConfigPath: helpers.root('./', 'tsconfig.json'),
+      tsconfig: helpers.root('./public/src', 'tsconfig.app.json'),
       skipCodeGeneration: true
     }),
     new webpack.DefinePlugin({

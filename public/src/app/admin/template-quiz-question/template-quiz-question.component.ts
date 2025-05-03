@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { QUIZ_QUESTION_TYPES } from '../../constants/quiz-question-types.constant';
-import { DELETE_ICON } from '../../constants/images.constants';
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
@@ -22,24 +21,17 @@ export class TemplateQuizQuestionComponent implements OnInit {
   questionTypes: any[] = QUIZ_QUESTION_TYPES;
   createModifyQuizTemplateForm: FormGroup
   questions: FormArray
-  deleteIcon: string
+  deleteIcon: string;
 
   constructor() {}
 
   ngOnInit() {
+    this.deleteIcon = require('../../../assets/images/delete_icon.jpg');
     this.alphaIdArray = fillIdArray(this.alphaIdArray);
     if (this.quizTemplateForm) {
       this.createModifyQuizTemplateForm = this.quizTemplateForm.createModifyQuizTemplateForm;
       this.questions = this.createModifyQuizTemplateForm.get('formQuestions') as FormArray;
     }
-    DELETE_ICON.then(
-      (result) => {
-        if (result) {
-          this.deleteIcon = result;
-        }
-      },
-      () => {}
-    )
   }
 
   get question(): FormGroup {

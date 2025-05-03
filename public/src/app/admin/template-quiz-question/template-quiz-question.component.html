@@ -10,7 +10,7 @@
     <label>Question Text:</label>
     <div class="double-wide flex-display">
       <input type="text" class="form-control question-text" formControlName="text" required>
-      <img class="delete_icon" *ngIf="questions.controls.length > 1" (click)="deleteQuestion()" ngSrc="deleteIcon" height="20">
+      <img class="delete_icon" *ngIf="questions.controls.length > 1" (click)="deleteQuestion()" [src]="deleteIcon" height="20">
     </div>
     <div *ngIf="question.controls.text.invalid && (question.controls.text.dirty || question.controls.text.touched)">
       <div *ngIf="question.controls.text.errors.requiredTrimWhitespace" class="alert alert-warning">Question text is required</div>
@@ -31,7 +31,7 @@
               <div [formGroupName]="i" class="flex-display">
                 <span class="multiple-choice-option">Option:</span>
                 <input type="text" class="form-control" formControlName="option" required>
-                <img class="delete_icon" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i)" ngSrc="deleteIcon" height="20">
+                <img class="delete_icon" *ngIf="question.controls.answer.controls.options.length > 1" (click)="deleteOption(i)" [src]="deleteIcon" height="20">
               </div>
             </div>
           </div>
@@ -52,7 +52,7 @@
             <div [formGroupName]="j" class="flex-display">
               <span class="correct-answer-id">{{alphaIdArray[j]}}:</span>
               <input type="text" class="form-control" formControlName="correctAnswer" required>
-              <img class="delete_icon" *ngIf="question.controls.answer.controls.correctAnswerArray.length > 1" (click)="deleteCorrectAnswer(j)" ngSrc="deleteIcon" height="20">
+              <img class="delete_icon" *ngIf="question.controls.answer.controls.correctAnswerArray.length > 1" (click)="deleteCorrectAnswer(j)" [src]="deleteIcon" height="20">
             </div>
             <div *ngIf="correctAnswer.controls.correctAnswer.invalid && (correctAnswer.controls.correctAnswer.dirty || correctAnswer.controls.correctAnswer.touched)">
               <div *ngIf="correctAnswer.controls.correctAnswer.errors && correctAnswer.controls.correctAnswer.errors.requiredTrimWhitespace" class="alert alert-warning">Correct answer is required</div>
