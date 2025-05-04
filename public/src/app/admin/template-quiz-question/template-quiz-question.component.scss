@@ -1,4 +1,4 @@
-@import '../../../assets/scss/variables';
+@use '../../../assets/scss/variables';
 
 .delete_icon {
   margin-left: 0.3rem;
@@ -48,5 +48,5 @@ form.quiz-question {
 }
 
 select.question-type-background {
-  background: $select-menu-yellow;
+  background: variables.$select-menu-yellow;
 }

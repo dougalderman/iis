@@ -16,9 +16,10 @@ import { SurveyTemplateDataModel } from  '../../../../../models/surveys/data/sur
 import { SurveyAdminService } from '../../services/survey-admin.service';
 import { NO_SURVEY, KEEP_SAME_SURVEY } from '../../constants/activate-quiz-survey.constants';
 import { WebpageModel } from '../../../../../models/webpages/webpage.model';
+import { TemplateSurveyQuestionDisabledComponent } from '../template-survey-question-disabled/template-survey-question-disabled.component';
 
 @Component({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TemplateSurveyQuestionDisabledComponent],
   selector: 'app-activate-survey-template',
   templateUrl: './activate-survey-template.component.html',
   styleUrls: ['./activate-survey-template.component.scss']
@@ -51,6 +52,7 @@ export class ActivateSurveyTemplateComponent implements OnInit, OnChanges {
 
   noSurvey: number = NO_SURVEY;
   keepSameSurvey: number = KEEP_SAME_SURVEY;
+  infoIcon: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -58,6 +60,7 @@ export class ActivateSurveyTemplateComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
+    this.infoIcon = require('../../../assets/images/information-512.png');
     if (this.activateQuizSurveyTemplateForm) {
       this.selectSurveyTemplateForm = this.activateQuizSurveyTemplateForm.selectSurveyTemplateForm;
       this.surveyForm = this.activateQuizSurveyTemplateForm.surveyForm;

@@ -16,9 +16,10 @@ import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { NO_QUIZ, KEEP_SAME_QUIZ } from '../../constants/activate-quiz-survey.constants';
 import { WebpageModel } from '../../../../../models/webpages/webpage.model';
+import { TemplateQuizQuestionDisabledComponent } from '../template-quiz-question-disabled/template-quiz-question-disabled.component';
 
 @Component({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TemplateQuizQuestionDisabledComponent],
   selector: 'app-activate-quiz-template',
   templateUrl: './activate-quiz-template.component.html',
   styleUrls: ['./activate-quiz-template.component.scss']
@@ -53,13 +54,14 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
 
   noQuiz: number = NO_QUIZ;
   keepSameQuiz: number = KEEP_SAME_QUIZ;
+  infoIcon: string = '';
 
   constructor(
     private fb: FormBuilder,
     private quizAdminService: QuizAdminService
   ) {}
-
   ngOnInit() {
+    this.infoIcon = require('../../../assets/images/information-512.png');
     if (this.activateQuizSurveyTemplateForm) {
       this.selectQuizTemplateForm = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
       this.quizForm = this.activateQuizSurveyTemplateForm.quizForm;

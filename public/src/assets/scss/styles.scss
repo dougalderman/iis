@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@use './variables';
 @import '~bootstrap/scss/bootstrap.scss';
-@import'./variables';
 
 * {
   box-sizing: border-box;
@@ -34,7 +34,7 @@ p {
     height: 1.2rem;
     top: auto; /* to remove the default positioning */
     bottom: 0;
-    background-color: $slider-pointer-purple;
+    background-color: variables.$slider-pointer-purple;
     border-top-left-radius: .4rem;
     border-top-right-radius: .4rem;
 
@@ -44,6 +44,6 @@ p {
   }
 
   span.ngx-slider-bar {
-    background: $slider-bar-yellow;
+    background: variables.$slider-bar-yellow;
   }
 }
