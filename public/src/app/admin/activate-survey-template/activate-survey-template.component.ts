@@ -83,17 +83,17 @@ export class ActivateSurveyTemplateComponent implements OnInit, OnChanges {
   }
 
   watchForTemplateSelectionChanges(): void {
-    this.selectSurveyTemplateForm.get('surveyTemplateSelect').valueChanges.subscribe(
-      (val: number) => {
+    this.selectSurveyTemplateForm.get('surveyTemplateSelect').valueChanges.subscribe({
+      next: (val: number) => {
         if (val) {
           this.surveyTemplateSelectionChanged(val);
         }
       },
-      error => {
-        console.error(error);
+      error: (e) => {
+        console.error(e);
         this.logError()
       }
-    );
+    });
   }
 
   get surveyFormQuestions(): FormArray {
@@ -133,20 +133,19 @@ export class ActivateSurveyTemplateComponent implements OnInit, OnChanges {
   getSurveyTemplates(): void {
     this.surveyTemplates = [];
 
-    this.surveyAdminService.getAllSurveyTemplates()
-      .subscribe(
-        (templates: SurveyTemplateDataModel[]) => {
-          if (templates && templates.length) {
-            for (let template of templates) {
-              this.surveyTemplates.push(new SurveyTemplateModel(template));
-            }
+    this.surveyAdminService.getAllSurveyTemplates().subscribe({
+      next: (templates: SurveyTemplateDataModel[]) => {
+        if (templates && templates.length) {
+          for (let template of templates) {
+            this.surveyTemplates.push(new SurveyTemplateModel(template));
           }
-        },
-        error => {
-          console.error(error);
-          this.logError();
         }
-      );
+      },
+      error: (e) => {
+        console.error(e);
+        this.logError();
+      }
+    });
   }
 
   handleWebpageChange(): void {
@@ -157,23 +156,22 @@ export class ActivateSurveyTemplateComponent implements OnInit, OnChanges {
     this.surveyForm.reset();
 
     if (surveyId) {
-      this.surveyAdminService.getSurvey(surveyId)
-        .subscribe(
-          (surveys: SurveyDataModel[]) => {
-            if (surveys && surveys.length) {
-              this.changeSurvey(new SurveyModel(surveys[0]));
+      this.surveyAdminService.getSurvey(surveyId).subscribe({
+        next: (surveys: SurveyDataModel[]) => {
+          if (surveys && surveys.length) {
+            this.changeSurvey(new SurveyModel(surveys[0]));
 
-              // Default to keep the same survey if survey is associated with webpage.
-              this.changeTemplateSelected(this.keepSameSurvey);
-              const surveyTemplateSelect = this.selectSurveyTemplateForm.get('surveyTemplateSelect')
-              surveyTemplateSelect.setValue(this.templateSelected);
-            }
-          },
-          error => {
-            console.error(error);
-            this.logError();
+            // Default to keep the same survey if survey is associated with webpage.
+            this.changeTemplateSelected(this.keepSameSurvey);
+            const surveyTemplateSelect = this.selectSurveyTemplateForm.get('surveyTemplateSelect')
+            surveyTemplateSelect.setValue(this.templateSelected);
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.logError();
+        }
+      });
     }
     else {
         // Set to no survey.
@@ -210,38 +208,36 @@ export class ActivateSurveyTemplateComponent implements OnInit, OnChanges {
     this.resetSurveyFormQuestions();
 
     if (this.templateSelected > 0) {
-      this.surveyAdminService.getQuestionsForSurveyTemplate(this.templateSelected)
-        .subscribe(
-          (questions: SurveyQuestionDataModel[]) => {
-            if (questions && questions.length) {
-              for (let i = 0; i < questions.length; i++) {
-                let question = new SurveyQuestionModel(questions[i]);
-                this.surveyTemplateForm.addQuestion(question);
-              }
+      this.surveyAdminService.getQuestionsForSurveyTemplate(this.templateSelected).subscribe({
+        next: (questions: SurveyQuestionDataModel[]) => {
+          if (questions && questions.length) {
+            for (let i = 0; i < questions.length; i++) {
+              let question = new SurveyQuestionModel(questions[i]);
+              this.surveyTemplateForm.addQuestion(question);
             }
-          },
-          error => {
-            console.error(error);
-            this.logError();
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.logError();
+        }
+      });
     }
     else if (this.surveyId && this.templateSelected !== this.noSurvey) {
-      this.surveyAdminService.getQuestionsForSurvey(this.surveyId)
-        .subscribe(
-          (questions: SurveyQuestionDataModel[]) => {
-            if (questions && questions.length) {
-              for (let i = 0; i < questions.length; i++) {
-                let question = new SurveyQuestionModel(questions[i]);
-                this.surveyTemplateForm.addQuestion(question);
-              }
+      this.surveyAdminService.getQuestionsForSurvey(this.surveyId).subscribe({
+        next: (questions: SurveyQuestionDataModel[]) => {
+          if (questions && questions.length) {
+            for (let i = 0; i < questions.length; i++) {
+              let question = new SurveyQuestionModel(questions[i]);
+              this.surveyTemplateForm.addQuestion(question);
             }
-          },
-          error => {
-            console.error(error);
-            this.logError();
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.logError();
+        }
+      });
     }
   }
 

@@ -17,8 +17,10 @@ import { QuizResultModel } from '../../../../../models/quizzes/quiz-result.model
 import { TakeQuizService } from '../../services/take-quiz.service';
 import { QuizAdminService } from '../../services/quiz-admin.service';
 
+import { TakeQuizQuestionComponent } from '../take-quiz-question/take-quiz-question.component';
+
 @Component({
-  imports: [CommonModule],
+  imports: [CommonModule, TakeQuizQuestionComponent],
   selector: 'app-take-quiz',
   templateUrl: './take-quiz.component.html',
   styleUrls: ['./take-quiz.component.scss'],
@@ -83,45 +85,43 @@ export class TakeQuizComponent implements OnInit {
     this.quizId = this.takeQuizService.getQuizId();
     if (this.quizId) {
       this.takeQuizService.resetQuizId();
-      this.quizAdminService.getQuiz(this.quizId)
-        .subscribe(
-          (quiz: QuizDataModel[]) => {
-            if (quiz && quiz.length) {
-              this.quiz = quiz[0];
-              this.title = this.quiz.title;
-              const config: QuizConfigModel = this.quiz.config;
-              this.configPercentGreatJob = config.percentGreatJob;
-              this.quizAdminService.getQuestionsForQuiz(this.quizId)
-                .subscribe(
-                  (questions: QuizQuestionDataModel[]) => {
-                    if (questions && questions.length) {
-                      this.resetFormQuestions();
-                      this.questionsCount = questions.length;
-                      this.takeQuizService.randomizeArray(questions);
-                      for (let i = 0; i < questions.length; i++) {
-                        let question = new QuizQuestionModel(questions[i]);
-                        if (question.questionType === 'textQuestionMultipleChoice') {
-                          question.options = this.takeQuizService.randomizeArray(question.options);
-                        }
-                        this.takeQuizFormModel.addQuestion(question);
-                        this.questions.push(question);
-                      }
-                      this.dateQuizStart = new Date();
-                      this.dateQuestionStart = new Date();
+      this.quizAdminService.getQuiz(this.quizId).subscribe({
+        next: (quiz: QuizDataModel[]) => {
+          if (quiz && quiz.length) {
+            this.quiz = quiz[0];
+            this.title = this.quiz.title;
+            const config: QuizConfigModel = this.quiz.config;
+            this.configPercentGreatJob = config.percentGreatJob;
+            this.quizAdminService.getQuestionsForQuiz(this.quizId).subscribe({
+              next: (questions: QuizQuestionDataModel[]) => {
+                if (questions && questions.length) {
+                  this.resetFormQuestions();
+                  this.questionsCount = questions.length;
+                  this.takeQuizService.randomizeArray(questions);
+                  for (let i = 0; i < questions.length; i++) {
+                    let question = new QuizQuestionModel(questions[i]);
+                    if (question.questionType === 'textQuestionMultipleChoice') {
+                      question.options = this.takeQuizService.randomizeArray(question.options);
                     }
-                  },
-                  error => {
-                    console.error(error);
-                    this.generalError = true;
+                    this.takeQuizFormModel.addQuestion(question);
+                    this.questions.push(question);
                   }
-                );
-            }
-          },
-          error => {
-            console.error(error);
-            this.generalError = true;
+                  this.dateQuizStart = new Date();
+                  this.dateQuestionStart = new Date();
+                }
+              },
+              error: (e) => {
+                console.error(e);
+                this.generalError = true;
+              }
+            });
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.generalError = true;
+        }
+      });
     }
     else {
       // No quiz to display. Redirect to home page
@@ -238,31 +238,28 @@ export class TakeQuizComponent implements OnInit {
     const quizDurationInMilliseconds = (new Date).getTime() - this.dateQuizStart.getTime()
     quizResult.quizDuration =  quizDurationInMilliseconds.toString() + ' milliseconds';
     this.quizDurationInSeconds = Math.round(quizDurationInMilliseconds / 1000);
-    this.takeQuizService.saveNewQuizResult(quizResult)
-      .subscribe(
-        (results: any) => {
-          if (results && results.length) {
-            const resultsId = results[0].id;
-            if (resultsId) {
-              for (let answer of this.quizAnswers) {
-                answer.resultId = resultsId;
-                this.takeQuizService.saveNewQuizAnswer(answer)
-                  .subscribe(
-                    (res: any) => {
-                    },
-                    error => {
-                      console.error(error);
-                      this.generalError = true;
-                    }
-                  );
-              }
+    this.takeQuizService.saveNewQuizResult(quizResult).subscribe({
+      next: (results: any) => {
+        if (results && results.length) {
+          const resultsId = results[0].id;
+          if (resultsId) {
+            for (let answer of this.quizAnswers) {
+              answer.resultId = resultsId;
+              this.takeQuizService.saveNewQuizAnswer(answer).subscribe({
+                next: (res: any) => {},
+                error: (e) => {
+                  console.error(e);
+                  this.generalError = true;
+                }
+              });
             }
           }
-        },
-        error => {
-          console.error(error);
-          this.generalError = true;
         }
-      );
+      },
+      error: (e) => {
+        console.error(e);
+        this.generalError = true;
+      }
+    });
   }
 }

@@ -18,11 +18,16 @@ export class TakeSurveyQuestionComponent implements OnInit {
   @Output() submitAns = new EventEmitter();
 
   alphaIdArray: string[] = [];
-  questions: FormArray
+  questions: FormArray;
+  dislikeEmoticon: string = '';
+  smileyEmoticon: string = '';
 
   constructor() {}
 
   ngOnInit() {
+    this.dislikeEmoticon =  require("../../../assets/images/dislike_emoticon.jpg");
+    this.smileyEmoticon =  require("../../../assets/images/smiley_emoticon.jpg");
+
     this.alphaIdArray = fillIdArray(this.alphaIdArray);
     if (this.takeSurveyForm) {
       this.questions = this.takeSurveyForm.get('formQuestions') as FormArray;

@@ -23,7 +23,7 @@ export class TakeQuizQuestionComponent implements OnInit {
   @Output() nextQuestion = new EventEmitter();
 
   alphaIdArray: string[] = [];
-  questions: FormArray
+  questions: FormArray;
 
   constructor() {}
 

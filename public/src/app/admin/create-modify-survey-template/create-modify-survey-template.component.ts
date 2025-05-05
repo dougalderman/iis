@@ -212,23 +212,22 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
                 .subscribe(
                   (result: any) => {
                     if (result) {
-                      this.surveyAdminService.deleteSurveyTemplate(this.template.id)
-                        .subscribe(
-                          (result: any) => {
-                            if (result) {
-                              this.deleteSuccess = true;
-                              this.clearTemplateNoConfirm();
-                              this.getTemplates();
-                            }
-                            else {
-                              this.deleteError = true;
-                            }
-                          },
-                          error => {
-                            console.error(error);
+                      this.surveyAdminService.deleteSurveyTemplate(this.template.id).subscribe({
+                        next: (result: any) => {
+                          if (result) {
+                            this.deleteSuccess = true;
+                            this.clearTemplateNoConfirm();
+                            this.getTemplates();
+                          }
+                          else {
                             this.deleteError = true;
                           }
-                        );
+                        },
+                        error: (e) => {
+                          console.error(e);
+                          this.deleteError = true;
+                        }
+                      });
                     }
                   }
                 );
@@ -255,46 +254,43 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
     if (!this.template.id || name !== this.template.name) { // if new template or template name changed
       this.template.name = name;
       this.template.id = null;
-      this.surveyAdminService.saveNewSurveyTemplate(this.template)
-        .subscribe(
-          (results: any) => {
-            if (results && results.length) {
-              const templateId = results[0].id;
-              if (templateId) {
-                this.saveAllTemplateQuestions(templateId)
-              }
+      this.surveyAdminService.saveNewSurveyTemplate(this.template).subscribe({
+        next: (results: any) => {
+          if (results && results.length) {
+            const templateId = results[0].id;
+            if (templateId) {
+              this.saveAllTemplateQuestions(templateId)
             }
-          },
-          error => {
-            console.error(error);
-            this.saveError = true;
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.saveError = true;
+        }
+      });
       }
       else { // modifying existing template
-        this.surveyAdminService.saveExistingSurveyTemplate(this.template.id, this.template)
-          .subscribe(
-            (result: any) => {
-              if (result) {
-                this.surveyAdminService.deleteSurveyQuestionsByTemplateId(this.template.id)
-                  .subscribe(
-                    (result: any) => {
-                      if (result) {
-                        this.saveAllTemplateQuestions(this.template.id)
-                      }
-                    },
-                    error => {
-                      console.error(error);
-                      this.saveError = true;
-                    }
-                  );
-              }
-            },
-            error => {
-              console.error(error);
-              this.saveError = true;
+        this.surveyAdminService.saveExistingSurveyTemplate(this.template.id, this.template).subscribe({
+          next: (result: any) => {
+            if (result) {
+              this.surveyAdminService.deleteSurveyQuestionsByTemplateId(this.template.id).subscribe({
+                next: (result: any) => {
+                  if (result) {
+                    this.saveAllTemplateQuestions(this.template.id)
+                  }
+                },
+                error: (e) => {
+                  console.error(e);
+                  this.saveError = true;
+                }
+              });
             }
-          );
+          },
+          error: (e) => {
+            console.error(e);
+            this.saveError = true;
+          }
+        });
       }
   }
 

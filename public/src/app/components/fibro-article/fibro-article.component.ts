@@ -29,37 +29,35 @@ export class FibroArticleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.data
-      .subscribe(
-        (result: any) => {
-          if (result) {
-            const title = result.title;
-            if (title) {
-              this.webpageAdminService.getWebpageByTitle(title)
-                .subscribe(
-                  (pages: WebpageDataModel[]) => {
-                    if (pages && pages.length) {
-                      const page: WebpageDataModel = pages[0];
-                      this.quizId = page.quiz_id;
-                      if (this.quizId) {
-                        this.takeQuizService.setQuizId(this.quizId);
-                      }
-                      this.surveyId = page.survey_id;
-                      if (this.surveyId) {
-                        this.takeSurveyService.setSurveyId(this.surveyId);
-                      }
-                    }
-                  },
-                  error => {
-                    console.error(error);
+    this.route.data.subscribe({
+      next: (result: any) => {
+        if (result) {
+          const title = result.title;
+          if (title) {
+            this.webpageAdminService.getWebpageByTitle(title).subscribe({
+              next: (pages: WebpageDataModel[]) => {
+                if (pages && pages.length) {
+                  const page: WebpageDataModel = pages[0];
+                  this.quizId = page.quiz_id;
+                  if (this.quizId) {
+                    this.takeQuizService.setQuizId(this.quizId);
                   }
-              );
-            }
+                  this.surveyId = page.survey_id;
+                  if (this.surveyId) {
+                    this.takeSurveyService.setSurveyId(this.surveyId);
+                  }
+                }
+              },
+              error: (e) => {
+                console.error(e);
+              }
+            });
           }
-        },
-        error => {
-          console.error(error);
         }
-      );
+      },
+      error: (e) => {
+        console.error(e);
+      }
+    });
   }
 }

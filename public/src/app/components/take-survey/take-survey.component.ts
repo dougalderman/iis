@@ -15,8 +15,10 @@ import { SurveyResultModel } from '../../../../../models/surveys/survey-result.m
 import { TakeSurveyService } from '../../services/take-survey.service';
 import { SurveyAdminService } from '../../services/survey-admin.service';
 
+import { TakeSurveyQuestionComponent } from '../take-survey-question/take-survey-question.component';
+
 @Component({
-  imports: [CommonModule],
+  imports: [CommonModule, TakeSurveyQuestionComponent],
   selector: 'app-take-survey',
   templateUrl: './take-survey.component.html',
   styleUrls: ['./take-survey.component.scss']
@@ -53,40 +55,38 @@ export class TakeSurveyComponent implements OnInit {
     this.surveyId = this.takeSurveyService.getSurveyId();
     if (this.surveyId) {
       this.takeSurveyService.resetSurveyId();
-      this.surveyAdminService.getSurvey(this.surveyId)
-        .subscribe(
-          (survey: SurveyDataModel[]) => {
-            if (survey && survey.length) {
-              this.survey = survey[0];
-              this.title = this.survey.title;
-              this.surveyAdminService.getQuestionsForSurvey(this.surveyId)
-                .subscribe(
-                  (questions: SurveyQuestionDataModel[]) => {
-                    if (questions && questions.length) {
-                      this.resetFormQuestions();
-                      this.questionsCount = questions.length;
-                      this.takeSurveyService.randomizeArray(questions);
-                      for (let i = 0; i < questions.length; i++) {
-                        let question = new SurveyQuestionModel(questions[i]);
-                        this.takeSurveyFormModel.addQuestion(question);
-                        this.questions.push(question);
-                      }
-                      this.dateSurveyStart = new Date();
-                      this.dateQuestionStart = new Date();
-                    }
-                  },
-                  error => {
-                    console.error(error);
-                    this.generalError = true;
+      this.surveyAdminService.getSurvey(this.surveyId).subscribe({
+        next: (survey: SurveyDataModel[]) => {
+          if (survey && survey.length) {
+            this.survey = survey[0];
+            this.title = this.survey.title;
+            this.surveyAdminService.getQuestionsForSurvey(this.surveyId).subscribe({
+              next: (questions: SurveyQuestionDataModel[]) => {
+                if (questions && questions.length) {
+                  this.resetFormQuestions();
+                  this.questionsCount = questions.length;
+                  this.takeSurveyService.randomizeArray(questions);
+                  for (let i = 0; i < questions.length; i++) {
+                    let question = new SurveyQuestionModel(questions[i]);
+                    this.takeSurveyFormModel.addQuestion(question);
+                    this.questions.push(question);
                   }
-                );
-            }
-          },
-          error => {
-            console.error(error);
-            this.generalError = true;
+                  this.dateSurveyStart = new Date();
+                  this.dateQuestionStart = new Date();
+                }
+              },
+              error: (e) => {
+                console.error(e);
+                this.generalError = true;
+              }
+            });
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.generalError = true;
+        }
+      });
     }
     else {
       // No survey to display. Redirect to home page
@@ -160,31 +160,28 @@ export class TakeSurveyComponent implements OnInit {
     const surveyDurationInMilliseconds = (new Date).getTime() - this.dateSurveyStart.getTime()
     surveyResult.surveyDuration =  surveyDurationInMilliseconds.toString() + ' milliseconds';
     this.surveyDurationInSeconds = Math.round(surveyDurationInMilliseconds / 1000);
-    this.takeSurveyService.saveNewSurveyResult(surveyResult)
-      .subscribe(
-        (results: any) => {
-          if (results && results.length) {
-            const resultsId = results[0].id;
-            if (resultsId) {
-              for (let answer of this.surveyAnswers) {
-                answer.resultId = resultsId;
-                this.takeSurveyService.saveNewSurveyAnswer(answer)
-                  .subscribe(
-                    (res: any) => {
-                    },
-                    error => {
-                      console.error(error);
-                      this.generalError = true;
-                    }
-                  );
-              }
+    this.takeSurveyService.saveNewSurveyResult(surveyResult).subscribe({
+      next: (results: any) => {
+        if (results && results.length) {
+          const resultsId = results[0].id;
+          if (resultsId) {
+            for (let answer of this.surveyAnswers) {
+              answer.resultId = resultsId;
+              this.takeSurveyService.saveNewSurveyAnswer(answer).subscribe({
+                next: (res: any) => {},
+                error: (e) => {
+                  console.error(e);
+                  this.generalError = true;
+                }
+              });
             }
           }
-        },
-        error => {
-          console.error(error);
-          this.generalError = true;
         }
-      );
+      },
+      error: (e) => {
+        console.error(e);
+        this.generalError = true;
+      }
+    });
   }
 }

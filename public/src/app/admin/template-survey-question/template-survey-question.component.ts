@@ -19,12 +19,14 @@ export class TemplateSurveyQuestionComponent implements OnInit {
 
   alphaIdArray: string[] = [];
   questionTypes: any[] = SURVEY_QUESTION_TYPES;
-  createModifySurveyTemplateForm: FormGroup
-  questions: FormArray
+  createModifySurveyTemplateForm: FormGroup;
+  questions: FormArray;
+  deleteIcon: string = '';
 
   constructor() {}
 
   ngOnInit() {
+    this.deleteIcon = require('../../../assets/images/delete_icon.jpg');
     this.alphaIdArray = fillIdArray(this.alphaIdArray);
     if (this.surveyTemplateForm) {
       this.createModifySurveyTemplateForm = this.surveyTemplateForm.createModifySurveyTemplateForm;

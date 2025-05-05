@@ -19,8 +19,8 @@ export class TemplateQuizQuestionComponent implements OnInit {
 
   alphaIdArray: string[] = [];
   questionTypes: any[] = QUIZ_QUESTION_TYPES;
-  createModifyQuizTemplateForm: FormGroup
-  questions: FormArray
+  createModifyQuizTemplateForm: FormGroup;
+  questions: FormArray;
   deleteIcon: string = '';
 
   constructor() {}
