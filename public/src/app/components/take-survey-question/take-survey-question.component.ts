@@ -2,10 +2,12 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
+
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxSliderModule],
   selector: 'app-take-survey-question',
   templateUrl: './take-survey-question.component.html',
   styleUrls: ['./take-survey-question.component.scss']
