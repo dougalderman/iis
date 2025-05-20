@@ -1,10 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
-  standalone: false,
+  imports: [CommonModule, ReactiveFormsModule],
   selector: 'app-take-quiz-question',
   templateUrl: './take-quiz-question.component.html',
   styleUrls: ['./take-quiz-question.component.scss']
@@ -22,7 +23,7 @@ export class TakeQuizQuestionComponent implements OnInit {
   @Output() nextQuestion = new EventEmitter();
 
   alphaIdArray: string[] = [];
-  questions: FormArray
+  questions: FormArray;
 
   constructor() {}
 

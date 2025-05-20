@@ -1,5 +1,6 @@
 import { Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChange } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule } from '@angular/forms';
 
 import * as _ from 'lodash';
 
@@ -15,9 +16,10 @@ import { QuizTemplateDataModel } from  '../../../../../models/quizzes/data/quiz-
 import { QuizAdminService } from '../../services/quiz-admin.service';
 import { NO_QUIZ, KEEP_SAME_QUIZ } from '../../constants/activate-quiz-survey.constants';
 import { WebpageModel } from '../../../../../models/webpages/webpage.model';
+import { TemplateQuizQuestionDisabledComponent } from '../template-quiz-question-disabled/template-quiz-question-disabled.component';
 
 @Component({
-  standalone: false,
+  imports: [CommonModule, ReactiveFormsModule, TemplateQuizQuestionDisabledComponent],
   selector: 'app-activate-quiz-template',
   templateUrl: './activate-quiz-template.component.html',
   styleUrls: ['./activate-quiz-template.component.scss']
@@ -52,13 +54,14 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
 
   noQuiz: number = NO_QUIZ;
   keepSameQuiz: number = KEEP_SAME_QUIZ;
+  infoIcon: string = '';
 
   constructor(
     private fb: FormBuilder,
     private quizAdminService: QuizAdminService
   ) {}
-
   ngOnInit() {
+    this.infoIcon = require('../../../assets/images/information-512.png');
     if (this.activateQuizSurveyTemplateForm) {
       this.selectQuizTemplateForm = this.activateQuizSurveyTemplateForm.selectQuizTemplateForm;
       this.quizForm = this.activateQuizSurveyTemplateForm.quizForm;
@@ -83,17 +86,17 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
   }
 
   watchForTemplateSelectionChanges(): void {
-    this.selectQuizTemplateForm.get('quizTemplateSelect').valueChanges.subscribe(
-      (val: number) => {
+    this.selectQuizTemplateForm.get('quizTemplateSelect').valueChanges.subscribe({
+      next: (val: number) => {
         if (val) {
           this.quizTemplateSelectionChanged(val);
         }
       },
-      error => {
-        console.error(error);
+      error: (e) => {
+        console.error(e);
         this.logError()
       }
-    );
+    });
   }
 
   get quizFormQuestions(): FormArray {
@@ -133,20 +136,19 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
   getQuizTemplates(): void {
     this.quizTemplates = [];
 
-    this.quizAdminService.getAllQuizTemplates()
-      .subscribe(
-        (templates: QuizTemplateDataModel[]) => {
-          if (templates && templates.length) {
-            for (let template of templates) {
-              this.quizTemplates.push(new QuizTemplateModel(template));
-            }
+    this.quizAdminService.getAllQuizTemplates().subscribe({
+      next: (templates: QuizTemplateDataModel[]) => {
+        if (templates && templates.length) {
+          for (let template of templates) {
+            this.quizTemplates.push(new QuizTemplateModel(template));
           }
-        },
-        error => {
-          console.error(error);
-          this.logError();
         }
-      );
+      },
+      error: (e) => {
+        console.error(e);
+        this.logError();
+      }
+    });
   }
 
   handleWebpageChange(): void {
@@ -158,23 +160,22 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
     this.quizConfigurationForm.reset();
 
     if (quizId) {
-      this.quizAdminService.getQuiz(quizId)
-        .subscribe(
-          (quizzes: QuizDataModel[]) => {
-            if (quizzes && quizzes.length) {
-              this.changeQuiz(new QuizModel(quizzes[0]));
+      this.quizAdminService.getQuiz(quizId).subscribe({
+        next: (quizzes: QuizDataModel[]) => {
+          if (quizzes && quizzes.length) {
+            this.changeQuiz(new QuizModel(quizzes[0]));
 
-              // Default to keep the same quiz if quiz is associated with webpage.
-              this.changeTemplateSelected(this.keepSameQuiz);
-              const quizTemplateSelect = this.selectQuizTemplateForm.get('quizTemplateSelect')
-              quizTemplateSelect.setValue(this.templateSelected);
-            }
-          },
-          error => {
-            console.error(error);
-            this.logError();
+            // Default to keep the same quiz if quiz is associated with webpage.
+            this.changeTemplateSelected(this.keepSameQuiz);
+            const quizTemplateSelect = this.selectQuizTemplateForm.get('quizTemplateSelect')
+            quizTemplateSelect.setValue(this.templateSelected);
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.logError();
+        }
+      });
     }
     else {
        // Set to no quiz.
@@ -212,38 +213,36 @@ export class ActivateQuizTemplateComponent implements OnInit, OnChanges {
     this.resetQuizFormQuestions();
 
     if (this.templateSelected > 0) {
-      this.quizAdminService.getQuestionsForQuizTemplate(this.templateSelected)
-        .subscribe(
-          (questions: QuizQuestionDataModel[]) => {
-            if (questions && questions.length) {
-              for (let i = 0; i < questions.length; i++) {
-                let question = new QuizQuestionModel(questions[i]);
-                this.quizTemplateForm.addQuestion(question);
-              }
+      this.quizAdminService.getQuestionsForQuizTemplate(this.templateSelected).subscribe({
+        next: (questions: QuizQuestionDataModel[]) => {
+          if (questions && questions.length) {
+            for (let i = 0; i < questions.length; i++) {
+              let question = new QuizQuestionModel(questions[i]);
+              this.quizTemplateForm.addQuestion(question);
             }
-          },
-          error => {
-            console.error(error);
-            this.logError();
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.logError();
+        }
+      });
     }
     else if (this.quizId && this.templateSelected !== this.noQuiz) {
-      this.quizAdminService.getQuestionsForQuiz(this.quizId)
-        .subscribe(
-          (questions: QuizQuestionDataModel[]) => {
-            if (questions && questions.length) {
-              for (let i = 0; i < questions.length; i++) {
-                let question = new QuizQuestionModel(questions[i]);
-                this.quizTemplateForm.addQuestion(question);
-              }
+      this.quizAdminService.getQuestionsForQuiz(this.quizId).subscribe({
+        next: (questions: QuizQuestionDataModel[]) => {
+          if (questions && questions.length) {
+            for (let i = 0; i < questions.length; i++) {
+              let question = new QuizQuestionModel(questions[i]);
+              this.quizTemplateForm.addQuestion(question);
             }
-          },
-          error => {
-            console.error(error);
-            this.logError();
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.logError();
+        }
+      });
     }
   }
 

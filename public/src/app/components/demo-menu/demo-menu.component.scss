@@ -1,8 +1,8 @@
-@import '../../../assets/scss/variables';
+@use '../../../assets/scss/variables';
 
 h2 {
   margin-bottom: 3rem;
-  color: $demo-header-slateblue;
+  color: variables.$demo-header-slateblue;
 }
 
 h4 {

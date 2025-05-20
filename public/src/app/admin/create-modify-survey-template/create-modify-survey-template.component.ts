@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, AbstractControl } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, FormArray, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
@@ -13,10 +14,10 @@ import { CreateModifySurveyTemplateFormModel } from '../../../../../models/forms
 import { SurveyAdminService } from '../../services/survey-admin.service';
 import { ModalService } from '../../services/modal.service';
 import { CheckSurveyTemplateNameValidator } from '../../validators/check-survey-template-name.validator';
-
+import { TemplateSurveyQuestionComponent } from '../template-survey-question/template-survey-question.component';
 
 @Component({
-  standalone: false,
+  imports: [CommonModule, ReactiveFormsModule, TemplateSurveyQuestionComponent],
   selector: 'app-create-modify-survey-template',
   templateUrl: './create-modify-survey-template.component.html',
   styleUrls: ['./create-modify-survey-template.component.scss']
@@ -52,19 +53,19 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
   }
 
   onChanges(): void {
-    this.selectTemplateForm.get('templateSelect').valueChanges.subscribe(
-      (val: number) => {
+    this.selectTemplateForm.get('templateSelect').valueChanges.subscribe({
+      next: (val: number) => {
         if (val) {
           this.templateSelectionChanged(val);
         }
       },
-      error => {
-        console.error(error);
+      error: (e) => {
+        console.error(e);
         this.generalError = true;
       }
-    );
-    this.createModifySurveyTemplateForm.get('name').valueChanges.subscribe(
-      (val: string) => {
+    });
+    this.createModifySurveyTemplateForm.get('name').valueChanges.subscribe({
+      next: (val: string) => {
         if (val) {
           if (!this.templateSelectionProcessing) {
             this.selectTemplateForm.reset();
@@ -72,11 +73,11 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
           this.clearStatusFlags();
         }
       },
-      error => {
-        console.error(error);
+      error: (e) => {
+        console.error(e);
         this.generalError = true;
       }
-    );
+    });
     this.subscribeToQuestionTypeChanges();
   }
 
@@ -91,17 +92,17 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
     if (this.formQuestions && this.formQuestions.controls) {
       for (let i = 0; i < this.formQuestions.controls.length; i++) {
         let formQuestionControls: FormGroup = this.formQuestions.controls[i] as FormGroup;
-        this.questionTypeChangedSubscription[i] = formQuestionControls.controls.typeSelect.valueChanges.subscribe(
-          (val: string) => {
+        this.questionTypeChangedSubscription[i] = formQuestionControls.controls.typeSelect.valueChanges.subscribe({
+          next: (val: string) => {
             if (val) {
               this.questionTypeChanged(val, i);
             }
           },
-          error => {
-            console.error(error);
+          error: (e) => {
+            console.error(e);
             this.generalError = true;
           }
-        );
+        });
       }
     }
   }
@@ -117,51 +118,48 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
   getTemplates(): void {
     this.templates = [];
 
-    this.surveyAdminService.getAllSurveyTemplates()
-      .subscribe(
-        (templates: SurveyTemplateDataModel[]) => {
-          if (templates && templates.length) {
-            for (let template of templates) {
-              this.templates.push(new SurveyTemplateModel(template));
-            }
+    this.surveyAdminService.getAllSurveyTemplates().subscribe({
+      next: (templates: SurveyTemplateDataModel[]) => {
+        if (templates && templates.length) {
+          for (let template of templates) {
+            this.templates.push(new SurveyTemplateModel(template));
           }
-        },
-        error => {
-          console.error(error);
-          this.generalError = true;
         }
-      );
+      },
+      error: (e) => {
+        console.error(e);
+        this.generalError = true;
+      }
+    });
   }
 
   templateSelectionChanged(templateSelected: number): void {
     if (templateSelected) {
       this.clearStatusFlags();
       this.templateSelectionProcessing = true;
-      this.surveyAdminService.getSurveyTemplate(templateSelected)
-        .subscribe(
-          (template: SurveyTemplateDataModel[]) => {
+      this.surveyAdminService.getSurveyTemplate(templateSelected).subscribe({
+        next: (template: SurveyTemplateDataModel[]) => {
             if (template && template.length) {
               this.template = new SurveyTemplateModel(template[0]);
               this.createModifySurveyTemplateForm.reset();
               this.resetFormQuestions();
               this.createModifySurveyTemplateForm.controls.name.setValue(this.template.name);
               this.createModifySurveyTemplateForm.controls.description.setValue(this.template.description);
-              this.surveyAdminService.getQuestionsForSurveyTemplate(templateSelected)
-                .subscribe(
-                  (questions: SurveyQuestionDataModel[]) => {
-                    if (questions && questions.length) {
-                      for (let i = 0; i < questions.length; i++) {
-                        this.addQuestion(new SurveyQuestionModel(questions[i]));
-                      }
+              this.surveyAdminService.getQuestionsForSurveyTemplate(templateSelected).subscribe({
+                next: (questions: SurveyQuestionDataModel[]) => {
+                  if (questions && questions.length) {
+                    for (let i = 0; i < questions.length; i++) {
+                      this.addQuestion(new SurveyQuestionModel(questions[i]));
                     }
-                    this.templateSelectionProcessing = false;
-                  },
-                  error => {
-                    console.error(error);
-                    this.generalError = true;
-                    this.templateSelectionProcessing = false;
                   }
-                );
+                  this.templateSelectionProcessing = false;
+                },
+                error: (e) => {
+                  console.error(e);
+                  this.generalError = true;
+                  this.templateSelectionProcessing = false;
+                }
+              });
             }
             else {
               console.error('Error retrieving selected survey template');
@@ -169,12 +167,12 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
               this.templateSelectionProcessing = false;
             }
         },
-        error => {
-          console.error(error);
+        error: (e) => {
+          console.error(e);
           this.generalError = true;
           this.templateSelectionProcessing = false;
         }
-      );
+      });
     }
   }
 
@@ -214,23 +212,22 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
                 .subscribe(
                   (result: any) => {
                     if (result) {
-                      this.surveyAdminService.deleteSurveyTemplate(this.template.id)
-                        .subscribe(
-                          (result: any) => {
-                            if (result) {
-                              this.deleteSuccess = true;
-                              this.clearTemplateNoConfirm();
-                              this.getTemplates();
-                            }
-                            else {
-                              this.deleteError = true;
-                            }
-                          },
-                          error => {
-                            console.error(error);
+                      this.surveyAdminService.deleteSurveyTemplate(this.template.id).subscribe({
+                        next: (result: any) => {
+                          if (result) {
+                            this.deleteSuccess = true;
+                            this.clearTemplateNoConfirm();
+                            this.getTemplates();
+                          }
+                          else {
                             this.deleteError = true;
                           }
-                        );
+                        },
+                        error: (e) => {
+                          console.error(e);
+                          this.deleteError = true;
+                        }
+                      });
                     }
                   }
                 );
@@ -257,46 +254,43 @@ export class CreateModifySurveyTemplateComponent implements OnInit {
     if (!this.template.id || name !== this.template.name) { // if new template or template name changed
       this.template.name = name;
       this.template.id = null;
-      this.surveyAdminService.saveNewSurveyTemplate(this.template)
-        .subscribe(
-          (results: any) => {
-            if (results && results.length) {
-              const templateId = results[0].id;
-              if (templateId) {
-                this.saveAllTemplateQuestions(templateId)
-              }
+      this.surveyAdminService.saveNewSurveyTemplate(this.template).subscribe({
+        next: (results: any) => {
+          if (results && results.length) {
+            const templateId = results[0].id;
+            if (templateId) {
+              this.saveAllTemplateQuestions(templateId)
             }
-          },
-          error => {
-            console.error(error);
-            this.saveError = true;
           }
-        );
+        },
+        error: (e) => {
+          console.error(e);
+          this.saveError = true;
+        }
+      });
       }
       else { // modifying existing template
-        this.surveyAdminService.saveExistingSurveyTemplate(this.template.id, this.template)
-          .subscribe(
-            (result: any) => {
-              if (result) {
-                this.surveyAdminService.deleteSurveyQuestionsByTemplateId(this.template.id)
-                  .subscribe(
-                    (result: any) => {
-                      if (result) {
-                        this.saveAllTemplateQuestions(this.template.id)
-                      }
-                    },
-                    error => {
-                      console.error(error);
-                      this.saveError = true;
-                    }
-                  );
-              }
-            },
-            error => {
-              console.error(error);
-              this.saveError = true;
+        this.surveyAdminService.saveExistingSurveyTemplate(this.template.id, this.template).subscribe({
+          next: (result: any) => {
+            if (result) {
+              this.surveyAdminService.deleteSurveyQuestionsByTemplateId(this.template.id).subscribe({
+                next: (result: any) => {
+                  if (result) {
+                    this.saveAllTemplateQuestions(this.template.id)
+                  }
+                },
+                error: (e) => {
+                  console.error(e);
+                  this.saveError = true;
+                }
+              });
             }
-          );
+          },
+          error: (e) => {
+            console.error(e);
+            this.saveError = true;
+          }
+        });
       }
   }
 

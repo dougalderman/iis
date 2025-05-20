@@ -5,23 +5,23 @@
   "projects": {
     "iis": {
       "root": "",
-      "sourceRoot": "src",
+      "sourceRoot": "public/src",
       "projectType": "application",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
+            "index": "index.html",
+            "main": "main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "polyfills": "polyfills.ts",
             "assets": [
-              "src/assets",
-              "src/favicon.ico"
+              "assets",
+              "favicon.ico"
             ],
             "styles": [
-              "src/styles.scss"
+              "styles.scss"
             ],
             "scripts": [],
             "vendorChunk": true,
@@ -41,8 +41,8 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "environments/environment.ts",
+                  "with": "environments/environment.prod.ts"
                 }
               ]
             },
@@ -87,17 +87,17 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
+            "main": "test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
+            "polyfills": "polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
             "scripts": [],
             "styles": [
-              "src/styles.scss"
+              "styles.scss"
             ],
             "assets": [
-              "src/assets",
-              "src/favicon.ico"
+              "assets",
+              "favicon.ico"
             ]
           }
         }

@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { QUIZ_QUESTION_TYPES } from '../../constants/quiz-question-types.constant';
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
-  standalone: false,
+  imports: [CommonModule, ReactiveFormsModule],
   selector: 'app-template-quiz-question',
   templateUrl: './template-quiz-question.component.html',
   styleUrls: ['./template-quiz-question.component.scss']
@@ -18,12 +19,14 @@ export class TemplateQuizQuestionComponent implements OnInit {
 
   alphaIdArray: string[] = [];
   questionTypes: any[] = QUIZ_QUESTION_TYPES;
-  createModifyQuizTemplateForm: FormGroup
-  questions: FormArray
+  createModifyQuizTemplateForm: FormGroup;
+  questions: FormArray;
+  deleteIcon: string = '';
 
   constructor() {}
 
   ngOnInit() {
+    this.deleteIcon = require('../../../assets/images/delete_icon.jpg');
     this.alphaIdArray = fillIdArray(this.alphaIdArray);
     if (this.quizTemplateForm) {
       this.createModifyQuizTemplateForm = this.quizTemplateForm.createModifyQuizTemplateForm;

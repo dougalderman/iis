@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { SURVEY_QUESTION_TYPES } from '../../constants/survey-question-types.constant';
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
-  standalone: false,
+  imports: [CommonModule, ReactiveFormsModule],
   selector: 'app-template-survey-question',
   templateUrl: './template-survey-question.component.html',
   styleUrls: ['./template-survey-question.component.scss']
@@ -18,12 +19,14 @@ export class TemplateSurveyQuestionComponent implements OnInit {
 
   alphaIdArray: string[] = [];
   questionTypes: any[] = SURVEY_QUESTION_TYPES;
-  createModifySurveyTemplateForm: FormGroup
-  questions: FormArray
+  createModifySurveyTemplateForm: FormGroup;
+  questions: FormArray;
+  deleteIcon: string = '';
 
   constructor() {}
 
   ngOnInit() {
+    this.deleteIcon = require('../../../assets/images/delete_icon.jpg');
     this.alphaIdArray = fillIdArray(this.alphaIdArray);
     if (this.surveyTemplateForm) {
       this.createModifySurveyTemplateForm = this.surveyTemplateForm.createModifySurveyTemplateForm;

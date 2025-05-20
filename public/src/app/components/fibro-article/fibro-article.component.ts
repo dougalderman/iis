@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { WebpageDataModel } from '../../../../../models/webpages/data/webpage-data.model';
 import { WebpageAdminService } from '../../services/webpage-admin.service';
@@ -8,7 +9,7 @@ import { TakeQuizService } from '../../services/take-quiz.service';
 import { TakeSurveyService } from '../../services/take-survey.service';
 
 @Component({
-  standalone: false,
+  imports: [CommonModule, RouterLink],
   selector: 'app-fibro-article',
   templateUrl: './fibro-article.component.html',
   styleUrls: ['./fibro-article.component1.scss','./fibro-article.component2.scss','./fibro-article.component3.scss']
@@ -28,37 +29,35 @@ export class FibroArticleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.data
-      .subscribe(
-        (result: any) => {
-          if (result) {
-            const title = result.title;
-            if (title) {
-              this.webpageAdminService.getWebpageByTitle(title)
-                .subscribe(
-                  (pages: WebpageDataModel[]) => {
-                    if (pages && pages.length) {
-                      const page: WebpageDataModel = pages[0];
-                      this.quizId = page.quiz_id;
-                      if (this.quizId) {
-                        this.takeQuizService.setQuizId(this.quizId);
-                      }
-                      this.surveyId = page.survey_id;
-                      if (this.surveyId) {
-                        this.takeSurveyService.setSurveyId(this.surveyId);
-                      }
-                    }
-                  },
-                  error => {
-                    console.error(error);
+    this.route.data.subscribe({
+      next: (result: any) => {
+        if (result) {
+          const title = result.title;
+          if (title) {
+            this.webpageAdminService.getWebpageByTitle(title).subscribe({
+              next: (pages: WebpageDataModel[]) => {
+                if (pages && pages.length) {
+                  const page: WebpageDataModel = pages[0];
+                  this.quizId = page.quiz_id;
+                  if (this.quizId) {
+                    this.takeQuizService.setQuizId(this.quizId);
                   }
-              );
-            }
+                  this.surveyId = page.survey_id;
+                  if (this.surveyId) {
+                    this.takeSurveyService.setSurveyId(this.surveyId);
+                  }
+                }
+              },
+              error: (e) => {
+                console.error(e);
+              }
+            });
           }
-        },
-        error => {
-          console.error(error);
         }
-      );
+      },
+      error: (e) => {
+        console.error(e);
+      }
+    });
   }
 }

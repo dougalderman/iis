@@ -1,7 +1,7 @@
 <form class="select-form" [formGroup]="selectSurveyTemplateForm">
   <div class="form-group">
     <label class="subheading">Second Step: Select Survey Template:</label>
-    <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="right" ngbTooltip="Select survey template to apply to the web page. Select 'No Survey' to not have a survey. Select 'Keep the Same Survey' if a survey is already associated with the web page, and you want to keep the same survey.">
+    <img class="info-icon" [src]="infoIcon" height=15 placement="right" ngbTooltip="Select survey template to apply to the web page. Select 'No Survey' to not have a survey. Select 'Keep the Same Survey' if a survey is already associated with the web page, and you want to keep the same survey.">
     <select id="survey-template-select" class="form-control survey-template-select-background" formControlName="surveyTemplateSelect">
       <option value="" disabled selected>Select Survey Template</option>
       <option [ngValue]="noSurvey">No Survey</option>
@@ -15,7 +15,7 @@
     <div class="form-group  three-rem-margin-bottom">
       <div class="form-group">
         <label>Unique Name:</label>
-        <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="Enter a survey unique name that will identify the survey in the database.">
+        <img class="info-icon" [src]="infoIcon" height=15 placement="top" ngbTooltip="Enter a survey unique name that will identify the survey in the database.">
         <input type="text" id="survey-unique-name" class="form-control" formControlName="uniqueName">
         <div *ngIf="surveyForm.controls.uniqueName.errors && surveyForm.controls.uniqueName.errors.surveyUniqueNameTaken" class="alert alert-warning">Survey unique name is already being used.</div>
         <div *ngIf="surveyForm.controls.uniqueName.invalid && (surveyForm.controls.uniqueName.dirty || surveyForm.controls.uniqueName.touched)">
@@ -24,7 +24,7 @@
       </div>
       <div class="form-group">
         <label>Title:</label>
-        <img class="info-icon" src="../../../assets/images/information-512.png" height=15 placement="top" ngbTooltip="This will be visible to the user taking the survey.">
+        <img class="info-icon" [src]="infoIcon" height=15 placement="top" ngbTooltip="This will be visible to the user taking the survey.">
         <input type="text" id="survey-title" class="form-control" formControlName="title">
       </div>
       <div class="form-group">

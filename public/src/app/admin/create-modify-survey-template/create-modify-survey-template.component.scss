@@ -1,4 +1,4 @@
-@import '../../../assets/scss/variables';
+@use '../../../assets/scss/variables';
 
 .template-container {
   width: 30%;
@@ -19,5 +19,5 @@ h2 {
 }
 
 select.survey-template-background {
-  background: $select-menu-purple;
+  background: variables.$select-menu-purple;
 }

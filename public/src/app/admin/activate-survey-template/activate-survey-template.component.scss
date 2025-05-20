@@ -1,8 +1,8 @@
-@import '../../../assets/scss/variables';
+@use '../../../assets/scss/variables';
 
 label.subheading {
   font-size: 1.3rem;
-  color: $label-subheading-slateblue;
+  color: variables.$label-subheading-slateblue;
 }
 
 .select-form {
@@ -26,5 +26,5 @@ label.subheading {
 }
 
 .survey-template-select-background {
-  background: $select-menu-green;
+  background: variables.$select-menu-green;
 }

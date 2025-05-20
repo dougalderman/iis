@@ -23,10 +23,11 @@ module.exports = {
       },
       {
         // Image files
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader'
-        ]
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'images/[name].[hash][ext]',
+        },
       },
       {
         test: /\.(s*)css$/, // Test for CSS or Sass

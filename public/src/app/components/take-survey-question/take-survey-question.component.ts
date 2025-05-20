@@ -1,10 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
+
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 import { fillIdArray } from '../../utilities/fill-id-array.utility';
 
 @Component({
-  standalone: false,
+  imports: [CommonModule, ReactiveFormsModule, NgxSliderModule],
   selector: 'app-take-survey-question',
   templateUrl: './take-survey-question.component.html',
   styleUrls: ['./take-survey-question.component.scss']
@@ -17,11 +20,16 @@ export class TakeSurveyQuestionComponent implements OnInit {
   @Output() submitAns = new EventEmitter();
 
   alphaIdArray: string[] = [];
-  questions: FormArray
+  questions: FormArray;
+  dislikeEmoticon: string = '';
+  smileyEmoticon: string = '';
 
   constructor() {}
 
   ngOnInit() {
+    this.dislikeEmoticon =  require("../../../assets/images/dislike_emoticon.jpg");
+    this.smileyEmoticon =  require("../../../assets/images/smiley_emoticon.jpg");
+
     this.alphaIdArray = fillIdArray(this.alphaIdArray);
     if (this.takeSurveyForm) {
       this.questions = this.takeSurveyForm.get('formQuestions') as FormArray;

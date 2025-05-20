@@ -7,7 +7,7 @@
     "module": "es2020",
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "target":"ES6",
+    "target": "ES6",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -15,7 +15,10 @@
       "es2016",
       "dom"
     ],
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["public/src/app/*"]
+    }
   },
   "exclude": [
     "node_modules/*"

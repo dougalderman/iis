@@ -9,16 +9,10 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "server": "node dist/server/server.js",
-    "build:prodl": "./prod_build.sh",
-    "build:devl": "./dev_build.sh",
-    "build:prodw": "prod_build.sh",
-    "build:devw": "dev_build.sh",
     "build:prodangular": "webpack --config webpack.prod.js",
     "build:devangular": "webpack --config webpack.dev.js",
     "build:prodserver": "webpack --config webpack.prod.server.js",
-    "build:devserver": "webpack --config webpack.dev.server.js",
-    "watch:devangular": "webpack --config webpack.dev.js --watch",
-    "watch:devserver": "webpack --config webpack.dev.server.js --watch"
+    "build:devserver": "webpack --config webpack.dev.server.js"
   },
   "private": true,
   "dependencies": {
