@@ -3,10 +3,6 @@ const helpers = require('./config/helpers');
 module.exports = {
   name: 'client',
   target: 'web',
-  entry: {
-    'polyfills': helpers.root('./public/src', 'polyfills.ts'),
-    'app': helpers.root('./public/src', 'main.ts')
-  },
   optimization: {
     splitChunks: {
       chunks: 'all'
