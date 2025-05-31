@@ -12,6 +12,7 @@ const { AngularWebpackPlugin } = require('@ngtools/webpack');
 module.exports = merge(common, {
   mode: 'development',
   entry: {
+    'polyfills': helpers.root('./public/src', 'polyfills.ts'),
     'main': helpers.root('./public/src', 'main.ts')
   },
   devtool: 'inline-source-map',

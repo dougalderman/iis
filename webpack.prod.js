@@ -14,6 +14,7 @@ module.exports = merge(common, {
   devtool: 'source-map',
   mode: 'production',
   entry: {
+    'polyfills': helpers.root('./public/src', 'polyfills.ts'),
     'main': helpers.root('./public/src', 'main.ts')
   },
   output: {
