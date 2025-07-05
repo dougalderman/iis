@@ -70,13 +70,13 @@ The admin section is a separate component with its own routing. The AdminHomeCom
 #### Create/Modify Quiz Template
 Before attaching a quiz to a webpage, you need to create a quiz template. You can build a new template from scratch, or modify an existing one, using the Create/Modify Quiz Template screen.
 
-![Create Modify Quiz Template Page](https://github.com/dougalderman/iis/blob/master/readme_images/Create_Modify_Quiz_Template.jpg)
+![Create Modify Quiz Template Page](https://github.com/dougalderman/iis/blob/main/readme_images/Create_Modify_Quiz_Template.jpg)
 
 The component reads all templates from QuizTemplates on initialization. It listens for changes to the Select Template menu or to the Name field. It has methods to handle if the user selects Add Question, deletes a question, clicks the Clear (clear screen) or Delete (delete template) buttons, or clicks Save Template. Save Template first saves the template information to the QuizTemplates table, then deletes quiz questions associated with the template (if they exist), and saves quiz questions as new rows in the QuizQuestions table.
 
 Individual quiz question handling is done via a child component, TemplateQuizQuestionComponent. It handles the 3 supported quiz question types: multiple choice, short answer, and boolean. It has methods for adding and deleting multiple choice options or short answer correct answers. 
 
-![Create Modify Quiz Template Quiz Questions](https://github.com/dougalderman/iis/blob/master/readme_images/Create_Modify_Quiz_Template_Quiz_Questions.jpg)
+![Create Modify Quiz Template Quiz Questions](https://github.com/dougalderman/iis/blob/main/readme_images/Create_Modify_Quiz_Template_Quiz_Questions.jpg)
 
 #### Create/Modify Survey Template
 Create/Modify Survey template is very similar to Create/Modify Quiz template, with the difference that there are no correct answers for surveys. Surveys have an additional supported question type: textQuestionNumericAnswer.
@@ -84,7 +84,7 @@ Create/Modify Survey template is very similar to Create/Modify Quiz template, wi
 #### Activate Quiz/Survey Template
 After creating or modifying quiz and survey templates, the next step is to activate them by associating them with a webpage. Technically, this will update the row on the Webpages table corresponding to the page you want to link a quiz and/or survey to. It will also insert a row in the Quizzes or Surveys table with a new quiz or survey, and either update or add new records in QuizQuestions or SurveyQuestions that have a foreign key corresponding to the new quiz or survey. 
 
-![Activate Quiz/Survey Template](https://github.com/dougalderman/iis/blob/master/readme_images/Activate_Quiz_Survey_Template.jpg)
+![Activate Quiz/Survey Template](https://github.com/dougalderman/iis/blob/main/readme_images/Activate_Quiz_Survey_Template.jpg)
 
 On initialization, Activate Quiz/Survey Template gets a list of active routes from the constant appRoutes, and syncs this list with the Webpages table. It also gets all quiz and survey templates. The user follows a simple step-by-step approach. After selecting a webpage, she then selects a quiz template. If a quiz has already been associated with that webpage, it will default to "Keep the Same Quiz". If no quiz has been selected, it will default to "No Quiz". The user can either keep the default, or choose a different template. Unique Name, Title (which is visible to the quiz taker) and Description are text input fields that can be modified. The only configuration option is Percent Great Job, which is the percent of questions the user needs to answer correctly to see the "Great Job" Giphy (as opposed to the "OK Job" Giphy). The Preview button provides a way to see all the disabled quiz questions, multiple choice options, and correct answers. This makes use of a child component TemplateQuizQuestionDisabledComponent, which is a child class of TemplateQuizQuestionComponent.
 
@@ -93,11 +93,11 @@ Selecting a survey template is virtually the same user experience as selecting a
 ### Take Quiz
 Each webpage has code that queries the Webpages table whether or not a quiz_id is associated with the webpage. If there is a quiz_id, then the "Take Quiz" link will become visible on the page. When the user clicks on the "Take Quiz" link, the router calls the TakeQuizComponent. On initialization, TakeQuizComponent queries the Quizzes and QuizQuestions tables, randomizes question and multiple choice option order, and adds all the quiz questions to the form. It sends the form and the current question index to a child component TakeQuizQuestionComponent, which handles individual questions. Once the user submits the answer to a question, immediate feedback is given.
 
-![Take Quiz Question Feedback](https://github.com/dougalderman/iis/blob/master/readme_images/Take_Quiz_Question_Feedback.jpg)
+![Take Quiz Question Feedback](https://github.com/dougalderman/iis/blob/main/readme_images/Take_Quiz_Question_Feedback.jpg)
 
 After answering all the questions, a results page that is a div element within the TakeQuizComponent template is shown. This page provides feedback to the user on how many questions he correctly answered, the total time to take the quiz, and a Giphy with an animation that is targeted based on how well he did. A button that returns to the calling page is included.
 
-![Take Quiz Results](https://github.com/dougalderman/iis/blob/master/readme_images/Take_Quiz_Results.jpg)
+![Take Quiz Results](https://github.com/dougalderman/iis/blob/main/readme_images/Take_Quiz_Results.jpg)
 
 ### Take Survey
 Take Survey is very similar to Take Quiz, with the difference that no feedback is given after each question or at the end of the survey, as there are no correct answers, and no percent correct. A slider is used to handle user input for a numeric answer. Question order is randomized, but not multiple choice option order.
