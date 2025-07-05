@@ -70,7 +70,7 @@ The admin section is a separate component with its own routing. The AdminHomeCom
 #### Create/Modify Quiz Template
 Before attaching a quiz to a webpage, you need to create a quiz template. You can build a new template from scratch, or modify an existing one, using the Create/Modify Quiz Template screen.
 
-![Create Modify Quiz Template Page](Create_Modify_Quiz_Template.jpg)
+![Create Modify Quiz Template Page](https://github.com/dougalderman/iis/blob/main/readme_images/Create_Modify_Quiz_Template.jpg)
 
 The component reads all templates from QuizTemplates on initialization. It listens for changes to the Select Template menu or to the Name field. It has methods to handle if the user selects Add Question, deletes a question, clicks the Clear (clear screen) or Delete (delete template) buttons, or clicks Save Template. Save Template first saves the template information to the QuizTemplates table, then deletes quiz questions associated with the template (if they exist), and saves quiz questions as new rows in the QuizQuestions table.
 
