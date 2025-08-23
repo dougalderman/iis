@@ -29,18 +29,7 @@ const pgSqlPool = new Pool();
 new TimedTasksController(pgSqlPool);
 
 // Endpoints
-new EndpointsController(app, pgSqlPool);
-
-app.get('/wiki/*splat', (req, res) => {
-  if (req.originalUrl) {
-    res.redirect('https://en.wikipedia.org' + req.originalUrl);
-  }
-});
-
-// 404 catch
-app.all('/{*splat}', (req: any, res: any) => {
-  res.status(200).sendFile('index.html', {root: path});
-});
+new EndpointsController(app, path, pgSqlPool);
 
 app.listen(port, function () {
   console.log('App listening on port ' + port + '\n');

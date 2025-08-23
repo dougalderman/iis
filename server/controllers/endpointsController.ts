@@ -15,11 +15,12 @@ import { SurveyAnswersController } from './surveys/surveyAnswersController';
 import { WebpagesController } from './webpages/webpagesController';
 
 export class EndpointsController {
-  constructor(app: any, pgSqlPool: Pool) {
-    this.runEndpoints(app, pgSqlPool)
+  constructor(app: any, path: string, pgSqlPool: Pool) {
+    this.runEndpoints(app, path, pgSqlPool)
   }
 
-  runEndpoints(app: any, pgSqlPool: Pool) {
+  runEndpoints(app: any, path: string, pgSqlPool: Pool) {
+
     // Quiz Endpoints
 
     // Quizzes
@@ -115,5 +116,70 @@ export class EndpointsController {
     app.get('/api/admin/webpages', WebpagesController.readAll(pgSqlPool)) // Reads all webpages.
     app.put('/api/admin/webpages/:id', WebpagesController.update(pgSqlPool)) // Updates webpage record.
     app.delete('/api/admin/webpages/:id', WebpagesController.delete(pgSqlPool)) // Deletes webpage record.
+  
+    
+    // Routes
+
+    // 200 catch for /demo-menu
+    app.get('/demo-menu', (req: any, res: any) => {
+      res.status(200).sendFile('index.html', {root: path});
+    });
+
+    // 200 catch for /fibro-article
+    app.get('/fibro-article', (req: any, res: any) => {
+      res.status(200).sendFile('index.html', {root: path});
+    });
+
+    // 200 catch for /sample-page-one
+    app.get('/sample-page-one', (req: any, res: any) => {
+      res.status(200).sendFile('index.html', {root: path});
+    });
+
+    // 200 catch for /sample-page-two
+    app.get('/sample-page-two', (req: any, res: any) => {
+      res.status(200).sendFile('index.html', {root: path});
+    });
+
+    // 200 catch for /take-quiz
+    app.get('/take-quiz', (req: any, res: any) => {
+      res.status(200).sendFile('index.html', {root: path});
+    });
+
+    // 200 catch for /take-survey
+    app.get('/take-survey', (req: any, res: any) => {
+      res.status(200).sendFile('index.html', {root: path});
+    });
+
+    // 200 catch for /admin
+    app.get('/admin', (req: any, res: any) => {
+      res.status(200).sendFile('index.html', {root: path});
+    });
+
+    // 200 catch for /admin/create-modify-quiz-template
+    app.get('/admin/create-modify-quiz-template', (req: any, res: any) => {
+      res.status(200).sendFile('index.html', {root: path});
+    });
+
+    // 200 catch for /admin/create-modify-survey-template
+    app.get('/admin/create-modify-survey-template', (req: any, res: any) => {
+      res.status(200).sendFile('index.html', {root: path});
+    });
+
+    // 200 catch for /admin/activate-quiz-survey-template
+    app.get('/admin/activate-quiz-survey-template', (req: any, res: any) => {
+      res.status(200).sendFile('index.html', {root: path});
+    });
+
+    // Redirect for /wiki
+    app.get('/wiki/{*splat}', (req, res) => {
+      if (req.originalUrl) {
+        res.redirect('https://en.wikipedia.org' + req.originalUrl);
+      }
+    });
+
+    // 404 catch
+    app.all('/{*splat}', (req: any, res: any) => {
+      res.status(404).send('Not Found');
+    });
   }
 }
