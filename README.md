@@ -38,7 +38,6 @@ This site includes a template-based quiz and survey administration system that a
 6. npm run server.
 
 ## Usage
-### Demo Insructions
 
 1. Select Admin Main Menu from the home page menu (or point the browser to [url]/admin).
 2. Select Create/Modify Quiz Template.
