@@ -12,8 +12,10 @@ From a development persepective, quizzes and surveys are very similar. They both
 
 The purpose of this project is to use Angular v.19 and a Node.js v.22 server, along with PostgreSQL v.17 database, to allow for a quick and efficient way to create quizzes and surveys that will add interactivity to an informational site. 
 
-This site includes a template-based quiz and survey administration system that allows for quizzes and surveys to be created, modified, and added as links to a webpage on a site. A Wikipedia page is used as an example, with Take Quiz and Take Survey links added to the header. 
+This site includes a template-based quiz and survey administration system that allows for quizzes and surveys to be created, modified, and added as links to a webpage on a site. A Wikipedia page is used as an example, with Take Quiz and Take Survey links added to the header.
 
+## Demo Site
+http://167.71.24.179:7497
 
 ## Getting Started
 ### Prerequisites
